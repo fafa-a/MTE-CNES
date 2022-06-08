@@ -24,42 +24,38 @@ export const Map = () => {
   const dataGeojson = [Andalousie, BurkinaFaso, India, Occitanie, Tunisia]
   const [polygonClicked, setPolygonCliked] = useState(Boolean)
   const [chartData, setChartData] = useState([])
-  const [pattern, setPattern] = useState("")
-  const [id, setId] = useState("")
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const response = await fetch(
-  //       "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_110m_populated_places_simple.geojson"
-  //     )
-  //     const cities = await response.json()
-  //     setAsyncCities(cities)
-  //   }
-  //   fetchData().catch(console.error)
-  // }, [])
-
+  const [idSwot, setIdSwot] = useState([])
+  const [lakesInfo, setLakesInfo] = useState([])
   const isPolygonClicked = bool => {
     setPolygonCliked(bool)
   }
 
-  const getLakeData = async id => {
+  const getLakeData = async (id, ptrn) => {
     if (!id || !pattern) return
-    console.log(id, pattern)
     const data = await dsv(
       ";",
-      `/src/data/series/${id}${config.delimitter}${pattern}${config.delimitter}MO1.csv`
+      `/src/data/series/${id}${config.delimitter}${ptrn}${config.delimitter}MO1.csv`
     )
-    setChartData(data)
+    setChartData([...chartData, data])
   }
+
   useEffect(() => {
-    getLakeData()
-  }, [])
+    idSwot.forEach(el => console.log(el))
+  }, [idSwot])
 
   const handleChange = el => {
-    console.log(el.name)
-    setPattern(el.name)
-    setId(el.id)
+    if (!el) return
+    setLakesInfo([
+      ...lakesInfo,
+      {
+        pattern: el.name,
+        id: el.id,
+      },
+    ])
   }
-
+  const getIdSwot = id => {
+    setIdSwot([...idSwot, id])
+  }
   return (
     <>
       <MapContainer center={[36.91, -3.54]} zoom={12} scrollWheelZoom={true}>
@@ -84,11 +80,7 @@ export const Map = () => {
                 getRadiusFilter={getRadiusFilter}
                 getGeoFilter={getGeoFilter}
               />
-              <PolygonLayer
-                data={data}
-                getLakeData={getLakeData}
-                isPolygonClicked={isPolygonClicked}
-              />
+              <PolygonLayer data={data} getIdSwot={getIdSwot} />
 
               <MarkerLayerWithTooltipCluster data={data} />
             </div>
@@ -110,7 +102,7 @@ export const Map = () => {
         </LayersControl>
       </MapContainer>
       <div style={{ display: "flex", height: "45vh" }}>
-        <Chart chartData={chartData} id={id} />
+        {/* <Chart chartData={chartData} lakesInfo={lakesInfo} /> */}
         <div
           style={{ display: "flex", flexDirection: "column", height: "100%" }}
         >

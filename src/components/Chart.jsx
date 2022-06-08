@@ -26,20 +26,19 @@ ChartJS.register(
   zoomPlugin
 )
 
-export const Chart = ({ chartData, id }) => {
+export const Chart = ({ chartData, lakesInfo }) => {
   const [label, setLabel] = useState("")
   const [unit, setUnit] = useState("")
   const [borderColor, setBorderColor] = useState("")
   const [backgroundColor, setBackgroundColor] = useState("")
 
-  useEffect(() => {
-    if (id) {
-      config.dataType.map(obj => {
-        console.log(obj[id])
-      })
-    }
+  console.log("info=>", lakesInfo)
+  console.log("data=>", chartData)
 
-    if (id) {
+  useEffect(() => {
+    console.log("useEfect charrt")
+
+    if (id && chartData) {
       config.dataType.map(el => {
         if (el[id]) {
           setLabel(el[id].label)
@@ -49,7 +48,7 @@ export const Chart = ({ chartData, id }) => {
         }
       })
     }
-  }, [id])
+  }, [chartData])
 
   const handleValue = value => {
     if (unit === "hm³") {
@@ -60,7 +59,7 @@ export const Chart = ({ chartData, id }) => {
       return value
     }
   }
-  
+
   const options = {
     responsive: true,
     maintainAspectRatio: false,
