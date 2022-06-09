@@ -5,6 +5,7 @@ import { defaultIcon } from "../icons/defaultIcon"
 import { Button, Card, InputNumber, Space } from "antd"
 import { FilterOutlined } from "@ant-design/icons"
 import booleanPointInPolygon from "@turf/boolean-point-in-polygon"
+import { useMemo } from "react"
 
 const DEFAULT_RADIUS = 3000
 
@@ -93,12 +94,12 @@ export const MarkerLayer = ({
 
   const findCountryName = () => data.features[0].properties.COUNTRY
   const country = findCountryName()
-  
+
   const layer = data.features
     .filter(currentFeature => {
       let filterByRadius
       let filterByGeo
-
+      console.log("dadad")
       if (centerPoint) {
         const { coordinates } = currentFeature.geometry
         const currentPoint = L.latLng(coordinates[1], coordinates[0])
@@ -138,6 +139,7 @@ export const MarkerLayer = ({
         </Marker>
       )
     })
+
   return (
     <LayersControl.Overlay name={`${country} lakes markers`}>
       <LayerGroup>{layer}</LayerGroup>

@@ -12,7 +12,7 @@ import {
 } from "chart.js"
 import { Line } from "react-chartjs-2"
 import zoomPlugin from "chartjs-plugin-zoom"
-import { config } from "../config"
+import { config } from "../../config"
 
 ChartJS.register(
   CategoryScale,
@@ -31,26 +31,34 @@ export const Chart = ({ chartData, lakesInfo }) => {
   const [unit, setUnit] = useState("")
   const [borderColor, setBorderColor] = useState("")
   const [backgroundColor, setBackgroundColor] = useState("")
-
-  console.log("info=>", lakesInfo)
-  console.log("data=>", chartData)
+  const [dataSets, setDataSets] = useState([])
+  const id = lakesInfo.map(({ id }) => id)
 
   useEffect(() => {
-    console.log("useEfect charrt")
-
-    if (id && chartData) {
-      config.dataType.map(el => {
-        if (el[id]) {
-          setLabel(el[id].label)
-          setUnit(el[id].unit)
-          setBorderColor(el[id].borderColor)
-          setBackgroundColor(el[id].backgroundColor)
-        }
-      })
+    for (const item of chartData) {
+      setDataLines(item)
     }
   }, [chartData])
 
-  const handleValue = value => {
+  //  useEffect(() => {
+  //     if (id && chartData) {
+  //       config.dataType.map(el => {
+  //         if (el[id]) {
+  //           setLabel(el[id].label)
+  //           setUnit(el[id].unit)
+  //           setBorderColor(el[id].borderColor)
+  //           setBackgroundColor(el[id].backgroundColor)
+  //         }
+  //       })
+  //     }
+  //   }, [chartData])
+
+  useEffect(() => {
+    console.log("datasets======>", dataSets)
+    console.log("id ===>", id)
+  }, [dataSets])
+
+  const handleValue = (value, unit) => {
     if (unit === "hm³") {
       return (1 * value) / 1_000_000
     } else if (unit === "hm²") {
@@ -131,20 +139,47 @@ export const Chart = ({ chartData, lakesInfo }) => {
     title: { display: true, text: "My Chart" },
   }
 
+  const setDataLines = item => {
+    if (!item) return
+    let label, unit, borderColor, backgroundColor
+    const value = item
+      ?.filter(el => !isNaN(el.value) && el.date !== "" && el.value !== "0")
+      .map(el => el.value)
+
+    config.dataType.map(el => {
+      for (let i of id) {
+        console.log(i)
+        label = el[i].label
+        unit = el[i].unit
+        borderColor = el[i].borderColor
+        backgroundColor = el[i].backgroundColor
+      }
+    })
+
+    const data = {
+      label: `${label} ${unit}`,
+      data: value.map(el => handleValue(el, unit)),
+      borderColor,
+      backgroundColor,
+    }
+    setDataSets([...dataSets, data])
+  }
+
   const data = {
-    labels: chartData
+    labels: chartData[0]
       ?.filter(el => !isNaN(el.value) && el.date !== "" && el.value !== "0")
       .map(el => el.date),
-    datasets: [
-      {
-        label: `${label} ${unit}`,
-        data: chartData
-          ?.filter(el => !isNaN(el.value) && el.date !== "" && el.value !== "0")
-          .map(el => handleValue(el.value)),
-        borderColor,
-        backgroundColor,
-      },
-    ],
+    // datasets: [
+    //   {
+    //     label: `${label} ${unit}`,
+    //     data: chartData[0]
+    //       ?.filter(el => !isNaN(el.value) && el.date !== "" && el.value !== "0")
+    //       .map(el => handleValue(el.value)),
+    //     borderColor,
+    //     backgroundColor,
+    //   },
+    // ],
+    datasets: dataSets,
   }
 
   const style = {

@@ -6,15 +6,13 @@ export const PolygonLayer = ({ data, getIdSwot }) => {
   const [click, setClick] = useState(false)
   const { COUNTRY } = data.features[0].properties
   const map = useMap()
-
+console.log("dada")
   const handleClick = () => {
     setClick(!click)
   }
-
   const centerPolygon = (...coord) => {
     map.setView(coord[0], coord[1])
   }
-
   const layer = data.features.map(feature => {
     const { ID_SWOT, DAM_NAME, LONG_DD, LAT_DD } = feature.properties
     const { coordinates } = feature.geometry
@@ -43,7 +41,7 @@ export const PolygonLayer = ({ data, getIdSwot }) => {
     )
   })
   return (
-    <LayersControl.Overlay name={`${COUNTRY} lakes polygons`}>
+    <LayersControl.Overlay checked={true} name={`${COUNTRY} lakes polygons`}>
       <LayerGroup>{layer}</LayerGroup>
     </LayersControl.Overlay>
   )
