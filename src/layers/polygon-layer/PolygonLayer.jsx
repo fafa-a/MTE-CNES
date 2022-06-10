@@ -1,4 +1,4 @@
-import usePolygonLayerHook from "./polygon/PolygonLayerHook"
+import usePolygonLayerHook from "./PolygonLayerHook"
 
 import { LayerGroup, LayersControl, Polygon, Tooltip } from "react-leaflet"
 import { v4 as uuid } from "@lukeed/uuid"

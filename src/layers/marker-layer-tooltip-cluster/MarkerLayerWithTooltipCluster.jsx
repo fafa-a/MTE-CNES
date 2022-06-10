@@ -1,7 +1,7 @@
 import React from "react"
 import { LayersControl, Marker, Tooltip, useMap } from "react-leaflet"
 import MarkerClusterGroup from "react-leaflet-markercluster"
-import { defaultIcon } from "../icons/defaultIcon"
+import { defaultIcon } from "../../icons/defaultIcon"
 import { v4 as uuid } from "@lukeed/uuid"
 
 /**

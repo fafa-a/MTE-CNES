@@ -1,9 +1,9 @@
 import useMapHook from "./MapHook"
 import { LayersControl, MapContainer, TileLayer } from "react-leaflet"
 import styled from "styled-components"
-import { MarkerLayer } from "../../layers/MarkerLayer"
-import { MarkerLayerWithTooltipCluster } from "../../layers/MarkerLayerWithTooltipCluster"
-import { PolygonLayer } from "../../layers/PolygonLayer"
+import { MarkerLayer } from "../../layers/marker-layer/MarkerLayer"
+import { MarkerLayerWithTooltipCluster } from "../../layers/marker-layer-tooltip-cluster/MarkerLayerWithTooltipCluster"
+import { PolygonLayer } from "../../layers/polygon-layer/PolygonLayer"
 
 import { Andalousie } from "../../data/geojson/Andalousie"
 import { BurkinaFaso } from "../../data/geojson/BurkinaFaso"

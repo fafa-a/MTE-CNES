@@ -1,7 +1,7 @@
 import { LayersControl, LayerGroup, Marker } from "react-leaflet"
-import { defaultIcon } from "../icons/defaultIcon"
+import { defaultIcon } from "../../icons/defaultIcon"
 import { v4 as uuid } from "@lukeed/uuid"
-import Card from "../components/card/Card"
+import Card from "../../components/card/Card"
 
 /**
  * Component to display the marker layer and tooltip for cities
