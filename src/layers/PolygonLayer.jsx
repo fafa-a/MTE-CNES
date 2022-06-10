@@ -1,20 +1,13 @@
-import { useRef, useState, useEffect } from "react"
-import { useMap } from "react-leaflet"
+import usePolygonLayerHook from "./polygon/PolygonLayerHook"
+
 import { LayerGroup, LayersControl, Polygon, Tooltip } from "react-leaflet"
+import { v4 as uuid } from "@lukeed/uuid"
 
 export const PolygonLayer = ({ data, getIdSwot }) => {
-  const [click, setClick] = useState(false)
-  const { COUNTRY } = data.features[0].properties
-  const map = useMap()
-console.log("dada")
-  const handleClick = () => {
-    setClick(!click)
-  }
-  const centerPolygon = (...coord) => {
-    map.setView(coord[0], coord[1])
-  }
+  const { centerPolygon, country } = usePolygonLayerHook({ data })
+
   const layer = data.features.map(feature => {
-    const { ID_SWOT, DAM_NAME, LONG_DD, LAT_DD } = feature.properties
+    const { ID_SWOT, DAM_NAME, LONG_WW, LAT_WW } = feature.properties
     const { coordinates } = feature.geometry
     const reversedMultiPolygons = coordinates[0].map(polygon =>
       polygon.map(p => [p[1], p[0]])
@@ -22,15 +15,14 @@ console.log("dada")
 
     return (
       <Polygon
-        key={ID_SWOT}
+        key={uuid()}
         positions={reversedMultiPolygons}
         data-id={ID_SWOT}
-        data-coordinates={[LAT_DD, LONG_DD]}
+        data-coordinates={[LAT_WW, LONG_WW]}
         eventHandlers={{
           click: el => {
-            getIdSwot(el.target.options["data-id"])
-            handleClick()
             centerPolygon(el.target.options["data-coordinates"])
+            // getIdSwot(el.target.options["data-id"])
           },
         }}
       >
@@ -41,7 +33,7 @@ console.log("dada")
     )
   })
   return (
-    <LayersControl.Overlay checked={true} name={`${COUNTRY} lakes polygons`}>
+    <LayersControl.Overlay checked={true} name={`${country} lakes polygons`}>
       <LayerGroup>{layer}</LayerGroup>
     </LayersControl.Overlay>
   )

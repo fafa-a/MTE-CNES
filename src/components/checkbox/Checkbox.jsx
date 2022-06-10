@@ -1,20 +1,19 @@
 import useCheckboxHook from "./CheckboxHook"
+import styled from "styled-components"
+
+const StyledLabel = styled.label(
+  ({ theme }) => `
+  margin-left: ${theme.space.sm};
+`
+)
 
 export const Checkbox = props => {
   const { onChange } = useCheckboxHook(props)
-  const { id, label, pattern, value } = props
+  const { id, label, value } = props
   return (
     <div>
-      <input
-        type="checkbox"
-        name={pattern}
-        id={id}
-        checked={value}
-        onChange={onChange}
-      />
-      <label style={{ marginLeft: 5 }} htmlFor={id}>
-        {label}
-      </label>
+      <input type="checkbox" id={id} checked={value} onChange={onChange} />
+      <StyledLabel htmlFor={id}>{label}</StyledLabel>
     </div>
   )
 }

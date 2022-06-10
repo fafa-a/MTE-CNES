@@ -2,7 +2,7 @@ import React from "react"
 import { LayersControl, Marker, Tooltip, useMap } from "react-leaflet"
 import MarkerClusterGroup from "react-leaflet-markercluster"
 import { defaultIcon } from "../icons/defaultIcon"
-
+import { v4 as uuid } from "@lukeed/uuid"
 
 /**
  * Component to diplay a marker cluster layer for world cities
@@ -20,7 +20,7 @@ export const MarkerLayerWithTooltipCluster = ({ data }) => {
     const { DAM_NAME, ID_SWOT, LONG_DD, LAT_DD } = feature.properties
     return (
       <Marker
-        key={ID_SWOT}
+        key={uuid()}
         position={[LAT_DD, LONG_DD]}
         icon={defaultIcon}
         eventHandlers={{
