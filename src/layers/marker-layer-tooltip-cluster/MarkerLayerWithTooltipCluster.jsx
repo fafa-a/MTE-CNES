@@ -17,11 +17,11 @@ export const MarkerLayerWithTooltipCluster = ({ data }) => {
 
   const leafletMap = useMap()
   const layer = data.features.map(feature => {
-    const { DAM_NAME, ID_SWOT, LONG_DD, LAT_DD } = feature.properties
+    const { DAM_NAME, LONG_WW, LAT_WW } = feature.properties
     return (
       <Marker
         key={uuid()}
-        position={[LAT_DD, LONG_DD]}
+        position={[LAT_WW, LONG_WW]}
         icon={defaultIcon}
         eventHandlers={{
           click: e => leafletMap.panTo(e.latlng),
