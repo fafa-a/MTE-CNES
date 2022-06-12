@@ -5,16 +5,8 @@ import { MarkerLayer } from "../../layers/marker-layer/MarkerLayer"
 import { MarkerLayerWithTooltipCluster } from "../../layers/marker-layer-tooltip-cluster/MarkerLayerWithTooltipCluster"
 import { PolygonLayer } from "../../layers/polygon-layer/PolygonLayer"
 
-import { Andalousie } from "../../data/geojson/Andalousie"
-import { BurkinaFaso } from "../../data/geojson/BurkinaFaso"
-import { India } from "../../data/geojson/India"
-import { Occitanie } from "../../data/geojson/Occitanie"
-import { Tunisia } from "../../data/geojson/Tunisia"
-import anda from "../../data/geojson/andalousie_selected_max_extent_v12.geojson"
-
-console.log(anda)
-
-const dataGeojson = [Andalousie, BurkinaFaso, India, Occitanie, Tunisia]
+const files = import.meta.globEager("/src/data/geojson/*.geojson")
+const dataGeojson = Object.entries(files).map(([filepath, data]) => data)
 
 const StyledMapContainer = styled(MapContainer)`
   width: 100vw;
