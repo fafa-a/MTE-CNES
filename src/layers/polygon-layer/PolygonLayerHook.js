@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useState } from "react"
-
+import { useCallback } from "react"
 import { useMap } from "react-leaflet"
 
 export default function usePolygonLayerHook({ data, handleChange }) {
