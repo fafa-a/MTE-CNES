@@ -1,4 +1,5 @@
 export const config = {
+  baseDir: "/src/data/series/",
   delimitter: "_",
   attributes: {
     fillingRate: {

@@ -15,13 +15,13 @@ const StyledContainer = styled("div", {
 })
 
 const App = () => {
-  const { handleChange } = useAppHook()
-  console.log(handleChange)
+  const { handleCheckboxChange, handleIdSwot } = useAppHook()
+
   return (
     <>
-      <Map />
+      <Map handleChange={handleIdSwot} />
       <StyledContainer>
-        <Form handleChange={handleChange} />
+        <Form handleChange={handleCheckboxChange} />
         {/*
       <Chart /> */}
       </StyledContainer>

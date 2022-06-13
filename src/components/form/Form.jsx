@@ -45,12 +45,13 @@ export const Form = ({ handleChange }) => {
       </StyledDiv>
       <StyledDiv>
         <StyledH3>Attributes</StyledH3>
-        {dataTypesValues.map(({ id, label, value }) => (
+        {dataTypesValues.map(({ id, label, value, filePath }) => (
           <Checkbox
             key={id}
             id={id}
             label={label}
             value={value}
+            filePath={filePath}
             handleChange={handleChange}
           />
         ))}

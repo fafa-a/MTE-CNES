@@ -23,7 +23,7 @@ export const Map = () => {
   const getRadiusFilter = () => radiusFilter
   const dataGeojson = [Andalousie, BurkinaFaso, India, Occitanie, Tunisia]
   const [polygonClicked, setPolygonCliked] = useState(Boolean)
-  const [chartData, setChartData] = useState([])
+  const [chartData, setChartData] = useState([](()))
   const [idSwot, setIdSwot] = useState([])
   const [lakesInfo, setLakesInfo] = useState([])
 
@@ -31,9 +31,6 @@ export const Map = () => {
     if (!id || !pattern) return
     const data = await dsv(
       ";",
-      `/src/data/series/${id}${config.delimitter}${pattern}${config.delimitter}MO1.csv`
-    )
-    console.log(
       `/src/data/series/${id}${config.delimitter}${pattern}${config.delimitter}MO1.csv`
     )
     setChartData([...chartData, data])
