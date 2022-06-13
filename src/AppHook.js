@@ -1,5 +1,5 @@
-import React from "react"
+export function useAppHook() {
+  const handleChange = el => console.log("el", el)
 
-export default function AppHook() {
-
+  return { handleChange }
 }

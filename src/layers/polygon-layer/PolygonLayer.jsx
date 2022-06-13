@@ -33,7 +33,7 @@ export const PolygonLayer = ({ data, getIdSwot }) => {
     )
   })
   return (
-    <LayersControl.Overlay checked={true} name={`${country} lakes polygons`}>
+    <LayersControl.Overlay name={`${country} lakes polygons`}>
       <LayerGroup>{layer}</LayerGroup>
     </LayersControl.Overlay>
   )

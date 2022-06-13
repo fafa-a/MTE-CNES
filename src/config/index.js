@@ -1,6 +1,6 @@
 export const config = {
   delimitter: "_",
-  dataTypes: {
+  attributes: {
     fillingRate: {
       borderColor: "rgb(255, 99, 132)",
       backgroundColor: "rgba(255, 99, 132, 0.5)",
@@ -23,8 +23,14 @@ export const config = {
       unit: "hm³",
     },
   },
-  observationType: {
-    optic: "",
-    radar: "",
+  observationTypes: {
+    optic: {
+      abbr: "MO",
+      label: "Optic",
+    },
+    radar: {
+      abbr: "MR",
+      label: "Radar",
+    },
   },
 }

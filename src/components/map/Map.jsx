@@ -1,6 +1,6 @@
 import useMapHook from "./MapHook"
 import { LayersControl, MapContainer, TileLayer } from "react-leaflet"
-import styled from "styled-components"
+import { styled } from "@stitches/react"
 import { MarkerLayer } from "../../layers/marker-layer/MarkerLayer"
 import { MarkerLayerWithTooltipCluster } from "../../layers/marker-layer-tooltip-cluster/MarkerLayerWithTooltipCluster"
 import { PolygonLayer } from "../../layers/polygon-layer/PolygonLayer"
@@ -8,10 +8,10 @@ import { PolygonLayer } from "../../layers/polygon-layer/PolygonLayer"
 const files = import.meta.globEager("/src/data/geojson/*.geojson")
 const dataGeojson = Object.entries(files).map(([filepath, data]) => data)
 
-const StyledMapContainer = styled(MapContainer)`
-  width: 100vw;
-  height: 55vh;
-`
+const StyledMapContainer = styled(MapContainer, {
+  width: "100vw",
+  height: "55vh",
+})
 
 export const Map = () => {
   return (
