@@ -14,7 +14,7 @@ export const config = {
       backgroundColor: "rgba(53, 162, 235, 0.5)",
       label: "Surface",
       filePath: "surface",
-      unit: "hm²",
+      unit: "ha",
     },
     volume: {
       borderColor: "rgb(127, 255, 0)",
