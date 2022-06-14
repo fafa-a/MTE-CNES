@@ -30,10 +30,10 @@ const StyledDiv = styled("div", {
   height: "100%",
   width: "100%",
 })
-export const Chart = ({ chartData, chartAttribute }) => {
-  const { data, options } = useChartHook(chartData, chartAttribute)
+export const Chart = ({ chartData, chartAttribute, lakeName }) => {
+  const { data, options } = useChartHook(chartData, chartAttribute, lakeName)
 
-    return (
+  return (
     <StyledDiv>
       <Line options={options} data={data} />
     </StyledDiv>

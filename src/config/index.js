@@ -4,9 +4,11 @@ export const config = {
   attributes: {
     fillingRate: {
       borderColor: "rgb(255, 99, 132)",
+      borderWidth: 1.2,
       backgroundColor: "rgba(255, 99, 132, 0.5)",
+      pointBackgroundColor: "#2E1D25",
       tension: 0.4,
-      pointRadius: 0,
+      pointRadius: 1.4,
       label: "Filling rate",
       filePath: "filling_rate",
       unit: "%",

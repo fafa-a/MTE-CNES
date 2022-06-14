@@ -1,5 +1,5 @@
 import { config } from "../../config"
-export default function useChartHook(chartData, chartAttribute) {
+export default function useChartHook(chartData, chartAttribute, lakeName) {
   const [dataSets, setDataSets] = useState([])
 
   useEffect(() => {
@@ -24,9 +24,14 @@ export default function useChartHook(chartData, chartAttribute) {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
+      title: {
+        display: true,
+        text: lakeName || "",
+        position: "top",
+      },
       tooltip: {
         callbacks: {
-          label: function (context) {
+          label(context) {
             const label = context.dataset.label || ""
 
             const labelStartWith = label
@@ -88,7 +93,6 @@ export default function useChartHook(chartData, chartAttribute) {
         },
       },
     },
-    title: { display: true, text: "My Chart" },
   }
 
   const setDataLines = item => {
@@ -96,14 +100,24 @@ export default function useChartHook(chartData, chartAttribute) {
     const value = item
       ?.filter(el => !isNaN(el.value) && el.date !== "" && el.value !== "0")
       .map(el => el.value)
-    const { label, unit, borderColor, backgroundColor, tension, pointRadius } =
-      config.attributes[chartAttribute]
+    const {
+      label,
+      unit,
+      borderColor,
+      borderWidth,
+      backgroundColor,
+      pointBackgroundColor,
+      tension,
+      pointRadius,
+    } = config.attributes[chartAttribute]
 
     const data = {
       label: `${label} ${unit}`,
       data: value.map(el => handleValue(el, unit)),
       borderColor,
       backgroundColor,
+      borderWidth,
+      pointBackgroundColor,
       tension,
       pointRadius,
     }
