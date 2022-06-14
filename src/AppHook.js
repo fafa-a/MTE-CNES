@@ -17,6 +17,8 @@ export function useAppHook() {
   const [observationType, setObservationType] = useState(null)
   const [duration, setDuration] = useState(null)
   const [idSwot, setIdSwot] = useState(null)
+  const [lakeName, setLakeName] = useState(null)
+
   const [chartData, setChartData] = useState([])
 
   useEffect(() => {
@@ -56,9 +58,10 @@ export function useAppHook() {
     [attribute, observationType, duration]
   )
 
-  const handleIdSwot = useCallback(
-    id => {
+  const handleIdName = useCallback(
+    (id, name) => {
       setIdSwot(id)
+      setLakeName(name)
     },
     [idSwot]
   )
@@ -85,5 +88,11 @@ export function useAppHook() {
     }
   }
 
-  return { handleCheckboxChange, handleIdSwot, chartData, chartAttribute }
+  return {
+    handleCheckboxChange,
+    handleIdName,
+    chartData,
+    chartAttribute,
+    lakeName,
+  }
 }

@@ -8,9 +8,9 @@ export default function usePolygonLayerHook({ data, handleChange }) {
     map.setView(coord[0], coord[1])
   })
 
-  const getIdSwot = useCallback(
-    id => {
-      handleChange(id)
+  const getIdName = useCallback(
+    (id, name) => {
+      handleChange(id, name)
     },
     [handleChange]
   )
@@ -18,6 +18,6 @@ export default function usePolygonLayerHook({ data, handleChange }) {
   return {
     centerPolygon,
     country: COUNTRY,
-    getIdSwot,
+    getIdName,
   }
 }
