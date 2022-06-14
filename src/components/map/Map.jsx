@@ -5,7 +5,7 @@ import { MarkerLayerWithTooltipCluster } from "../../layers/marker-layer-tooltip
 import { PolygonLayer } from "../../layers/polygon-layer/PolygonLayer"
 
 const files = import.meta.globEager("/src/data/geojson/*.geojson")
-const dataGeojson = Object.entries(files).map(([filepath, data]) => data)
+const dataGeojson = Object.entries(files).map(([, data]) => data)
 
 const StyledMapContainer = styled(MapContainer, {
   width: "100vw",
