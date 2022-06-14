@@ -10,7 +10,7 @@ import "leaflet.markercluster/dist/MarkerCluster.Default.css"
 
 const StyledContainer = styled("div", {
   display: "flex",
-  height: "45vh",
+  height: "50vh",
   width: "100vw",
 })
 

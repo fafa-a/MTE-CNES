@@ -9,7 +9,7 @@ const dataGeojson = Object.entries(files).map(([filepath, data]) => data)
 
 const StyledMapContainer = styled(MapContainer, {
   width: "100vw",
-  height: "55vh",
+  height: "50vh",
 })
 
 export const Map = ({ handleChange }) => {
