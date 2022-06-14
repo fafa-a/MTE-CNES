@@ -10,6 +10,7 @@ export const PolygonLayer = ({ data, handleChange }) => {
     handleChange,
   })
 
+
   useEffect(() => {
     setLayer(
       data.features.map(feature => {
@@ -37,7 +38,7 @@ export const PolygonLayer = ({ data, handleChange }) => {
         )
       })
     )
-  }, [data])
+  }, [])
 
   return (
     <LayersControl.Overlay checked name={`${country} lakes polygons`}>
