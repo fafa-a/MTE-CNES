@@ -2,15 +2,17 @@ import { config } from "./config"
 import { useState } from "react"
 import { useEffect } from "react"
 import { useCallback } from "react"
+
 import { dsv } from "d3"
 
 const attributes = Object.keys(config.attributes)
+
 const observationTypes = Object.keys(config.observationTypes)
 const durations = Object.keys(config.duration)
 
 export function useAppHook() {
-  const [fileURL, setFileURL] = useState(null)
-  const [attribute, setAttribute] = useState(null)
+  const [fileURL, setFileURL] = useState([])
+  const [attribute, setAttribute] = useState([])
   const [chartAttribute, setChartAttribute] = useState(null)
   const [observationType, setObservationType] = useState(null)
   const [duration, setDuration] = useState(null)
@@ -18,27 +20,29 @@ export function useAppHook() {
   const [chartData, setChartData] = useState([])
 
   useEffect(() => {
-    if (attribute && observationType && duration && idSwot) {
-      handleFileURL()
+    if (observationType && duration && idSwot && attribute) {
+      for (const attr of attribute) {
+        console.log({ attr })
+        handleFileURL(attr)
+      }
     }
   }, [attribute, observationType, duration, idSwot])
 
   useEffect(() => {
-    if (fileURL) {
-      handleChartData()
+    console.log({ fileURL })
+    for (const url of fileURL) {
+      handleChartData(url)
     }
   }, [fileURL])
-
-  useEffect(() => {
-    console.log(chartData)
-  }, [chartData])
 
   const handleCheckboxChange = useCallback(
     id => {
       if (attributes.includes(id)) {
         const { filePath } = config.attributes[id]
-        setAttribute(filePath)
-        setChartAttribute(id)
+        if (!attribute.includes(filePath)) {
+          setAttribute([...attribute, filePath])
+          setChartAttribute(id)
+        }
       }
       if (observationTypes.includes(id)) {
         const { abbr } = config.observationTypes[id]
@@ -59,15 +63,26 @@ export function useAppHook() {
     [idSwot]
   )
 
-  const handleFileURL = () => {
-    setFileURL(
-      `${config.baseDir}${idSwot}/${observationType}${duration}/${idSwot}${config.delimitter}${attribute}${config.delimitter}${observationType}${duration}.csv`
-    )
+  const handleFileURL = attr => {
+    const url = `${config.baseDir}${idSwot}/${observationType}${duration}/${idSwot}${config.delimitter}${attr}${config.delimitter}${observationType}${duration}.csv`
+    if (!fileURL.includes(url)) {
+      setFileURL([...fileURL, url])
+      console.log({ fileURL })
+    }
   }
 
-  const handleChartData = async () => {
-    const data = await dsv(";", fileURL)
-    setChartData([...chartData, data])
+  const handleChartData = async url => {
+    const data = await dsv(";", url)
+
+    const isDataInChartdata = chartData.some(item => {
+      if (JSON.stringify(item) === JSON.stringify(data)) {
+        return true
+      }
+    })
+
+    if (!isDataInChartdata) {
+      setChartData([...chartData, data])
+    }
   }
 
   return { handleCheckboxChange, handleIdSwot, chartData, chartAttribute }
