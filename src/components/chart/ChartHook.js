@@ -3,8 +3,10 @@ export default function useChartHook(chartData, chartAttribute) {
   const [dataSets, setDataSets] = useState([])
 
   useEffect(() => {
-    for (const item of chartData) {
-      setDataLines(item)
+    if (chartData && chartAttribute) {
+      for (const item of chartData) {
+        setDataLines(item)
+      }
     }
   }, [chartData])
 
