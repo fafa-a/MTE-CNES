@@ -5,6 +5,8 @@ export const config = {
     fillingRate: {
       borderColor: "rgb(255, 99, 132)",
       backgroundColor: "rgba(255, 99, 132, 0.5)",
+      tension: 0.4,
+      pointRadius: 0,
       label: "Filling rate",
       filePath: "filling_rate",
       unit: "%",
@@ -12,6 +14,9 @@ export const config = {
     surface: {
       borderColor: "rgb(53, 162, 235)",
       backgroundColor: "rgba(53, 162, 235, 0.5)",
+      tension: 0.4,
+      pointRadius: 0,
+      filePath: "surface",
       label: "Surface",
       filePath: "surface",
       unit: "ha",
@@ -19,6 +24,8 @@ export const config = {
     volume: {
       borderColor: "rgb(127, 255, 0)",
       backgroundColor: "rgba(127, 255, 0, 0.5)",
+      tension: 0.4,
+      pointRadius: 0,
       label: "Volume",
       filePath: "volume",
       unit: "hm³",

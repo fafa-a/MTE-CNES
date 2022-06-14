@@ -46,7 +46,7 @@ export default function useChartHook(chartData, chartAttribute) {
               else if (labelStartWith === "surface")
                 return `${labelWithoutExtension} : ${context.parsed.y.toFixed(
                   3
-                )} hm²`
+                )} ha`
               else if (labelStartWith === "volume")
                 return `${labelWithoutExtension} : ${context.parsed.y.toFixed(
                   3
@@ -96,7 +96,7 @@ export default function useChartHook(chartData, chartAttribute) {
     const value = item
       ?.filter(el => !isNaN(el.value) && el.date !== "" && el.value !== "0")
       .map(el => el.value)
-    const { label, unit, borderColor, backgroundColor } =
+    const { label, unit, borderColor, backgroundColor, tension, pointRadius } =
       config.attributes[chartAttribute]
 
     const data = {
@@ -104,6 +104,8 @@ export default function useChartHook(chartData, chartAttribute) {
       data: value.map(el => handleValue(el, unit)),
       borderColor,
       backgroundColor,
+      tension,
+      pointRadius,
     }
     setDataSets([...dataSets, data])
   }
