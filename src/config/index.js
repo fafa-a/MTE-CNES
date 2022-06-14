@@ -34,4 +34,14 @@ export const config = {
       label: "Radar",
     },
   },
+  duration: {
+    day: {
+      abbr: "1",
+      label: "1 day",
+    },
+    period: {
+      abbr: "2",
+      label: "10 days",
+    },
+  },
 }
