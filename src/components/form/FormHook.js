@@ -25,5 +25,17 @@ export default function useFormHook() {
     }
   )
 
-  return { dataTypesValues, observationTypesValues }
+  const durationValues = Object.entries(config.duration).map(
+    ([duration, properties]) => {
+      const { abbr, label } = properties
+      return {
+        id: duration,
+        abbr,
+        label,
+        active: false,
+      }
+    }
+  )
+
+  return { dataTypesValues, observationTypesValues, durationValues }
 }

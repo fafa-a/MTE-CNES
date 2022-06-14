@@ -14,7 +14,7 @@ const StyledDiv = styled("div", {
   marginBottom: theme.space.base,
 })
 
-const StyledObsCheckboxDiv = styled("div", {
+const StyledFlexRowDiv = styled("div", {
   display: "flex",
   justifyContent: "space-around",
 })
@@ -25,12 +25,13 @@ const StyledH3 = styled("h3", {
 })
 
 export const Form = ({ handleChange }) => {
-  const { dataTypesValues, observationTypesValues } = useFormHook()
+  const { dataTypesValues, observationTypesValues, durationValues } =
+    useFormHook()
   return (
     <StyledContainer>
       <StyledDiv>
         <StyledH3>Observation types</StyledH3>
-        <StyledObsCheckboxDiv>
+        <StyledFlexRowDiv>
           {observationTypesValues.map(({ id, label, value, abbr }) => (
             <Checkbox
               key={id}
@@ -41,7 +42,21 @@ export const Form = ({ handleChange }) => {
               handleChange={handleChange}
             />
           ))}
-        </StyledObsCheckboxDiv>
+        </StyledFlexRowDiv>
+      </StyledDiv>
+      <StyledDiv>
+        <StyledH3>Observation periods</StyledH3>
+        <StyledFlexRowDiv>
+          {durationValues.map(({ id, label, value }) => (
+            <Checkbox
+              key={id}
+              id={id}
+              label={label}
+              value={value}
+              handleChange={handleChange}
+            />
+          ))}
+        </StyledFlexRowDiv>
       </StyledDiv>
       <StyledDiv>
         <StyledH3>Attributes</StyledH3>
