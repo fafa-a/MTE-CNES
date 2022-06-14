@@ -3,7 +3,8 @@ import { Checkbox } from "../checkbox/Checkbox"
 import { styled, theme } from "../../../stitches.config"
 
 const StyledContainer = styled("div", {
-  backgroundColor: "#f5f5",
+  backgroundColor: "#f1f1f1",
+  borderRight: "1px solid #ccc",
   display: "flex",
   flexDirection: "column",
   height: "100%",
