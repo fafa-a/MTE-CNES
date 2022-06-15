@@ -1,7 +1,6 @@
 import { LayersControl, MapContainer, TileLayer } from "react-leaflet"
 import { styled } from "@stitches/react"
-import { MarkerLayer } from "../../layers/marker-layer/MarkerLayer"
-import { MarkerLayerWithTooltipCluster } from "../../layers/marker-layer-tooltip-cluster/MarkerLayerWithTooltipCluster"
+import { MarkerLayerCluster } from "../../layers/marker-layer-cluster/MarkerLayerCluster"
 import { PolygonLayer } from "../../layers/polygon-layer/PolygonLayer"
 
 const files = import.meta.globEager("/src/data/geojson/*.geojson")
@@ -34,9 +33,8 @@ export const Map = ({ handleChange }) => {
         </LayersControl.BaseLayer>
         {dataGeojson.map((data, index) => (
           <div key={index.toString()}>
-            <MarkerLayer data={data} />
             <PolygonLayer data={data} handleChange={handleChange} />
-            <MarkerLayerWithTooltipCluster data={data} />
+            <MarkerLayerCluster data={data} />
           </div>
         ))}
       </LayersControl>

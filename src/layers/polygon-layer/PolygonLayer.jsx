@@ -1,15 +1,14 @@
 import usePolygonLayerHook from "./PolygonLayerHook"
-import { LayerGroup, LayersControl, Polygon, Tooltip } from "react-leaflet"
+import { LayerGroup, Polygon, Tooltip } from "react-leaflet"
 import { v4 as uuid } from "@lukeed/uuid"
-import { useState,useEffect } from "react"
+import { useState, useEffect } from "react"
 
 export const PolygonLayer = ({ data, handleChange }) => {
   const [layer, setLayer] = useState(null)
-  const { centerPolygon, country, getIdName } = usePolygonLayerHook({
+  const { centerPolygon, getIdName } = usePolygonLayerHook({
     data,
     handleChange,
   })
-
 
   useEffect(() => {
     setLayer(
@@ -40,9 +39,5 @@ export const PolygonLayer = ({ data, handleChange }) => {
     )
   }, [])
 
-  return (
-    <LayersControl.Overlay checked name={`${country} lakes polygons`}>
-      <LayerGroup>{layer}</LayerGroup>
-    </LayersControl.Overlay>
-  )
+  return <LayerGroup>{layer}</LayerGroup>
 }
