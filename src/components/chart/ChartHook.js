@@ -26,14 +26,19 @@ export default function useChartHook(chartData, chartAttribute, lakeName) {
     plugins: {
       title: {
         display: true,
-        text: lakeName || "",
+        text: lakeName ? `${lakeName}'s observations` : "",
         position: "top",
+        font: {
+          size: 16,
+        },
+        padding: {
+          top: 10,
+        },
       },
       tooltip: {
         callbacks: {
           label(context) {
             const label = context.dataset.label || ""
-
             const labelStartWith = label
               .slice(0, label.indexOf(" "))
               .toLowerCase()
@@ -91,6 +96,11 @@ export default function useChartHook(chartData, chartAttribute, lakeName) {
         limits: {
           y: { min: 0, max: "original" },
         },
+      },
+    },
+    scales: {
+      y: {
+        min: 0,
       },
     },
   }
