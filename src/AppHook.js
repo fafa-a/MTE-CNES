@@ -24,14 +24,12 @@ export function useAppHook() {
   useEffect(() => {
     if (observationType && duration && idSwot && attribute) {
       for (const attr of attribute) {
-        console.log({ attr })
         handleFileURL(attr)
       }
     }
   }, [attribute, observationType, duration, idSwot])
 
   useEffect(() => {
-    console.log({ fileURL })
     for (const url of fileURL) {
       handleChartData(url)
     }
@@ -70,7 +68,6 @@ export function useAppHook() {
     const url = `${config.baseDir}${idSwot}/${observationType}${duration}/${idSwot}${config.delimitter}${attr}${config.delimitter}${observationType}${duration}.csv`
     if (!fileURL.includes(url)) {
       setFileURL([...fileURL, url])
-      console.log({ fileURL })
     }
   }
 
@@ -87,10 +84,33 @@ export function useAppHook() {
       setChartData([...chartData, data])
     }
   }
+  useEffect(() => {
+    console.log({
+      chartData,
+      fileURL,
+      attribute,
+      observationType,
+      duration,
+    })
+  }, [chartData, fileURL, attribute, observationType, duration])
+  const handleButtonReset = useCallback(type => {
+    console.log("app hook", type)
+    if (type === "reset") {
+      setAttribute([])
+      setFileURL([])
+      setChartAttribute(null)
+      setObservationType(null)
+      setDuration(null)
+      setIdSwot(null)
+      setLakeName(null)
+      setChartData([])
+    }
+  })
 
   return {
     handleCheckboxChange,
     handleIdName,
+    handleButtonReset,
     chartData,
     chartAttribute,
     lakeName,

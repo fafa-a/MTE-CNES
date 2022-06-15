@@ -1,6 +1,7 @@
 import { config } from "../../config"
 
 export default function useFormHook() {
+
   const dataTypesValues = Object.entries(config.attributes).map(
     ([attributes, properties]) => {
       const { label, filePath } = properties
@@ -37,5 +38,9 @@ export default function useFormHook() {
     }
   )
 
-  return { dataTypesValues, observationTypesValues, durationValues }
+  return {
+    dataTypesValues,
+    observationTypesValues,
+    durationValues,
+  }
 }

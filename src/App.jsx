@@ -21,13 +21,17 @@ const App = () => {
     chartData,
     chartAttribute,
     lakeName,
+    handleButtonReset,
   } = useAppHook()
 
   return (
     <>
       <Map handleChange={handleIdName} />
       <StyledContainer>
-        <Form handleChange={handleCheckboxChange} />
+        <Form
+          handleChange={handleCheckboxChange}
+          handleReset={handleButtonReset}
+        />
         <Chart
           chartData={chartData}
           chartAttribute={chartAttribute}
