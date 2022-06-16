@@ -65,7 +65,7 @@ export function useAppHook() {
   )
 
   const handleFileURL = attr => {
-    const url = `${config.baseDir}${idSwot}/${observationType}${duration}/${idSwot}${config.delimitter}${attr}${config.delimitter}${observationType}${duration}.csv`
+    const url = `${config.baseDir}${idSwot}/${idSwot}${config.delimitter}${attr}${config.delimitter}${observationType}${duration}.csv`
     if (!fileURL.includes(url)) {
       setFileURL([...fileURL, url])
     }
