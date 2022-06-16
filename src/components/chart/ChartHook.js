@@ -1,6 +1,11 @@
 import { config } from "../../config"
 export default function useChartHook(chartData, chartAttribute, lakeName) {
+
   const [dataSets, setDataSets] = useState([])
+
+  useEffect(() => {
+    console.log("charts", chartData)
+  }, [chartData])
 
   useEffect(() => {
     if (chartData && chartAttribute) {

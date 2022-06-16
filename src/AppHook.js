@@ -14,8 +14,8 @@ export function useAppHook() {
   const [fileURL, setFileURL] = useState([])
   const [attribute, setAttribute] = useState([])
   const [chartAttribute, setChartAttribute] = useState(null)
-  const [observationType, setObservationType] = useState(null)
-  const [duration, setDuration] = useState(null)
+  const [observationType, setObservationType] = useState([])
+  const [duration, setDuration] = useState("")
   const [idSwot, setIdSwot] = useState(null)
   const [lakeName, setLakeName] = useState(null)
 
@@ -28,9 +28,25 @@ export function useAppHook() {
   }, [attribute, observationType, duration, idSwot])
 
   useEffect(() => {
+    if (!idSwot) return
+    if (
+      attribute.length === 0 &&
+      observationType.length === 0 &&
+      duration === ""
+    ) {
+      setAttribute(["filling_rate"])
+      setChartAttribute("fillingRate")
+      setObservationType(["MO", "MR"])
+      setDuration("2")
+    }
+    handleFileURL(attribute)
+  }, [idSwot])
+
+  useEffect(() => {
     for (const url of fileURL) {
       handleChartData(url)
     }
+    handleButtonReset()
   }, [fileURL])
 
   const handleCheckboxChange = useCallback(
@@ -42,7 +58,7 @@ export function useAppHook() {
       }
       if (observationTypes.includes(id)) {
         const { abbr } = config.observationTypes[id]
-        setObservationType(abbr)
+        setObservationType([...observationType, abbr])
       }
       if (durations.includes(id)) {
         const { abbr } = config.duration[id]
@@ -61,10 +77,12 @@ export function useAppHook() {
   )
 
   const handleFileURL = attr => {
-    const url = `${config.baseDir}${idSwot}/${idSwot}${config.delimitter}${attr}${config.delimitter}${observationType}${duration}.csv`
-    if (!fileURL.includes(url)) {
-      setFileURL([...fileURL, url])
+    const urlArrTmp = []
+    for (const obs of observationType) {
+      const url = `${config.baseDir}${idSwot}/${idSwot}${config.delimitter}${attr}${config.delimitter}${obs}${duration}.csv`
+      urlArrTmp.push(url)
     }
+    setFileURL(urlArrTmp)
   }
 
   const handleChartData = async url => {
@@ -80,18 +98,17 @@ export function useAppHook() {
       setChartData([...chartData, data])
     }
   }
+
   useEffect(() => {
     console.log({
       chartData,
-      fileURL,
-      attribute,
-      observationType,
-      duration,
+      chartAttribute,
     })
-  }, [chartData, fileURL, attribute, observationType, duration])
+  }, [chartData])
+
   const handleButtonReset = useCallback(type => {
-    console.log("app hook", type)
     if (type === "reset") {
+      console.log("reset")
       setAttribute([])
       setFileURL([])
       setChartAttribute(null)

@@ -25,11 +25,13 @@ ChartJS.register(
   Legend,
   zoomPlugin
 )
+
 const StyledDiv = styled("div", {
   display: "flex",
   height: "100%",
   width: "100%",
 })
+
 export const Chart = ({ chartData, chartAttribute, lakeName }) => {
   const { data, options } = useChartHook(chartData, chartAttribute, lakeName)
 
