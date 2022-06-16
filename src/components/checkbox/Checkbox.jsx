@@ -12,7 +12,7 @@ export const Checkbox = props => {
   const { id, label, value } = props
   return (
     <div>
-      <input type="checkbox" id={id} checked={value} onChange={onChange} />
+      <input type="checkbox" id={id} onChange={onChange} />
       <StyledLabel htmlFor={id}>{label}</StyledLabel>
     </div>
   )
