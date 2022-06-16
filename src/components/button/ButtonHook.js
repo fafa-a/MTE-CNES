@@ -1,11 +1,6 @@
-export default function useButtonHook({
-  type,
-  handleAction,
-  handleCheckboxValue,
-}) {
+export default function useButtonHook({ type, handleAction }) {
   const onClick = useCallback(() => {
     handleAction(type)
-    handleCheckboxValue(false)
   }, [handleAction, type])
   return { onClick }
 }
