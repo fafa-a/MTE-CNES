@@ -1,6 +1,7 @@
 import useFormHook from "./FormHook"
 import { Checkbox } from "../checkbox/Checkbox"
 import { Button } from "../button/Button"
+import { Select } from "../select/Select"
 import { styled, theme } from "../../../stitches.config"
 
 const StyledContainer = styled("div", {
@@ -9,8 +10,7 @@ const StyledContainer = styled("div", {
   display: "flex",
   flexDirection: "column",
   height: "100%",
-  padding: "0.5rem",
-  width: "15%",
+  padding: theme.space.sm,
 })
 const StyledDiv = styled("div", {
   marginBottom: theme.space.base,
@@ -63,16 +63,11 @@ export const Form = ({ handleChange, handleReset }) => {
         </StyledDiv>
         <StyledDiv>
           <StyledH3>Attributes</StyledH3>
-          {dataTypesValues.map(({ id, label, value, filePath }) => (
-            <Checkbox
-              key={id}
-              id={id}
-              label={label}
-              value={value}
-              filePath={filePath}
-              handleChange={handleChange}
-            />
-          ))}
+          <Select
+            data={dataTypesValues}
+            handleChange={handleChange}
+            id={"attributes"}
+          />
         </StyledDiv>
         <Button type={"reset"} value={"reset"} handleAction={handleReset} />
       </form>

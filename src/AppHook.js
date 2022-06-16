@@ -23,9 +23,7 @@ export function useAppHook() {
 
   useEffect(() => {
     if (observationType && duration && idSwot && attribute) {
-      for (const attr of attribute) {
-        handleFileURL(attr)
-      }
+      handleFileURL(attribute)
     }
   }, [attribute, observationType, duration, idSwot])
 
@@ -39,10 +37,8 @@ export function useAppHook() {
     id => {
       if (attributes.includes(id)) {
         const { filePath } = config.attributes[id]
-        if (!attribute.includes(filePath)) {
-          setAttribute([...attribute, filePath])
-          setChartAttribute(id)
-        }
+        setAttribute(filePath)
+        setChartAttribute(id)
       }
       if (observationTypes.includes(id)) {
         const { abbr } = config.observationTypes[id]
