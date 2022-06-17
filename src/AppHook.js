@@ -34,7 +34,7 @@ export function useAppHook() {
       observationType.length === 0 &&
       duration === ""
     ) {
-      setAttribute(["filling_rate"])
+      setAttribute(["filling_rate_raw"])
       setChartAttribute("fillingRate")
       setObservationType(["MO", "MR"])
       setDuration("2")
