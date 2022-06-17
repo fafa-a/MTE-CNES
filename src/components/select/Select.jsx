@@ -1,5 +1,5 @@
 import useSelectHook from "./SelectHook"
-import { Option } from "../select-option/Option"
+import { Option } from "./select-option/Option"
 import { styled, theme } from "../../../stitches.config"
 
 const StyledSelect = styled("select", {

@@ -1,4 +1,4 @@
-import { styled, theme } from "../../../stitches.config"
+import { styled, theme } from "../../../../stitches.config"
 
 const StyledOption = styled("option", {
   fontFamily: "sans-serif",
