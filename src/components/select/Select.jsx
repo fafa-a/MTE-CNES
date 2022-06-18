@@ -12,10 +12,11 @@ const StyledOption = styled("option", {
   fontSize: theme.fontSizes.base,
 })
 export const Select = ({ data, handleChange, id }) => {
-  const { onChange } = useSelectHook(handleChange, id)
+  const { onChange, value } = useSelectHook({ handleChange })
+
   return (
-    <StyledSelect id={id} onChange={onChange}>
-      <StyledOption value="">Please choose an option</StyledOption>
+    <StyledSelect id={id} onChange={onChange} value={value}>
+      <StyledOption value="choice">Please choose an option</StyledOption>
       {data.map(({ id, label, filePath }) => (
         <Option key={id} id={id} value={filePath} label={label} />
       ))}
