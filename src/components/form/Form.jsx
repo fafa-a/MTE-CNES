@@ -1,8 +1,8 @@
 import useFormHook from "./FormHook"
 import { Checkbox } from "../checkbox/Checkbox"
 import { Button } from "../button/Button"
-import { Select } from "../select/Select"
-import { styled, theme } from "../../../stitches.config"
+import { Select } from "@components/select/Select"
+import { styled, theme } from "@/stitches.config"
 
 const StyledContainer = styled("div", {
   backgroundColor: "#f1f1f1",
@@ -27,7 +27,7 @@ const StyledH3 = styled("h3", {
 })
 
 export const Form = ({ handleChange, handleReset }) => {
-  const { dataTypesValues, observationTypesValues, durationValues } =
+  const { dataTypesValues, observationTypesValues, durationValues, form } =
     useFormHook()
   return (
     <StyledContainer>
@@ -35,27 +35,32 @@ export const Form = ({ handleChange, handleReset }) => {
         <StyledDiv>
           <StyledH3>Observation types</StyledH3>
           <StyledFlexRowDiv>
-            {observationTypesValues.map(({ id, label, value, abbr }) => (
-              <Checkbox
-                key={id}
-                id={id}
-                label={label}
-                value={value}
-                abbr={abbr}
-                handleChange={handleChange}
-              />
-            ))}
+            {observationTypesValues.map(
+              ({ id, label, abbr, actionReducers }) => (
+                <Checkbox
+                  actionReducers={actionReducers}
+                  key={id}
+                  id={id}
+                  label={label}
+                  abbr={abbr}
+                  value={form.observationTypes.includes(abbr)}
+                  handleChange={handleChange}
+                />
+              )
+            )}
           </StyledFlexRowDiv>
         </StyledDiv>
         <StyledDiv>
           <StyledH3>Observation periods</StyledH3>
           <StyledFlexRowDiv>
-            {durationValues.map(({ id, label, value }) => (
+            {durationValues.map(({ id, label, abbr, actionReducers }) => (
               <Checkbox
+                actionReducers={actionReducers}
                 key={id}
                 id={id}
                 label={label}
-                value={value}
+                abbr={abbr}
+                value={form.observationDurations.includes(abbr)}
                 handleChange={handleChange}
               />
             ))}

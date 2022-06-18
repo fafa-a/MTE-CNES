@@ -12,6 +12,7 @@ export const config = {
       label: "Filling rate",
       filePath: "filling_rate_raw",
       unit: "%",
+      actionReducers: "setAttributes",
     },
     surface: {
       borderColor: "rgb(53, 162, 235)",
@@ -24,6 +25,7 @@ export const config = {
       label: "Surface",
       filePath: "surface_raw",
       unit: "ha",
+      actionReducers: "setAttributes",
     },
     volume: {
       borderColor: "rgb(127, 255, 0)",
@@ -35,24 +37,29 @@ export const config = {
       label: "Volume",
       filePath: "volume_raw",
       unit: "hm³",
+      actionReducers: "setAttributes",
     },
   },
   observationTypes: {
     optic: {
+      actionReducers: "setObservationTypes",
       abbr: "MO",
       label: "Optic",
     },
     radar: {
+      actionReducers: "setObservationTypes",
       abbr: "MR",
       label: "Radar",
     },
   },
   duration: {
     day: {
+      actionReducers: "setObservationDurations",
       abbr: "1",
       label: "1 day",
     },
     period: {
+      actionReducers: "setObservationDurations",
       abbr: "2",
       label: "10 days",
     },

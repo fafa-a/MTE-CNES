@@ -1,4 +1,5 @@
-import { styled, theme } from "../../../../stitches.config"
+import { styled, theme } from "@/stitches.config"
+import { useSelector } from "react-redux"
 
 const StyledOption = styled("option", {
   fontFamily: "sans-serif",
@@ -6,5 +7,10 @@ const StyledOption = styled("option", {
 })
 
 export const Option = ({ label, value }) => {
-  return <StyledOption value={value}>{label}</StyledOption>
+  const form = useSelector(state => state.form)
+  return (
+    <StyledOption value={value} selected={form.attributes.includes(value)}>
+      {label}
+    </StyledOption>
+  )
 }

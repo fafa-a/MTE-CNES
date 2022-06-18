@@ -1,7 +1,7 @@
-import { config } from "../../config"
-
+import { config } from "@/config"
+import { useSelector } from "react-redux"
 export default function useFormHook() {
-
+  const form = useSelector(state => state.form)
   const dataTypesValues = Object.entries(config.attributes).map(
     ([attributes, properties]) => {
       const { label, filePath } = properties
@@ -9,7 +9,7 @@ export default function useFormHook() {
         id: attributes,
         filePath,
         label,
-        active: false,
+        actionReducers: "attributes",
       }
     }
   )
@@ -21,7 +21,7 @@ export default function useFormHook() {
         id: observationTypes,
         abbr,
         label,
-        active: false,
+        actionReducers: "observationTypes",
       }
     }
   )
@@ -33,7 +33,7 @@ export default function useFormHook() {
         id: duration,
         abbr,
         label,
-        active: false,
+        actionReducers: "duration",
       }
     }
   )
@@ -42,5 +42,6 @@ export default function useFormHook() {
     dataTypesValues,
     observationTypesValues,
     durationValues,
+    form,
   }
 }

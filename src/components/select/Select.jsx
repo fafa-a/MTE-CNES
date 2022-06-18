@@ -1,6 +1,6 @@
 import useSelectHook from "./SelectHook"
 import { Option } from "./select-option/Option"
-import { styled, theme } from "../../../stitches.config"
+import { styled, theme } from "@/stitches.config"
 
 const StyledSelect = styled("select", {
   fontFamily: "sans-serif",
@@ -17,7 +17,7 @@ export const Select = ({ data, handleChange, id }) => {
     <StyledSelect id={id} onChange={onChange}>
       <StyledOption value="">Please choose an option</StyledOption>
       {data.map(({ id, label, filePath }) => (
-        <Option key={id} id={id} value={id} label={label} />
+        <Option key={id} id={id} value={filePath} label={label} />
       ))}
     </StyledSelect>
   )
