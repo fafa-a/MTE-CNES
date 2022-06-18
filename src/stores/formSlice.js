@@ -1,9 +1,30 @@
-import { createSlice, createReducer } from "@reduxjs/toolkit"
+import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
-  observationTypes: ["MO", "MR"],
-  observationDurations: "2",
-  attributes: "filling_rate_raw",
+  observationTypes: {
+    optic: {
+      value: "MO",
+      active: true,
+    },
+    radar: {
+      value: "MR",
+      active: true,
+    },
+  },
+  observationDurations: {
+    day: {
+      value: "1",
+      active: false,
+    },
+    period: {
+      value: "2",
+      active: true,
+    },
+  },
+  attributes: {
+    value: "filling_rate_raw",
+    active: true,
+  },
 }
 
 export const formSlice = createSlice({
@@ -11,24 +32,24 @@ export const formSlice = createSlice({
   initialState,
   reducers: {
     setObservationTypes: (state, action) => {
-      if (state.observationTypes.includes(action.payload)) {
-        state.observationTypes = state.observationTypes.filter(
-          observationType => observationType !== action.payload
-        )
-      } else {
-        state.observationTypes = [...state.observationTypes, action.payload]
-      }
+      const { id, active } = action.payload
+      state.observationTypes[id].active = active
     },
     setObservationDuration: (state, action) => {
-      state.observationDurations = action.payload
+      const { id, active } = action.payload
+      state.observationDurations[id].active = active
     },
     setAttributes: (state, action) => {
-      state.attributes = action.payload
+      const { value } = action.payload
+      state.attributes.value = value
+      state.attributes.active = true
     },
-    cleanForm: state => {
-      state.observationTypes = []
-      state.observationDurations = ""
-      state.attributes = ""
+    cleanForm: (state, action) => {
+      state.observationTypes.optic.active = false
+      state.observationTypes.radar.active = false
+      state.observationDurations.day.active = false
+      state.observationDurations.period.active = false
+      state.attributes.value = ""
     },
   },
 })
