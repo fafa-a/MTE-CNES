@@ -1,6 +1,6 @@
 import useFormHook from "./FormHook"
-import { Checkbox } from "../checkbox/Checkbox"
-import { Button } from "../button/Button"
+import { Checkbox } from "@components/checkbox/Checkbox"
+import { Button } from "@components/button/Button"
 import { Select } from "@components/select/Select"
 import { styled, theme } from "@/stitches.config"
 
@@ -27,7 +27,7 @@ const StyledH3 = styled("h3", {
 })
 
 export const Form = ({ handleChange, handleReset }) => {
-  const { dataTypesValues, observationTypesValues, durationValues, form } =
+  const { dataTypesValues, observationTypesValues, durationValues } =
     useFormHook()
   return (
     <StyledContainer>
@@ -43,7 +43,7 @@ export const Form = ({ handleChange, handleReset }) => {
                   id={id}
                   label={label}
                   abbr={abbr}
-                  value={form.observationTypes.includes(abbr)}
+                  storesKey={"observationTypes"}
                   handleChange={handleChange}
                 />
               )
@@ -60,7 +60,7 @@ export const Form = ({ handleChange, handleReset }) => {
                 id={id}
                 label={label}
                 abbr={abbr}
-                value={form.observationDurations.includes(abbr)}
+                storesKey={"observationDurations"}
                 handleChange={handleChange}
               />
             ))}

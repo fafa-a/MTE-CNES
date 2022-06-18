@@ -2,6 +2,7 @@ import { config } from "@/config"
 import { useSelector } from "react-redux"
 export default function useFormHook() {
   const form = useSelector(state => state.form)
+
   const dataTypesValues = Object.entries(config.attributes).map(
     ([attributes, properties]) => {
       const { label, filePath } = properties
