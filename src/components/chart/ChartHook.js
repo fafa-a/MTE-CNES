@@ -1,4 +1,4 @@
-import { config } from "../../config"
+import { config } from "@/config"
 export default function useChartHook(chartData, chartAttribute, lakeName) {
 
   const [dataSets, setDataSets] = useState([])

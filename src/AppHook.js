@@ -1,7 +1,5 @@
-import { config } from "./config"
-import { useState } from "react"
-import { useEffect } from "react"
-import { useCallback } from "react"
+import { config } from "@/config"
+import { useSelector } from "react-redux"
 
 import { dsv } from "d3"
 
@@ -18,8 +16,12 @@ export function useAppHook() {
   const [duration, setDuration] = useState("")
   const [idSwot, setIdSwot] = useState(null)
   const [lakeName, setLakeName] = useState(null)
-
+  const form = useSelector(state => state.form)
   const [chartData, setChartData] = useState([])
+
+  useEffect(() => {
+    console.log({ form })
+  }, [form])
 
   useEffect(() => {
     if (observationType && duration && idSwot && attribute) {
@@ -98,13 +100,6 @@ export function useAppHook() {
       setChartData([...chartData, data])
     }
   }
-
-  useEffect(() => {
-    console.log({
-      chartData,
-      chartAttribute,
-    })
-  }, [chartData])
 
   const handleButtonReset = useCallback(type => {
     if (type === "reset") {

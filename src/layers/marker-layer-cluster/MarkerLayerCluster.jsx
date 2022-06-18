@@ -1,7 +1,7 @@
 import { Marker } from "react-leaflet"
 import MarkerClusterGroup from "react-leaflet-markercluster"
 import { v4 as uuid } from "@lukeed/uuid"
-import { noSizeIcon } from "../../icons/transparentIcon"
+import { noSizeIcon } from "@/icons/transparentIcon"
 
 /**
  * Component to diplay a marker cluster layer for world cities

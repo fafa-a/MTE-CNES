@@ -1,7 +1,7 @@
 import { LayersControl, MapContainer, TileLayer } from "react-leaflet"
 import { styled } from "@stitches/react"
-import { MarkerLayerCluster } from "../../layers/marker-layer-cluster/MarkerLayerCluster"
-import { PolygonLayer } from "../../layers/polygon-layer/PolygonLayer"
+import { MarkerLayerCluster } from "@layers/marker-layer-cluster/MarkerLayerCluster"
+import { PolygonLayer } from "@layers/polygon-layer/PolygonLayer"
 
 const files = import.meta.globEager("/src/data/geojson/*.geojson")
 const dataGeojson = Object.entries(files).map(([, data]) => data)

@@ -1,5 +1,5 @@
 import { Popup } from "react-leaflet"
-import { styled, theme } from "../../../stitches.config"
+import { styled, theme } from "@/stitches.config"
 
 const StyledParagraph = styled("p", {
   fontSize: theme.fontSizes.base,
