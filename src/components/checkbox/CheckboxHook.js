@@ -1,13 +1,20 @@
 import { useDispatch } from "react-redux"
 import { setObservationDuration, setObservationTypes } from "@stores/formSlice"
+import { useSelector } from "react-redux"
 
 export default function useCheckboxHook({
   handleChange,
   id,
-  abbr,
   actionReducers,
+  storesKey,
 }) {
   const dispatch = useDispatch()
+  const [isChecked, setIsChecked] = useState(null)
+  const { active } = useSelector(state => state.form[storesKey][id])
+
+  useEffect(() => {
+    setIsChecked(active)
+  }, [active])
 
   let actionType = ""
   switch (actionReducers) {
@@ -21,14 +28,17 @@ export default function useCheckboxHook({
       break
   }
 
-  const onChange = e => {
+  const onChange = useCallback(e => {
     dispatch({
       type: `${actionType}`,
-      payload: abbr,
+      payload: {
+        id,
+        active: e.target.checked,
+      },
     })
 
     handleChange(id)
-  }
+  })
 
-  return { onChange, actionReducers }
+  return { isChecked, onChange, actionReducers }
 }
