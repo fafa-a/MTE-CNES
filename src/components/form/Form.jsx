@@ -26,7 +26,7 @@ const StyledH3 = styled("h3", {
   marginBottom: theme.space.sm,
 })
 
-export const Form = ({ handleChange, handleReset }) => {
+export const Form = () => {
   const { dataTypesValues, observationTypesValues, durationValues } =
     useFormHook()
   return (
@@ -44,7 +44,6 @@ export const Form = ({ handleChange, handleReset }) => {
                   label={label}
                   abbr={abbr}
                   storesKey={"observationTypes"}
-                  handleChange={handleChange}
                 />
               )
             )}
@@ -61,20 +60,15 @@ export const Form = ({ handleChange, handleReset }) => {
                 label={label}
                 abbr={abbr}
                 storesKey={"observationDurations"}
-                handleChange={handleChange}
               />
             ))}
           </StyledFlexRowDiv>
         </StyledDiv>
         <StyledDiv>
           <StyledH3>Attributes</StyledH3>
-          <Select
-            data={dataTypesValues}
-            handleChange={handleChange}
-            id={"attributes"}
-          />
+          <Select data={dataTypesValues} id={"attributes"} />
         </StyledDiv>
-        <Button type={"reset"} value={"reset"} handleAction={handleReset} />
+        <Button type={"reset"} value={"reset"} />
       </form>
     </StyledContainer>
   )

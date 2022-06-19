@@ -27,7 +27,6 @@ export const PolygonLayer = ({ data, handleChange }) => {
             eventHandlers={{
               click: el => {
                 centerPolygon(el.target.options["data-coordinates"])
-                getIdName(ID_SWOT, DAM_NAME)
                 getLakeInfo(ID_SWOT, DAM_NAME, LAT_WW, LONG_WW, MAIN_USE)
               },
             }}

@@ -11,13 +11,6 @@ export default function usePolygonLayerHook({ data, handleChange }) {
     map.setView(coord[0], coord[1])
   })
 
-  const getIdName = useCallback(
-    (id, name) => {
-      handleChange(id, name)
-    },
-    [handleChange]
-  )
-
   const getLakeInfo = useCallback(
     (ID_SWOT, DAM_NAME, LAT_WW, LONG_WW, MAIN_USE) => {
       dispatch({
@@ -36,7 +29,6 @@ export default function usePolygonLayerHook({ data, handleChange }) {
   return {
     centerPolygon,
     country: COUNTRY,
-    getIdName,
     getLakeInfo,
   }
 }

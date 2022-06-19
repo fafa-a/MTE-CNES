@@ -4,8 +4,8 @@ const StyledButton = styled("button", {
   fontFamily: "sans-serif",
 })
 
-export const Button = ({ type, value, handleAction }) => {
-  const { onClick } = useButtonHook({ type, handleAction })
+export const Button = ({ type, value }) => {
+  const { onClick } = useButtonHook({ type })
 
   return (
     <StyledButton type={type} value={value} onClick={onClick}>
