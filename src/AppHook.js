@@ -17,11 +17,16 @@ export function useAppHook() {
   const [idSwot, setIdSwot] = useState(null)
   const [lakeName, setLakeName] = useState(null)
   const form = useSelector(state => state.form)
+  const lakes = useSelector(state => state.lakes)
   const [chartData, setChartData] = useState([])
 
   useEffect(() => {
     console.log({ form })
   }, [form])
+
+  useEffect(() => {
+    console.log({ lakes })
+  }, [lakes])
 
   useEffect(() => {
     if (observationType && duration && idSwot && attribute) {

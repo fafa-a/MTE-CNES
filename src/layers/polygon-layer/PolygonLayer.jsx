@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 
 export const PolygonLayer = ({ data, handleChange }) => {
   const [layer, setLayer] = useState(null)
-  const { centerPolygon, getIdName } = usePolygonLayerHook({
+  const { centerPolygon, getIdName, getLakeInfo } = usePolygonLayerHook({
     data,
     handleChange,
   })
@@ -13,7 +13,8 @@ export const PolygonLayer = ({ data, handleChange }) => {
   useEffect(() => {
     setLayer(
       data.features.map(feature => {
-        const { ID_SWOT, DAM_NAME, LONG_WW, LAT_WW } = feature.properties
+        const { ID_SWOT, DAM_NAME, LONG_WW, LAT_WW, MAIN_USE } =
+          feature.properties
         const { coordinates } = feature.geometry
         const reversedMultiPolygons = coordinates[0].map(polygon =>
           polygon.map(p => [p[1], p[0]])
@@ -27,6 +28,7 @@ export const PolygonLayer = ({ data, handleChange }) => {
               click: el => {
                 centerPolygon(el.target.options["data-coordinates"])
                 getIdName(ID_SWOT, DAM_NAME)
+                getLakeInfo(ID_SWOT, DAM_NAME, LAT_WW, LONG_WW, MAIN_USE)
               },
             }}
           >
