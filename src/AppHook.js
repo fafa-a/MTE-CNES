@@ -1,131 +1,73 @@
 import { config } from "@/config"
 import { useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
+import { addChartData } from "@stores/chartSlice"
 
 import { dsv } from "d3"
 
-const attributes = Object.keys(config.attributes)
-
-const observationTypes = Object.keys(config.observationTypes)
-const durations = Object.keys(config.duration)
+//const attributes = Object.keys(config.attributes)
+//const observationTypes = Object.keys(config.observationTypes)
+//const durations = Object.keys(config.duration)
 
 export function useAppHook() {
   const [fileURL, setFileURL] = useState([])
-  const [attribute, setAttribute] = useState([])
-  const [chartAttribute, setChartAttribute] = useState(null)
-  const [observationType, setObservationType] = useState([])
-  const [duration, setDuration] = useState("")
-  const [idSwot, setIdSwot] = useState(null)
-  const [lakeName, setLakeName] = useState(null)
   const form = useSelector(state => state.form)
   const lakes = useSelector(state => state.lakes)
-  const [chartData, setChartData] = useState([])
+  const chart = useSelector(state => state.chart)
+  const dispatch = useDispatch()
+  const { idSwot, name } = lakes.lake
+
+  const activeObsTypeName = Object.entries(form.observationTypes)
+    .filter(([key, value]) => value.active)
+    .map(([key, value]) => key)
+
+  const {
+    observationTypes,
+    observationDurations,
+    attributes: { value: attr },
+  } = form
 
   useEffect(() => {
-    console.log({ form })
-  }, [form])
-
-  useEffect(() => {
-    console.log({ lakes })
-  }, [lakes])
-
-  useEffect(() => {
-    if (observationType && duration && idSwot && attribute) {
-      handleFileURL(attribute)
+    if (idSwot !== "") {
+      handleFileURL(attr)
     }
-  }, [attribute, observationType, duration, idSwot])
-
-  useEffect(() => {
-    if (!idSwot) return
-    if (
-      attribute.length === 0 &&
-      observationType.length === 0 &&
-      duration === ""
-    ) {
-      setAttribute(["filling_rate_raw"])
-      setChartAttribute("fillingRate")
-      setObservationType(["MO", "MR"])
-      setDuration("2")
-    }
-    handleFileURL(attribute)
   }, [idSwot])
 
   useEffect(() => {
     for (const url of fileURL) {
       handleChartData(url)
     }
-    handleButtonReset()
   }, [fileURL])
-
-  const handleCheckboxChange = useCallback(
-    id => {
-      if (attributes.includes(id)) {
-        const { filePath } = config.attributes[id]
-        setAttribute(filePath)
-        setChartAttribute(id)
-      }
-      if (observationTypes.includes(id)) {
-        const { abbr } = config.observationTypes[id]
-        setObservationType([...observationType, abbr])
-      }
-      if (durations.includes(id)) {
-        const { abbr } = config.duration[id]
-        setDuration(abbr)
-      }
-    },
-    [attribute, observationType, duration]
-  )
-
-  const handleIdName = useCallback(
-    (id, name) => {
-      setIdSwot(id)
-      setLakeName(name)
-    },
-    [idSwot]
-  )
 
   const handleFileURL = attr => {
     const urlArrTmp = []
-    for (const obs of observationType) {
+    const activeObsType = Object.entries(observationTypes).filter(
+      ([, { active }]) => active
+    )
+    const activeObsDur = Object.entries(observationDurations).filter(
+      ([, { active }]) => active
+    )
+
+    const duration = activeObsDur.map(([, { value }]) => value)
+
+    for (let [, { value: obs }] of activeObsType) {
       const url = `${config.baseDir}${idSwot}/${idSwot}${config.delimitter}${attr}${config.delimitter}${obs}${duration}.csv`
       urlArrTmp.push(url)
     }
+
     setFileURL(urlArrTmp)
   }
 
   const handleChartData = async url => {
     const data = await dsv(";", url)
 
-    const isDataInChartdata = chartData.some(item => {
-      if (JSON.stringify(item) === JSON.stringify(data)) {
-        return true
-      }
+    dispatch({
+      type: `${addChartData}`,
+      payload: {
+        chartData: data,
+        lakeName: name,
+        observationType: activeObsTypeName,
+      },
     })
-
-    if (!isDataInChartdata) {
-      setChartData([...chartData, data])
-    }
-  }
-
-  const handleButtonReset = useCallback(type => {
-    if (type === "reset") {
-      console.log("reset")
-      setAttribute([])
-      setFileURL([])
-      setChartAttribute(null)
-      setObservationType(null)
-      setDuration(null)
-      setIdSwot(null)
-      setLakeName(null)
-      setChartData([])
-    }
-  })
-
-  return {
-    handleCheckboxChange,
-    handleIdName,
-    handleButtonReset,
-    chartData,
-    chartAttribute,
-    lakeName,
   }
 }

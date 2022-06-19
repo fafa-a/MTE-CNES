@@ -17,28 +17,13 @@ const StyledContainer = styled("div", {
 })
 
 const App = () => {
-  const {
-    handleCheckboxChange,
-    handleIdName,
-    chartData,
-    chartAttribute,
-    lakeName,
-    handleButtonReset,
-  } = useAppHook()
-
+  useAppHook()
   return (
     <>
-      <Map handleChange={handleIdName} />
+      <Map />
       <StyledContainer>
-        <Form
-          handleChange={handleCheckboxChange}
-          handleReset={handleButtonReset}
-        />
-        <Chart
-          chartData={chartData}
-          chartAttribute={chartAttribute}
-          lakeName={lakeName}
-        />
+        <Form />
+        <Chart />
       </StyledContainer>
     </>
   )

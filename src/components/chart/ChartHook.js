@@ -1,19 +1,24 @@
 import { config } from "@/config"
-export default function useChartHook(chartData, chartAttribute, lakeName) {
+import { useSelector } from "react-redux"
 
+export default function useChartHook() {
   const [dataSets, setDataSets] = useState([])
+  const [dates, setDates] = useState([])
+  const chart = useSelector(state => state.chart)
+  const { chartData, lakeName, observationType } = chart.chart
 
   useEffect(() => {
-    console.log("charts", chartData)
-  }, [chartData])
-
-  useEffect(() => {
-    if (chartData && chartAttribute) {
+    if (chartData.length > 0) {
       for (const item of chartData) {
         setDataLines(item)
+        setLabelsDate(item)
       }
     }
   }, [chartData])
+
+  useEffect(() => {
+    console.log({ dates })
+  }, [dates])
 
   const handleValue = (value, unit) => {
     if (unit === "hm³") {
@@ -31,7 +36,7 @@ export default function useChartHook(chartData, chartAttribute, lakeName) {
     plugins: {
       title: {
         display: true,
-        text: lakeName ? `${lakeName}'s observations` : "",
+        text: "Chart.js Time Scale",
         position: "top",
         font: {
           size: 16,
@@ -112,9 +117,11 @@ export default function useChartHook(chartData, chartAttribute, lakeName) {
 
   const setDataLines = item => {
     if (!item) return
-    const value = item
+
+    const value = item[0]
       ?.filter(el => !isNaN(el.value) && el.date !== "" && el.value !== "0")
       .map(el => el.value)
+
     const {
       label,
       unit,
@@ -124,10 +131,10 @@ export default function useChartHook(chartData, chartAttribute, lakeName) {
       pointBackgroundColor,
       tension,
       pointRadius,
-    } = config.attributes[chartAttribute]
+    } = config.attributes["fillingRate"]
 
     const data = {
-      label: `${label} ${unit}`,
+      label: `${lakeName} ${observationType}`,
       data: value.map(el => handleValue(el, unit)),
       borderColor,
       backgroundColor,
@@ -139,12 +146,22 @@ export default function useChartHook(chartData, chartAttribute, lakeName) {
     setDataSets([...dataSets, data])
   }
 
-  const data = {
-    labels: chartData[0]
+  const setLabelsDate = item => {
+    if (!item) return
+    const dateFiltered = item[0]
       ?.filter(el => !isNaN(el.value) && el.date !== "" && el.value !== "0")
-      .map(el => el.date),
+      .map(el => el.date)
+    // merge dates and datesFiltered
+    const uniqueDates = [...new Set([...dates, ...dateFiltered])]
+    setDates(uniqueDates)
+  }
+
+  const data = {
+    labels: dates,
     datasets: dataSets,
   }
+
+  console.log("data ===>", data)
   return {
     data,
     options,
