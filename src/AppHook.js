@@ -13,7 +13,6 @@ export function useAppHook() {
   const [fileURL, setFileURL] = useState([])
   const form = useSelector(state => state.form)
   const lakes = useSelector(state => state.lakes)
-  const chart = useSelector(state => state.chart)
   const dispatch = useDispatch()
   const { idSwot, name } = lakes.lake
 
