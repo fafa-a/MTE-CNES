@@ -8,8 +8,11 @@ import { dsv } from "d3"
 export function useAppHook() {
   const [fileURL, setFileURL] = useState([])
   const [dataCSV, setDataCSV] = useState([])
+  const [obsTypes, setObsTypes] = useState(["optic", "radar"])
   const form = useSelector(state => state.form)
   const lakes = useSelector(state => state.lakes)
+  const chart = useSelector(state => state.chart)
+
   const dispatch = useDispatch()
   const { idSwot, name } = lakes.lake
 
@@ -23,6 +26,8 @@ export function useAppHook() {
     attributes: { value: attr },
   } = form
 
+  const { chartData } = chart.chart
+
   useEffect(() => {
     if (idSwot !== "") {
       handleFileURL(attr)
@@ -31,8 +36,16 @@ export function useAppHook() {
 
   useEffect(async () => {
     const data = await Promise.resolve(handleCSVData())
-    const dataSorted = data.sort((a, b) => (a.length > b.length ? -1 : 1))
+    const dataSorted = [...data].sort((a, b) => (a.length > b.length ? -1 : 1))
+
+    if (JSON.stringify(data) !== JSON.stringify(dataSorted)) {
+      setObsTypes(["radar", "optic"])
+    }
+
     setDataCSV(dataSorted)
+    if (!JSON.stringify(chartData).includes(JSON.stringify(dataSorted))) {
+      setDataCSV(dataSorted)
+    }
   }, [fileURL])
 
   useEffect(() => {
@@ -63,6 +76,7 @@ export function useAppHook() {
       const url = `${config.baseDir}${idSwot}/${idSwot}${config.delimitter}${attr}${config.delimitter}${obs}${duration}.csv`
       urlArrTmp.push(url)
     }
+
     setFileURL(urlArrTmp)
   }
 
@@ -74,4 +88,5 @@ export function useAppHook() {
     }
     return data
   }
+  return { obsTypes }
 }

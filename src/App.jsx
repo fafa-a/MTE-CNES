@@ -17,13 +17,13 @@ const StyledContainer = styled("div", {
 })
 
 const App = () => {
-  useAppHook()
+  const { obsTypes } = useAppHook()
   return (
     <>
       <Map />
       <StyledContainer>
         <Form />
-        <Chart />
+        <Chart obsTypes={obsTypes} />
       </StyledContainer>
     </>
   )
