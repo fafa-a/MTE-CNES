@@ -4,19 +4,20 @@ import { useSelector } from "react-redux"
 export default function useChartHook(obsTypes) {
   const [dates, setDates] = useState([])
   const [dataSets, setDataSets] = useState([])
+  const [labelTitle, setLabelTitle] = useState([])
   const chart = useSelector(state => state.chart)
+  const form = useSelector(state => state.form)
   const { chartData, lakeName } = chart.chart
+  const { idConfig } = form.attributes
 
   useEffect(() => {
-    if (chartData.length > 0) {
-      const arr = []
-      chartData.forEach((item, index) => {
-        const data = setDataLines(item, obsTypes[index])
-        arr.push(data)
-        setLabelsDate(item)
-      }),
-        setDataSets(arr)
-    }
+    const arr = []
+    chartData.forEach((item, index) => {
+      const data = setDataLines(item, obsTypes[index], index)
+      arr.push(data)
+      setLabelsDate(item)
+    }),
+      setDataSets(arr)
   }, [chartData])
 
   const handleValue = (value, unit) => {
@@ -35,7 +36,7 @@ export default function useChartHook(obsTypes) {
     plugins: {
       title: {
         display: true,
-        text: "Chart.js Time Scale",
+        text: chartData.length ? `${lakeName} - ${labelTitle}` : "",
         position: "top",
         font: {
           size: 16,
@@ -44,37 +45,36 @@ export default function useChartHook(obsTypes) {
           top: 10,
         },
       },
-      tooltip: {
-        callbacks: {
-          label(context) {
-            const label = context.dataset.label || ""
-            const labelStartWith = label
-              .slice(0, label.indexOf(" "))
-              .toLowerCase()
+      // tooltip: {
+      //   callbacks: {
+      //     label(context) {
+      //       const label = context.dataset.label || ""
+      //       const labelStartWith = label
+      //         .slice(0, label.indexOf(" "))
+      //         .toLowerCase()
 
-            const labelWithoutExtension = label
-              .split(" ")
-              .slice(0, -1)
-              .join(" ")
-
-            if (context.parsed.y !== null) {
-              if (labelStartWith === "filling")
-                return `${labelWithoutExtension} : ${context.parsed.y.toFixed(
-                  3
-                )} %`
-              else if (labelStartWith === "surface")
-                return `${labelWithoutExtension} : ${context.parsed.y.toFixed(
-                  3
-                )} ha`
-              else if (labelStartWith === "volume")
-                return `${labelWithoutExtension} : ${context.parsed.y.toFixed(
-                  3
-                )} hm³`
-            }
-            return labelWithoutExtension
-          },
-        },
-      },
+      //       const labelWithoutExtension = label
+      //         .split(" ")
+      //         .slice(0, -1)
+      //         .join(" ")
+      //       if (context.parsed.y !== null) {
+      //         if (labelStartWith === "filling")
+      //           return `${labelWithoutExtension} : ${context.parsed.y.toFixed(
+      //             3
+      //           )} %`
+      //         else if (labelStartWith === "surface")
+      //           return `${labelWithoutExtension} : ${context.parsed.y.toFixed(
+      //             3
+      //           )} ha`
+      //         else if (labelStartWith === "volume")
+      //           return `${labelWithoutExtension} : ${context.parsed.y.toFixed(
+      //             3
+      //           )} hm³`
+      //       }
+      //       return labelWithoutExtension
+      //     },
+      //   },
+      // },
       legend: {
         position: "top",
         labels: { font: { size: 14 } },
@@ -114,21 +114,16 @@ export default function useChartHook(obsTypes) {
     },
   }
 
-  const setDataLines = (item, obsType) => {
+  const setDataLines = (item, obsType, index) => {
     if (!item) return
     const value = item
       ?.filter(el => !isNaN(el.value) && el.date !== "" && el.value !== "0")
       .map(el => el.value)
-    const {
-      label,
-      unit,
-      borderColor,
-      borderWidth,
-      backgroundColor,
-      pointBackgroundColor,
-      tension,
-      pointRadius,
-    } = config.attributes["fillingRate"]
+    const { label, unit, borderWidth, tension, pointRadius } =
+      config.attributes[idConfig]
+    setLabelTitle(label)
+    const { borderColor, backgroundColor, pointBackgroundColor } =
+      config.attributes[idConfig].style[index]
 
     return {
       label: `${lakeName} ${label} ${obsType}`,
