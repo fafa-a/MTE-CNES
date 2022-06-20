@@ -23,6 +23,7 @@ const initialState = {
   },
   attributes: {
     value: "filling_rate_raw",
+    idConfig: "fillingRate",
     active: true,
   },
 }
@@ -40,8 +41,9 @@ export const formSlice = createSlice({
       state.observationDurations[id].active = active
     },
     setAttributes: (state, action) => {
-      const { value } = action.payload
+      const { value, idConfig } = action.payload
       state.attributes.value = value
+      state.attributes.idConfig = idConfig
       state.attributes.active = true
     },
     cleanForm: (state, action) => {
