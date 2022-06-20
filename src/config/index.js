@@ -3,10 +3,19 @@ export const config = {
   delimitter: "_",
   attributes: {
     fillingRate: {
-      borderColor: "rgb(255, 99, 132)",
+      style: [
+        {
+          borderColor: "rgb(255, 0, 0)",
+          backgroundColor: "rgba(255, 0, 0, 0.5)",
+          pointBackgroundColor: "#760000",
+        },
+        {
+          borderColor: "rgb(255, 100, 0)",
+          backgroundColor: "rgba(255, 100, 0, 0.5)",
+          pointBackgroundColor: "#C43100",
+        },
+      ],
       borderWidth: 1.2,
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-      pointBackgroundColor: "#650011",
       tension: 0,
       pointRadius: 1.4,
       label: "Filling rate",
@@ -15,10 +24,19 @@ export const config = {
       actionReducers: "setAttributes",
     },
     surface: {
-      borderColor: "rgb(53, 162, 235)",
+      style: [
+        {
+          borderColor: "rgb(53, 162, 235)",
+          backgroundColor: "rgba(53, 162, 235, 0.5)",
+          pointBackgroundColor: "#000F45",
+        },
+        {
+          borderColor: "rgb(155, 100, 186)",
+          backgroundColor: "rgba(155, 100, 186, 0.5)",
+          pointBackgroundColor: "#65368C",
+        },
+      ],
       borderWidth: 1.2,
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-      pointBackgroundColor: "#000F45",
       tension: 0,
       pointRadius: 1.4,
       filePath: "surface",
@@ -28,10 +46,20 @@ export const config = {
       actionReducers: "setAttributes",
     },
     volume: {
-      borderColor: "rgb(127, 255, 0)",
+      style: [
+        {
+          borderColor: "rgb(127, 255, 0)",
+          backgroundColor: "rgba(127, 255, 0, 0.5)",
+          pointBackgroundColor: "#006900",
+        },
+        {
+          borderColor: "rgb(222, 237, 25)",
+          backgroundColor: "rgba(222, 237, 25, 0.5)",
+          pointBackgroundColor: "#465E00",
+        },
+      ],
+
       borderWidth: 1.2,
-      backgroundColor: "rgba(127, 255, 0, 0.5)",
-      pointBackgroundColor: "#006900",
       tension: 0,
       pointRadius: 1.4,
       label: "Volume",
