@@ -32,8 +32,8 @@ const StyledDiv = styled("div", {
   width: "100%",
 })
 
-export const Chart = () => {
-  const { data, options } = useChartHook()
+export const Chart = ({ obsTypes }) => {
+  const { data, options } = useChartHook(obsTypes)
   return (
     <StyledDiv>
       <Line options={options} data={data} />

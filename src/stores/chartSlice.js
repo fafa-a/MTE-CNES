@@ -13,7 +13,7 @@ export const chartSlice = createSlice({
   reducers: {
     addChartData: (state, action) => {
       const { chartData, lakeName, observationType } = action.payload
-      state.chart.chartData = [...state.chart.chartData, [chartData]]
+      state.chart.chartData = chartData
       state.chart.lakeName = lakeName
       state.chart.observationType = observationType
     },

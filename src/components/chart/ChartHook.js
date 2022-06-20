@@ -1,24 +1,23 @@
 import { config } from "@/config"
 import { useSelector } from "react-redux"
 
-export default function useChartHook() {
-  const [dataSets, setDataSets] = useState([])
+export default function useChartHook(obsTypes) {
   const [dates, setDates] = useState([])
+  const [dataSets, setDataSets] = useState([])
   const chart = useSelector(state => state.chart)
-  const { chartData, lakeName, observationType } = chart.chart
+  const { chartData, lakeName } = chart.chart
 
   useEffect(() => {
     if (chartData.length > 0) {
-      for (const item of chartData) {
-        setDataLines(item)
+      const arr = []
+      chartData.forEach((item, index) => {
+        const data = setDataLines(item, obsTypes[index])
+        arr.push(data)
         setLabelsDate(item)
-      }
+      }),
+        setDataSets(arr)
     }
   }, [chartData])
-
-  useEffect(() => {
-    console.log({ dates })
-  }, [dates])
 
   const handleValue = (value, unit) => {
     if (unit === "hm³") {
@@ -115,13 +114,11 @@ export default function useChartHook() {
     },
   }
 
-  const setDataLines = item => {
+  const setDataLines = (item, obsType) => {
     if (!item) return
-
-    const value = item[0]
+    const value = item
       ?.filter(el => !isNaN(el.value) && el.date !== "" && el.value !== "0")
       .map(el => el.value)
-
     const {
       label,
       unit,
@@ -133,8 +130,8 @@ export default function useChartHook() {
       pointRadius,
     } = config.attributes["fillingRate"]
 
-    const data = {
-      label: `${lakeName} ${observationType}`,
+    return {
+      label: `${lakeName} ${label} ${obsType}`,
       data: value.map(el => handleValue(el, unit)),
       borderColor,
       backgroundColor,
@@ -143,17 +140,15 @@ export default function useChartHook() {
       tension,
       pointRadius,
     }
-    setDataSets([...dataSets, data])
   }
 
   const setLabelsDate = item => {
     if (!item) return
-    const dateFiltered = item[0]
+    const dateFiltered = item
       ?.filter(el => !isNaN(el.value) && el.date !== "" && el.value !== "0")
       .map(el => el.date)
-    // merge dates and datesFiltered
-    const uniqueDates = [...new Set([...dates, ...dateFiltered])]
-    setDates(uniqueDates)
+
+    setDates([...dateFiltered])
   }
 
   const data = {
@@ -161,7 +156,6 @@ export default function useChartHook() {
     datasets: dataSets,
   }
 
-  console.log("data ===>", data)
   return {
     data,
     options,
