@@ -1,13 +1,10 @@
 import { useDispatch } from "react-redux"
-import { cleanForm } from "@stores/formSlice"
 
-export default function useButtonHook({ type }) {
+export default function useButtonHook(cleanForm) {
   const dispatch = useDispatch()
 
   const onClick = useCallback(() => {
-    dispatch({
-      type: `${cleanForm}`,
-    })
+    dispatch(cleanForm())
   })
 
   return { onClick }
