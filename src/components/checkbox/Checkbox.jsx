@@ -1,6 +1,7 @@
 import useCheckboxHook from "./CheckboxHook"
 import { styled, theme } from "@/stitches.config"
 
+
 const StyledLabel = styled("label", {
   fontFamily: "sans-serif",
   fontSize: theme.fontSizes.base,
@@ -8,8 +9,8 @@ const StyledLabel = styled("label", {
 })
 
 export const Checkbox = props => {
-  const { onChange, isChecked } = useCheckboxHook(props)
-  const { id, label, abbr } = props
+  const { id, label, abbr, value } = props
+  const { isChecked, onChange } = useCheckboxHook(props)
   return (
     <div>
       <input
