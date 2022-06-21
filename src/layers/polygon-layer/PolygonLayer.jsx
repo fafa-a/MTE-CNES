@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 
 export const PolygonLayer = ({ data, handleChange }) => {
   const [layer, setLayer] = useState(null)
-  const { centerPolygon, getIdName, getLakeInfo } = usePolygonLayerHook({
+  const { centerPolygon, getLakeId } = usePolygonLayerHook({
     data,
     handleChange,
   })
@@ -27,12 +27,13 @@ export const PolygonLayer = ({ data, handleChange }) => {
             eventHandlers={{
               click: el => {
                 centerPolygon(el.target.options["data-coordinates"])
-                getLakeInfo(ID_SWOT, DAM_NAME, LAT_WW, LONG_WW, MAIN_USE)
+                getLakeId(ID_SWOT)
               },
             }}
           >
             <Tooltip>
               <h3>{DAM_NAME}</h3>
+              <h4>{MAIN_USE}</h4>
             </Tooltip>
           </Polygon>
         )
