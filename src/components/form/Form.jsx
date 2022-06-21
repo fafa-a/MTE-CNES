@@ -2,7 +2,18 @@ import useFormHook from "./FormHook"
 import { Checkbox } from "@components/checkbox/Checkbox"
 import { Button } from "@components/button/Button"
 import { Select } from "@components/select/Select"
+import { SelectOption } from "@components/select/SelectOption"
 import { styled, theme } from "@/stitches.config"
+import { DataTypes } from "../../config"
+
+import {
+  cleanForm,
+  toggleOptic,
+  toggleRadar,
+  toggleDay,
+  togglePeriod,
+  setAttributeValue,
+} from "../../stores/formSlice"
 
 const StyledContainer = styled("div", {
   backgroundColor: "#f1f1f1",
@@ -12,6 +23,7 @@ const StyledContainer = styled("div", {
   height: "100%",
   padding: theme.space.sm,
 })
+
 const StyledDiv = styled("div", {
   marginBottom: theme.space.base,
 })
@@ -27,7 +39,7 @@ const StyledH3 = styled("h3", {
 })
 
 export const Form = () => {
-  const { dataTypesValues, observationTypesValues, durationValues } =
+  const { dataTypesValues, observationTypesValues, durationValues, form } =
     useFormHook()
   return (
     <StyledContainer>
@@ -35,41 +47,61 @@ export const Form = () => {
         <StyledDiv>
           <StyledH3>Observation types</StyledH3>
           <StyledFlexRowDiv>
-            {observationTypesValues.map(
-              ({ id, label, abbr, actionReducers }) => (
-                <Checkbox
-                  actionReducers={actionReducers}
-                  key={id}
-                  id={id}
-                  label={label}
-                  abbr={abbr}
-                  storesKey={"observationTypes"}
-                />
-              )
-            )}
+            <Checkbox
+              storeAction={toggleOptic}
+              id={observationTypesValues.OPTIC.abbr}
+              label={observationTypesValues.OPTIC.label}
+              abbr={observationTypesValues.OPTIC.abbr}
+              value={form.OPTIC}
+            />
+            <Checkbox
+              storeAction={toggleRadar}
+              id={observationTypesValues.RADAR.abbr}
+              label={observationTypesValues.RADAR.label}
+              abbr={observationTypesValues.RADAR.abbr}
+              value={form.RADAR}
+            />
           </StyledFlexRowDiv>
         </StyledDiv>
         <StyledDiv>
           <StyledH3>Observation periods</StyledH3>
           <StyledFlexRowDiv>
-            {durationValues.map(({ id, label, abbr, actionReducers }) => (
-              <Checkbox
-                actionReducers={actionReducers}
-                key={id}
-                id={id}
-                label={label}
-                abbr={abbr}
-                storesKey={"observationDurations"}
-              />
-            ))}
+            <Checkbox
+              storeAction={toggleDay}
+              id={durationValues.DAY.abbr}
+              label={durationValues.DAY.label}
+              abbr={durationValues.DAY.abbr}
+              value={form.DAY}
+            />
+            <Checkbox
+              storeAction={togglePeriod}
+              id={durationValues.PERIOD.abbr}
+              label={durationValues.PERIOD.label}
+              abbr={durationValues.PERIOD.abbr}
+              value={form.PERIOD}
+            />
           </StyledFlexRowDiv>
         </StyledDiv>
         <StyledDiv>
           <StyledH3>Attributes</StyledH3>
-          <Select data={dataTypesValues} id={"attributes"} />
+          <Select setAttributeValue={setAttributeValue} value={form.dataType}>
+            <SelectOption
+              value={DataTypes.FILLING_RATE}
+              label={dataTypesValues.FILLING_RATE.label}
+            />
+            <SelectOption
+              value={DataTypes.SURFACE}
+              label={dataTypesValues.SURFACE.label}
+            />
+            <SelectOption
+              value={DataTypes.VOLUME}
+              label={dataTypesValues.VOLUME.label}
+            />
+          </Select>
         </StyledDiv>
-        <Button type={"reset"} value={"reset"} />
+        <Button type="reset" value="clear form" cleanForm={cleanForm} />
       </form>
     </StyledContainer>
   )
 }
+// <StyledOption value="">Please choose an option</StyledOption>
