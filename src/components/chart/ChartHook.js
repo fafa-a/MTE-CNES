@@ -5,6 +5,7 @@ export default function useChartHook(obsTypes) {
   const [dates, setDates] = useState([])
   const [dataSets, setDataSets] = useState([])
   const [labelTitle, setLabelTitle] = useState([])
+  const [unit, setUnit] = useState("")
   const chart = useSelector(state => state.chart)
   const form = useSelector(state => state.form)
   const { chartData, lakeName } = chart.chart
@@ -33,10 +34,14 @@ export default function useChartHook(obsTypes) {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    interaction: {
+      intersect: false,
+      mode: "nearest",
+    },
     plugins: {
       title: {
         display: true,
-        text: chartData.length ? `${lakeName} - ${labelTitle}` : "",
+        text: chartData.length ? `${lakeName} - ${labelTitle} - ${unit}` : "",
         position: "top",
         font: {
           size: 16,
@@ -45,36 +50,30 @@ export default function useChartHook(obsTypes) {
           top: 10,
         },
       },
-      // tooltip: {
-      //   callbacks: {
-      //     label(context) {
-      //       const label = context.dataset.label || ""
-      //       const labelStartWith = label
-      //         .slice(0, label.indexOf(" "))
-      //         .toLowerCase()
-
-      //       const labelWithoutExtension = label
-      //         .split(" ")
-      //         .slice(0, -1)
-      //         .join(" ")
-      //       if (context.parsed.y !== null) {
-      //         if (labelStartWith === "filling")
-      //           return `${labelWithoutExtension} : ${context.parsed.y.toFixed(
-      //             3
-      //           )} %`
-      //         else if (labelStartWith === "surface")
-      //           return `${labelWithoutExtension} : ${context.parsed.y.toFixed(
-      //             3
-      //           )} ha`
-      //         else if (labelStartWith === "volume")
-      //           return `${labelWithoutExtension} : ${context.parsed.y.toFixed(
-      //             3
-      //           )} hm³`
-      //       }
-      //       return labelWithoutExtension
-      //     },
-      //   },
-      // },
+      tooltip: {
+        callbacks: {
+          title(context) {
+            const { label } = context[0]
+            const options = { year: "numeric", month: "short", day: "numeric" }
+            const date = new Intl.DateTimeFormat("en-US", options).format(
+              new Date(label)
+            )
+            return `${date}`
+          },
+          afterTitle() {
+            return `${lakeName}`
+          },
+          beforeBody(context) {
+            console.log(context)
+            const { label } = context[0].dataset
+            return `Observation: ${label}`
+          },
+          label(context) {
+            const { formattedValue } = context
+            return ` ${labelTitle}: ${formattedValue}${unit}`
+          },
+        },
+      },
       legend: {
         position: "top",
         labels: { font: { size: 14 } },
@@ -122,11 +121,12 @@ export default function useChartHook(obsTypes) {
     const { label, unit, borderWidth, tension, pointRadius } =
       config.attributes[idConfig]
     setLabelTitle(label)
+    setUnit(unit)
     const { borderColor, backgroundColor, pointBackgroundColor } =
       config.attributes[idConfig].style[index]
 
     return {
-      label: `${lakeName} ${label} ${obsType}`,
+      label: `${obsType}`,
       data: value.map(el => handleValue(el, unit)),
       borderColor,
       backgroundColor,
