@@ -1,0 +1,5 @@
+const OBSERVATION_TYPES = {
+  OPTIC: "OPTIC",
+  RADAR: "RADAR",
+}
+export default OBSERVATION_TYPES
