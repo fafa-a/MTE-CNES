@@ -1,66 +1,51 @@
 import { createSlice } from "@reduxjs/toolkit"
+import { DataTypes, ObservationTypes, DurationTypes } from "@/config"
 
 const initialState = {
-  observationTypes: {
-    optic: {
-      value: "MO",
-      active: true,
-    },
-    radar: {
-      value: "MR",
-      active: true,
-    },
-  },
-  observationDurations: {
-    day: {
-      value: "1",
-      active: false,
-    },
-    period: {
-      value: "2",
-      active: true,
-    },
-  },
-  attributes: {
-    value: "filling_rate_raw",
-    idConfig: "fillingRate",
-    active: true,
-  },
+  [ObservationTypes.OPTIC]: true,
+  [ObservationTypes.RADAR]: true,
+  [DurationTypes.DAY]: false,
+  [DurationTypes.PERIOD]: true,
+  dataType: DataTypes.FILLING_RATE,
 }
 
 export const formSlice = createSlice({
   name: "form",
   initialState,
   reducers: {
-    setObservationTypes: (state, action) => {
-      const { id, active } = action.payload
-      state.observationTypes[id].active = active
+    toggleOptic: state => {
+      state.OPTIC = !state.OPTIC
     },
-    setObservationDuration: (state, action) => {
-      const { id, active } = action.payload
-      state.observationDurations[id].active = active
+    toggleRadar: state => {
+      state.RADAR = !state.RADAR
     },
-    setAttributes: (state, action) => {
-      const { value, idConfig } = action.payload
-      state.attributes.value = value
-      state.attributes.idConfig = idConfig
-      state.attributes.active = true
+    toggleDay: state => {
+      state.DAY = !state.DAY
     },
-    cleanForm: (state, action) => {
-      state.observationTypes.optic.active = false
-      state.observationTypes.radar.active = false
-      state.observationDurations.day.active = false
-      state.observationDurations.period.active = false
-      state.attributes.value = ""
+    togglePeriod: state => {
+      state.PERIOD = !state.PERIOD
+    },
+    setAttributeValue: (state, action) => {
+      const { value } = action.payload
+      state.dataType = value
+    },
+    cleanForm: state => {
+      state.OPTIC = false
+      state.RADAR = false
+      state.DAY = false
+      state.PERIOD = false
+      state.dataType = DataTypes.FILLING_RATE
     },
   },
 })
 
 export const {
   cleanForm,
-  setObservationTypes,
-  setObservationDuration,
-  setAttributes,
+  toggleOptic,
+  toggleRadar,
+  toggleDay,
+  togglePeriod,
+  setAttributeValue,
 } = formSlice.actions
 
 export default formSlice.reducer
