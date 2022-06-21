@@ -11,7 +11,7 @@ const StyledMapContainer = styled(MapContainer, {
   height: "50vh",
 })
 
-export const Map = () => {
+export const Map = ({ getIdSwot }) => {
   return (
     <StyledMapContainer
       center={[36.91, -3.54]}
@@ -33,7 +33,7 @@ export const Map = () => {
         </LayersControl.BaseLayer>
         {dataGeojson.map((data, index) => (
           <div key={index.toString()}>
-            <PolygonLayer data={data} />
+            <PolygonLayer data={data} handleChange={getIdSwot} />
             <MarkerLayerCluster data={data} />
           </div>
         ))}
