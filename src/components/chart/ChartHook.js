@@ -1,15 +1,37 @@
-import { config } from "@/config"
+import { AppConfig, DataTypes } from "@/config"
 import { useSelector } from "react-redux"
 
-export default function useChartHook(obsTypes) {
+export default function useChartHook({ lakeInfo }) {
+  const [chartData, setChartData] = useState([])
   const [dates, setDates] = useState([])
   const [dataSets, setDataSets] = useState([])
+  const [id, setId] = useState("")
+  const [lakeName, setLakeName] = useState("")
+  const [dataType, setDataType] = useState("")
+  const [obsTypes, setObsTypes] = useState([])
   const [labelTitle, setLabelTitle] = useState([])
   const [unit, setUnit] = useState("")
+
   const chart = useSelector(state => state.chart)
-  const form = useSelector(state => state.form)
-  const { chartData, lakeName } = chart.chart
-  const { idConfig } = form.attributes
+  const lakes = useSelector(state => state.lakes)
+
+  useEffect(() => {
+    if (lakeInfo.obsTypes?.length > 0) {
+      const { id, name, dataType, obsTypes } = lakeInfo
+      const { label, unit } = AppConfig.attributes[dataType]
+      setId(id)
+      setLakeName(name)
+      setDataType(dataType)
+      setObsTypes(obsTypes)
+      setLabelTitle(label)
+      setUnit(unit)
+    }
+  }, [lakeInfo.obsTypes])
+
+  useEffect(() => {
+    if (!id) return
+    setChartData(lakes.data[id][dataType])
+  }, [lakes, id, dataType])
 
   useEffect(() => {
     const arr = []
@@ -41,7 +63,9 @@ export default function useChartHook(obsTypes) {
     plugins: {
       title: {
         display: true,
-        text: chartData.length ? `${lakeName} - ${labelTitle} - ${unit}` : "",
+        text: chartData.length
+          ? `${lakeName} - ${labelTitle} - ${unit}`
+          : "To Fix",
         position: "top",
         font: {
           size: 16,
@@ -61,10 +85,9 @@ export default function useChartHook(obsTypes) {
             return `${date}`
           },
           afterTitle() {
-            return `${lakeName}`
+            return `${lakeName}` || "To Fix"
           },
           beforeBody(context) {
-            console.log(context)
             const { label } = context[0].dataset
             return `Observation: ${label}`
           },
@@ -108,7 +131,7 @@ export default function useChartHook(obsTypes) {
     },
     scales: {
       y: {
-        min: 0,
+        beginAtZero: true,
       },
     },
   }
@@ -118,12 +141,9 @@ export default function useChartHook(obsTypes) {
     const value = item
       ?.filter(el => !isNaN(el.value) && el.date !== "" && el.value !== "0")
       .map(el => el.value)
-    const { label, unit, borderWidth, tension, pointRadius } =
-      config.attributes[idConfig]
-    setLabelTitle(label)
-    setUnit(unit)
+    const { borderWidth, tension, pointRadius } = AppConfig.attributes[dataType]
     const { borderColor, backgroundColor, pointBackgroundColor } =
-      config.attributes[idConfig].style[index]
+      AppConfig.attributes[dataType].style[index]
 
     return {
       label: `${obsType}`,
@@ -141,8 +161,13 @@ export default function useChartHook(obsTypes) {
     if (!item) return
     const dateFiltered = item
       ?.filter(el => !isNaN(el.value) && el.date !== "" && el.value !== "0")
-      .map(el => el.date)
-
+      .map(el => {
+        const options = { year: "numeric", month: "2-digit", day: "2-digit" }
+        const date = new Intl.DateTimeFormat("en-US", options).format(
+          new Date(el.date)
+        )
+        return date
+      })
     setDates([...dateFiltered])
   }
 
