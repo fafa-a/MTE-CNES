@@ -6,12 +6,12 @@ export default function usePolygonLayerHook({ handleChange }) {
     map.setView(coord[0], coord[1])
   })
 
-  const getLakeId = useCallback(id => {
-    handleChange(id)
+  const getLakeIdName = useCallback((id, name) => {
+    handleChange(id, name)
   })
 
   return {
     centerPolygon,
-    getLakeId,
+    getLakeIdName,
   }
 }
