@@ -1,25 +1,41 @@
 import { useSelector } from "react-redux"
 import { useDispatch } from "react-redux"
-import { addChartData } from "@stores/chartSlice"
+import { addLake } from "./stores/lakesSlice"
+
 import {
   AppConfig,
   SeriePathUtils,
   ObservationTypes,
   DurationTypes,
-} from "@/config"
+  DataTypes,
+} from "./config"
+import { dsv } from "d3"
 
 export function useAppHook() {
-  const [lakeId, setLakeId] = useState(null)
+  const [lakeInfo, setLakeInfo] = useState({
+    id: "",
+    name: "",
+    dataType: "",
+    obsTypes: [],
+  })
   const [seriePath, setSeriePath] = useState([])
+  const [obsTypes, setObsTypes] = useState([])
+  const [lakeData, setLakeData] = useState([])
+
   const form = useSelector(state => state.form)
   const lakes = useSelector(state => state.lakes)
   const chart = useSelector(state => state.chart)
 
   const { OPTIC, RADAR, DAY, PERIOD, dataType } = form
   const { getSeriePath } = SeriePathUtils
+  const dispatch = useDispatch()
 
-  const getIdSwot = idSwot => {
-    setLakeId(idSwot)
+  const getLakeIdSwotName = (id, name) => {
+    setLakeInfo({
+      id,
+      name,
+      dataType,
+    })
   }
 
   const getSeriePathByDay = () => {
@@ -69,16 +85,15 @@ export function useAppHook() {
   }
 
   useEffect(() => {
-    if (!lakeId) return
+    if (!lakeInfo.id) return
     const seriePathByday = getSeriePathByDay()
     const seriePathByPeriod = getSeriePathByPeriod()
     setSeriePath([...seriePathByday, ...seriePathByPeriod])
-    setLakeId(null)
-  }, [lakeId, OPTIC, RADAR, DAY, PERIOD])
+  }, [lakeInfo.id, OPTIC, RADAR, DAY, PERIOD])
 
   const handleSeriePath = (dataType, obs, duration) => {
     const path = getSeriePath(
-      lakeId,
+      lakeInfo.id,
       AppConfig.attributes[dataType].filePath,
       AppConfig.observationTypes[obs].abbr,
       AppConfig.duration[duration].abbr
@@ -86,5 +101,60 @@ export function useAppHook() {
     return path
   }
 
-  return { getIdSwot }
+  const fetchData = useCallback(async () => {
+    const arrTmp = []
+    for (const path of seriePath) {
+      const data = await dsv(";", path)
+      arrTmp.push(data)
+    }
+    return arrTmp
+  }, [seriePath])
+
+  const sortDataByArrayLength = useCallback(data => {
+    const dataSorted = [...data].sort((a, b) => (a.length > b.length ? -1 : 1))
+    return dataSorted
+  }, [])
+
+  const setOrderObsTypes = useCallback(
+    (arrayRaw, arraySorted) => {
+      if (arrayRaw.length === 0) return
+      if (JSON.stringify(arrayRaw) !== JSON.stringify(arraySorted)) {
+        setObsTypes([
+          AppConfig.observationTypes.RADAR.label,
+          AppConfig.observationTypes.OPTIC.label,
+        ])
+      } else {
+        setObsTypes([
+          AppConfig.observationTypes.OPTIC.label,
+          AppConfig.observationTypes.RADAR.label,
+        ])
+      }
+    },
+    [sortDataByArrayLength]
+  )
+
+  const handleFetchData = useCallback(async () => {
+    const data = await fetchData()
+    const dataSorted = sortDataByArrayLength(data)
+    setOrderObsTypes(data, dataSorted)
+    setLakeData(dataSorted)
+  }, [fetchData])
+
+  useEffect(() => {
+    handleFetchData()
+  }, [fetchData])
+
+  useEffect(() => {
+    setLakeInfo({
+      ...lakeInfo,
+      obsTypes: [...obsTypes],
+    })
+  }, [obsTypes])
+
+  useEffect(() => {
+    if (!lakeInfo.id) return
+    dispatch(addLake({ lakeId: lakeInfo.id, dataType, lakeData }))
+  }, [lakeData])
+
+  return { getLakeIdSwotName, lakeInfo }
 }
