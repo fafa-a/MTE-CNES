@@ -22,8 +22,7 @@ export function useAppHook() {
     setLakeId(idSwot)
   }
 
-  useEffect(() => {
-    if (!lakeId) return
+  const getSeriePathByDay = () => {
     const arrTmp = []
     if (OPTIC && DAY) {
       const path = handleSeriePath(
@@ -33,6 +32,7 @@ export function useAppHook() {
       )
       arrTmp.push(path)
     }
+
     if (RADAR && DAY) {
       const path = handleSeriePath(
         dataType,
@@ -41,11 +41,11 @@ export function useAppHook() {
       )
       arrTmp.push(path)
     }
-    setSeriePath(arrTmp)
-  }, [lakeId, DAY])
 
-  useEffect(() => {
-    if (!lakeId) return
+    return arrTmp
+  }
+
+  const getSeriePathByPeriod = () => {
     const arrTmp = []
     if (OPTIC && PERIOD) {
       const path = handleSeriePath(
@@ -55,6 +55,7 @@ export function useAppHook() {
       )
       arrTmp.push(path)
     }
+
     if (RADAR && PERIOD) {
       const path = handleSeriePath(
         dataType,
@@ -63,12 +64,17 @@ export function useAppHook() {
       )
       arrTmp.push(path)
     }
-    setSeriePath(arrTmp)
-  }, [lakeId, PERIOD])
+
+    return arrTmp
+  }
 
   useEffect(() => {
-    console.log({ seriePath })
-  }, [seriePath])
+    if (!lakeId) return
+    const seriePathByday = getSeriePathByDay()
+    const seriePathByPeriod = getSeriePathByPeriod()
+    setSeriePath([...seriePathByday, ...seriePathByPeriod])
+    setLakeId(null)
+  }, [lakeId, OPTIC, RADAR, DAY, PERIOD])
 
   const handleSeriePath = (dataType, obs, duration) => {
     const path = getSeriePath(
@@ -78,8 +84,6 @@ export function useAppHook() {
       AppConfig.duration[duration].abbr
     )
     return path
-    if (seriePath.includes(path)) return
-    setSeriePath([...seriePath, path])
   }
 
   return { getIdSwot }
