@@ -63,7 +63,9 @@ export default function useChartHook({ lakeInfo }) {
     plugins: {
       title: {
         display: true,
-        text: lakeName ? `${lakeName} - ${labelTitle} - ${unit}` : "",
+        text: lakeName
+          ? `${lakeName} - ${labelTitle} - ${unit}`
+          : "Choose a lake and click on it",
         position: "top",
         font: {
           size: 16,
