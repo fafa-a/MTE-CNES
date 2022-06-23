@@ -1,4 +1,4 @@
-import { AppConfig, DataTypes } from "@/config"
+import { AppConfig, ObservationTypes } from "@/config"
 import { useSelector } from "react-redux"
 
 export default function useChartHook({ lakeInfo }) {
@@ -12,8 +12,21 @@ export default function useChartHook({ lakeInfo }) {
   const [labelTitle, setLabelTitle] = useState([])
   const [unit, setUnit] = useState("")
 
-  const chart = useSelector(state => state.chart)
+  const form = useSelector(state => state.form)
   const lakes = useSelector(state => state.lakes)
+
+  useEffect(() => {
+    if (!form.OPTIC) {
+      setObsTypes([ObservationTypes.RADAR])
+    }
+    if (!form.RADAR) {
+      setObsTypes([ObservationTypes.OPTIC])
+    }
+  }, [form.OPTIC, form.RADAR])
+
+  useEffect(() => {
+    console.log({ obsTypes })
+  }, [obsTypes])
 
   useEffect(() => {
     if (lakeInfo.obsTypes?.length > 0) {
@@ -22,7 +35,15 @@ export default function useChartHook({ lakeInfo }) {
       setId(id)
       setLakeName(name)
       setDataType(dataType)
-      setObsTypes(obsTypes)
+      if (!form.OPTIC) {
+        setObsTypes([ObservationTypes.RADAR])
+      }
+      if (!form.RADAR) {
+        setObsTypes([ObservationTypes.OPTIC])
+      }
+      if (form.OPTIC && form.RADAR) {
+        setObsTypes(obsTypes)
+      }
       setLabelTitle(label)
       setUnit(unit)
     }
@@ -59,6 +80,7 @@ export default function useChartHook({ lakeInfo }) {
     interaction: {
       intersect: false,
       mode: "nearest",
+      mode: "index",
     },
     plugins: {
       title: {
