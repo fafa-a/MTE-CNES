@@ -101,7 +101,7 @@ export default function useChartHook({ lakeInfo }) {
           title(context) {
             const { label } = context[0]
             const options = { year: "numeric", month: "short", day: "numeric" }
-            const date = new Intl.DateTimeFormat("en-US", options).format(
+            const date = new Intl.DateTimeFormat("en-GB", options).format(
               new Date(label)
             )
             return `${date}`
@@ -185,7 +185,7 @@ export default function useChartHook({ lakeInfo }) {
       ?.filter(el => !isNaN(el.value) && el.date !== "" && el.value !== "0")
       .map(el => {
         const options = { year: "numeric", month: "2-digit", day: "2-digit" }
-        const date = new Intl.DateTimeFormat("en-US", options).format(
+        const date = new Intl.DateTimeFormat("en-GB", options).format(
           new Date(el.date)
         )
         return date
