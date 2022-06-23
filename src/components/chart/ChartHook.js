@@ -80,7 +80,7 @@ export default function useChartHook({ lakeInfo }) {
     interaction: {
       intersect: false,
       mode: "nearest",
-      mode: "index",
+// mode: "index",
     },
     plugins: {
       title: {
@@ -100,9 +100,13 @@ export default function useChartHook({ lakeInfo }) {
         callbacks: {
           title(context) {
             const { label } = context[0]
+            const day = label.slice(0, 2)
+            const month = label.slice(3, 5)
+            const year = label.slice(6, 10)
             const options = { year: "numeric", month: "short", day: "numeric" }
+            const newDate = new Date(new Date(year, month - 1, day))
             const date = new Intl.DateTimeFormat("en-GB", options).format(
-              new Date(label)
+              newDate
             )
             return `${date}`
           },
