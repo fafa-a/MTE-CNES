@@ -95,7 +95,7 @@ export function useAppHook() {
     const seriePathByday = getSeriePathByDay()
     const seriePathByPeriod = getSeriePathByPeriod()
     setSeriePath([...seriePathByday, ...seriePathByPeriod])
-  }, [lakeInfo.id, OPTIC, RADAR, DAY, PERIOD])
+  }, [lakeInfo.id, OPTIC, RADAR, DAY, PERIOD, dataType])
 
   const handleSeriePath = (dataType, obs, duration) => {
     const path = getSeriePath(
