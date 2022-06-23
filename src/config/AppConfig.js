@@ -8,13 +8,13 @@ const config = {
       style: [
         {
           borderColor: "rgb(255, 0, 0)",
-          backgroundColor: "rgba(255, 0, 0, 0.5)",
-          pointBackgroundColor: "#760000",
+          backgroundColor: "rgba(255, 0, 0)",
+          // pointBackgroundColor: "#760000",
         },
         {
-          borderColor: "rgb(255, 100, 0)",
-          backgroundColor: "rgba(255, 100, 0, 0.5)",
-          pointBackgroundColor: "#C43100",
+          borderColor: "rgb(126, 0, 0)",
+          backgroundColor: "rgba(126, 0, 0 )",
+          // pointBackgroundColor: "#5C0000",
         },
       ],
       borderWidth: 1.2,
@@ -30,13 +30,13 @@ const config = {
       style: [
         {
           borderColor: "rgb(53, 162, 235)",
-          backgroundColor: "rgba(53, 162, 235, 0.5)",
-          pointBackgroundColor: "#000F45",
+          backgroundColor: "rgba(53, 162, 235)",
+          // pointBackgroundColor: "#000F45",
         },
         {
           borderColor: "rgb(155, 100, 186)",
-          backgroundColor: "rgba(155, 100, 186, 0.5)",
-          pointBackgroundColor: "#65368C",
+          backgroundColor: "rgba(155, 100, 186)",
+          // pointBackgroundColor: "#65368C",
         },
       ],
       borderWidth: 1.2,
@@ -52,13 +52,13 @@ const config = {
       style: [
         {
           borderColor: "rgb(127, 255, 0)",
-          backgroundColor: "rgba(127, 255, 0, 0.5)",
-          pointBackgroundColor: "#006900",
+          backgroundColor: "rgba(127, 255, 0)",
+          // pointBackgroundColor: "#006900",
         },
         {
           borderColor: "rgb(222, 237, 25)",
           backgroundColor: "rgba(222, 237, 25)",
-          pointBackgroundColor: "#465E00",
+          // pointBackgroundColor: "#465E00",
         },
       ],
       borderWidth: 1.2,
