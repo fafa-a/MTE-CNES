@@ -91,7 +91,7 @@ export default function useChartHook({ lakeInfo }) {
           },
           label(context) {
             const { formattedValue } = context
-            return ` ${labelTitle}: ${formattedValue}${unit}`
+            return ` ${labelTitle}: ${formattedValue} ${unit}`
           },
         },
       },
