@@ -7,7 +7,6 @@ import {
   SeriePathUtils,
   ObservationTypes,
   DurationTypes,
-  DataTypes,
 } from "./config"
 import { dsv } from "d3"
 
@@ -24,9 +23,8 @@ export function useAppHook() {
 
   const form = useSelector(state => state.form)
   const lakes = useSelector(state => state.lakes)
-  const chart = useSelector(state => state.chart)
 
-  const { OPTIC, RADAR, DAY, PERIOD, dataType } = form
+  const { OPTIC, RADAR, DAY, PERIOD, dataType, isCleared } = form
   const { getSeriePath } = SeriePathUtils
   const dispatch = useDispatch()
 
@@ -34,9 +32,17 @@ export function useAppHook() {
     setLakeInfo({
       id,
       name,
-      dataType,
     })
   }
+
+  useEffect(() => {
+    setLakeInfo({
+      id: "",
+      name: "",
+      dataType: "",
+      obsTypes: [],
+    })
+  }, [isCleared])
 
   const getSeriePathByDay = () => {
     const arrTmp = []
@@ -147,6 +153,7 @@ export function useAppHook() {
   useEffect(() => {
     setLakeInfo({
       ...lakeInfo,
+      dataType,
       obsTypes: [...obsTypes],
     })
   }, [obsTypes])
@@ -155,6 +162,10 @@ export function useAppHook() {
     if (!lakeInfo.id) return
     dispatch(addLake({ lakeId: lakeInfo.id, dataType, lakeData }))
   }, [lakeData])
+
+  useEffect(() => {
+    console.log({ lakes: lakes.data })
+  }, [lakes])
 
   return { getLakeIdSwotName, lakeInfo }
 }
