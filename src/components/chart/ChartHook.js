@@ -63,9 +63,7 @@ export default function useChartHook({ lakeInfo }) {
     plugins: {
       title: {
         display: true,
-        text: chartData.length
-          ? `${lakeName} - ${labelTitle} - ${unit}`
-          : "To Fix",
+        text: lakeName ? `${lakeName} - ${labelTitle} - ${unit}` : "",
         position: "top",
         font: {
           size: 16,
