@@ -13,6 +13,7 @@ import {
 import { Line } from "react-chartjs-2"
 import zoomPlugin from "chartjs-plugin-zoom"
 import { styled } from "@stitches/react"
+ import "chartjs-adapter-date-fns"
 
 ChartJS.register(
   CategoryScale,
@@ -41,3 +42,4 @@ export const Chart = props => {
     </StyledDiv>
   )
 }
+//

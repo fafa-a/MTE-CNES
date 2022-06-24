@@ -1,11 +1,14 @@
 import { AppConfig, ObservationTypes } from "@/config"
 import { useSelector } from "react-redux"
+import { enGB } from "date-fns/locale"
 
 export default function useChartHook({ lakeInfo }) {
   const [chartData, setChartData] = useState([])
   const [dates, setDates] = useState([])
   const [dataSets, setDataSets] = useState([])
   const [id, setId] = useState("")
+  const [dateMin, setDateMin] = useState(null)
+  const [dateMax, setDateMax] = useState(null)
   const [lakeName, setLakeName] = useState("")
   const [dataType, setDataType] = useState("")
   const [obsTypes, setObsTypes] = useState([])
@@ -23,10 +26,6 @@ export default function useChartHook({ lakeInfo }) {
       setObsTypes([ObservationTypes.OPTIC])
     }
   }, [form.OPTIC, form.RADAR])
-
-  useEffect(() => {
-    console.log({ obsTypes })
-  }, [obsTypes])
 
   useEffect(() => {
     if (lakeInfo.obsTypes?.length > 0) {
@@ -56,13 +55,43 @@ export default function useChartHook({ lakeInfo }) {
 
   useEffect(() => {
     const arr = []
+    const allDates = []
+
     chartData.forEach((item, index) => {
       const data = setDataLines(item, obsTypes[index], index)
+      // return date min and max
+      const itemDates = item
+        .filter(el => !isNaN(el.value) && el.date !== "" && el.value !== "0")
+        .map(el => el.date)
+      allDates.push(...itemDates)
       arr.push(data)
-      setLabelsDate(item)
-    }),
-      setDataSets(arr)
+    })
+    const allDatesSorted = [...allDates].sort(
+      (a, b) => new Date(a) - new Date(b)
+    )
+    
+    const minDatevalue = new Date(allDatesSorted.shift())
+    const firstDayMonth = new Date(
+      minDatevalue.getFullYear(),
+      minDatevalue.getMonth(),
+      1
+    )
+    setDateMin(firstDayMonth)
+
+    const maxDateValue = new Date(allDatesSorted.at(-1))
+    const nextMonth = new Date(
+      maxDateValue.getFullYear(),
+      maxDateValue.getMonth() + 1,
+      1
+    )
+
+    setDateMax(nextMonth)
+    setDataSets(arr)
   }, [chartData])
+
+  useEffect(() => {
+    console.log({ dateMin })
+  }, [dateMin, dateMax])
 
   const handleValue = (value, unit) => {
     if (unit === "hm³") {
@@ -80,7 +109,6 @@ export default function useChartHook({ lakeInfo }) {
     interaction: {
       intersect: false,
       mode: "nearest",
-// mode: "index",
     },
     plugins: {
       title: {
@@ -100,15 +128,7 @@ export default function useChartHook({ lakeInfo }) {
         callbacks: {
           title(context) {
             const { label } = context[0]
-            const day = label.slice(0, 2)
-            const month = label.slice(3, 5)
-            const year = label.slice(6, 10)
-            const options = { year: "numeric", month: "short", day: "numeric" }
-            const newDate = new Date(new Date(year, month - 1, day))
-            const date = new Intl.DateTimeFormat("en-GB", options).format(
-              newDate
-            )
-            return `${date}`
+            return label
           },
           afterTitle() {
             return `${lakeName}` || "To Fix"
@@ -156,24 +176,43 @@ export default function useChartHook({ lakeInfo }) {
       },
     },
     scales: {
+      x: {
+        type: "time",
+        min: dateMin,
+        max: dateMax,
+        time: {
+          unit: "year",
+          tooltipFormat: "dd MMM yyyy",
+        },
+      },
       y: {
         beginAtZero: true,
       },
     },
+    parsing: {
+      xAxisKey: "date",
+      yAxisKey: "value",
+    },
+    animation: false,
   }
 
   const setDataLines = (item, obsType, index) => {
     if (!item) return
     const value = item
       ?.filter(el => !isNaN(el.value) && el.date !== "" && el.value !== "0")
-      .map(el => el.value)
+      .map(el => {
+        return {
+          date: new Date(el.date).toISOString(),
+          value: handleValue(el.value, unit),
+        }
+      })
     const { borderWidth, tension, pointRadius } = AppConfig.attributes[dataType]
     const { borderColor, backgroundColor, pointBackgroundColor } =
       AppConfig.attributes[dataType].style[index]
 
     return {
       label: `${obsType}`,
-      data: value.map(el => handleValue(el, unit)),
+      data: value,
       borderColor,
       backgroundColor,
       borderWidth,
@@ -183,22 +222,7 @@ export default function useChartHook({ lakeInfo }) {
     }
   }
 
-  const setLabelsDate = item => {
-    if (!item) return
-    const dateFiltered = item
-      ?.filter(el => !isNaN(el.value) && el.date !== "" && el.value !== "0")
-      .map(el => {
-        const options = { year: "numeric", month: "2-digit", day: "2-digit" }
-        const date = new Intl.DateTimeFormat("en-GB", options).format(
-          new Date(el.date)
-        )
-        return date
-      })
-    setDates([...dateFiltered])
-  }
-
   const data = {
-    labels: dates,
     datasets: dataSets,
   }
 
