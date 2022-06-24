@@ -165,6 +165,7 @@ export default function useChartHook({ lakeInfo }) {
         },
         limits: {
           y: { min: 0, max: "original" },
+          x: { min: "original", max: "original" },
         },
       },
     },
@@ -174,7 +175,10 @@ export default function useChartHook({ lakeInfo }) {
         min: dateMin,
         max: dateMax,
         time: {
-          unit: "year",
+          displayFormats: {
+            month: "MMM yyyy",
+            day: "dd MMM",
+          },
           tooltipFormat: "dd MMM yyyy",
         },
       },
