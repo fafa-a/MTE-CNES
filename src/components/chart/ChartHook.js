@@ -1,10 +1,8 @@
 import { AppConfig, ObservationTypes } from "@/config"
 import { useSelector } from "react-redux"
-import { enGB } from "date-fns/locale"
 
 export default function useChartHook({ lakeInfo }) {
   const [chartData, setChartData] = useState([])
-  const [dates, setDates] = useState([])
   const [dataSets, setDataSets] = useState([])
   const [id, setId] = useState("")
   const [dateMin, setDateMin] = useState(null)
@@ -59,7 +57,6 @@ export default function useChartHook({ lakeInfo }) {
 
     chartData.forEach((item, index) => {
       const data = setDataLines(item, obsTypes[index], index)
-      // return date min and max
       const itemDates = item
         .filter(el => !isNaN(el.value) && el.date !== "" && el.value !== "0")
         .map(el => el.date)
@@ -69,7 +66,7 @@ export default function useChartHook({ lakeInfo }) {
     const allDatesSorted = [...allDates].sort(
       (a, b) => new Date(a) - new Date(b)
     )
-    
+
     const minDatevalue = new Date(allDatesSorted.shift())
     const firstDayMonth = new Date(
       minDatevalue.getFullYear(),
@@ -88,10 +85,6 @@ export default function useChartHook({ lakeInfo }) {
     setDateMax(nextMonth)
     setDataSets(arr)
   }, [chartData])
-
-  useEffect(() => {
-    console.log({ dateMin })
-  }, [dateMin, dateMax])
 
   const handleValue = (value, unit) => {
     if (unit === "hm³") {
