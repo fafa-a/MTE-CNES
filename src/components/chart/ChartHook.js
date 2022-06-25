@@ -1,68 +1,98 @@
 import { AppConfig, ObservationTypes } from "@/config"
 import { useSelector } from "react-redux"
 
-export default function useChartHook({ lakeInfo }) {
+export default function useChartHook() {
   const [chartData, setChartData] = useState([])
   const [dataSets, setDataSets] = useState([])
   const [id, setId] = useState("")
   const [dateMin, setDateMin] = useState(null)
   const [dateMax, setDateMax] = useState(null)
-  const [lakeName, setLakeName] = useState("")
+  const [lakesName, setLakesName] = useState([])
   const [dataType, setDataType] = useState("")
-  const [obsTypes, setObsTypes] = useState([])
   const [labelTitle, setLabelTitle] = useState([])
   const [unit, setUnit] = useState("")
 
   const form = useSelector(state => state.form)
   const lakes = useSelector(state => state.lakes)
 
-  useEffect(() => {
-    if (!form.OPTIC) {
-      setObsTypes([ObservationTypes.RADAR])
-    }
-    if (!form.RADAR) {
-      setObsTypes([ObservationTypes.OPTIC])
-    }
-  }, [form.OPTIC, form.RADAR])
+  const obsTypes = [
+    AppConfig.observationTypes.OPTIC.label,
+    AppConfig.observationTypes.RADAR.label,
+  ]
 
   useEffect(() => {
-    if (lakeInfo.obsTypes?.length > 0) {
-      const { id, name, dataType, obsTypes } = lakeInfo
-      const { label, unit } = AppConfig.attributes[dataType]
-      setId(id)
-      setLakeName(name)
-      setDataType(dataType)
-      if (!form.OPTIC) {
-        setObsTypes([ObservationTypes.RADAR])
-      }
-      if (!form.RADAR) {
-        setObsTypes([ObservationTypes.OPTIC])
-      }
-      if (form.OPTIC && form.RADAR) {
-        setObsTypes(obsTypes)
-      }
-      setLabelTitle(label)
-      setUnit(unit)
-    }
-  }, [lakeInfo.obsTypes])
+    if (!lakes.activeLakes) return
+    const { dataType } = form
+    const { label, unit } = AppConfig.attributes[dataType]
+    setDataType(dataType)
+    setLabelTitle(label)
+    setUnit(unit)
+  }, [form])
 
   useEffect(() => {
-    if (!id) return
-    setChartData(lakes.data[id][dataType])
-  }, [lakes, id, dataType])
+    console.log({ lakes })
+    console.log(lakes.activeLakes)
+  }, [lakes])
+
+  useEffect(() => {
+    console.log({ dataType })
+  }, [dataType])
+
+  useEffect(() => {
+    console.log({ chartData })
+  }, [chartData])
+
+  // set data for one lake
+  // useEffect(() => {
+  //   if (!lakes.activatesLakes) return
+  //   setChartData(lakes.data[lakeId][dataType])
+  // }, [lakes, id, dataType])
+
+  // set data for all lakes active
+  useEffect(() => {
+    if (!lakes.activeLakes) return
+    for (const lakeId of Object.keys(lakes.activeLakes)) {
+      const { name } = lakes.activeLakes[lakeId]
+      if (!lakesName.includes(name)) {
+        setLakesName([...lakesName, name])
+      }
+      setChartData([...chartData, [lakes.data[lakeId][dataType]]])
+    }
+  }, [lakes])
 
   useEffect(() => {
     const arr = []
     const allDates = []
 
-    chartData.forEach((item, index) => {
-      const data = setDataLines(item, obsTypes[index], index)
-      const itemDates = item
-        .filter(el => !isNaN(el.value) && el.date !== "" && el.value !== "0")
-        .map(el => el.date)
-      allDates.push(...itemDates)
-      arr.push(data)
-    })
+    // setDataSets for one lake
+    // chartData.forEach((item, index) => {
+    //   const data = setDataLines(item, obsTypes[index], index)
+    //   const itemDates = item
+    //     .filter(el => !isNaN(el.value) && el.date !== "" && el.value !== "0")
+    //     .map(el => el.date)
+    //   allDates.push(...itemDates)
+    //   arr.push(data)
+    // })
+    // setDataSets(arr)
+    for (const key of chartData) {
+      key.forEach(item => {
+        item.forEach((itm, index) => {
+          const data = setDataLines(itm, obsTypes[index], index)
+          const itemDates = itm
+            .filter(
+              el => !isNaN(el.value) && el.date !== "" && el.value !== "0"
+            )
+            .map(el => el.date)
+          allDates.push(...itemDates)
+          if (arr.includes(data)) {
+            console.log("data exists")
+          }
+          arr.push(data)
+        })
+      })
+    }
+    setDataSets([...arr])
+    arr.length = 0
     const allDatesSorted = [...allDates].sort(
       (a, b) => new Date(a) - new Date(b)
     )
@@ -81,9 +111,7 @@ export default function useChartHook({ lakeInfo }) {
       maxDateValue.getMonth() + 1,
       1
     )
-
     setDateMax(nextMonth)
-    setDataSets(arr)
   }, [chartData])
 
   const handleValue = (value, unit) => {
@@ -106,9 +134,10 @@ export default function useChartHook({ lakeInfo }) {
     plugins: {
       title: {
         display: true,
-        text: lakeName
-          ? `${lakeName} - ${labelTitle} - ${unit}`
-          : "Choose a lake and click on it",
+        text:
+          chartData.length === 1
+            ? `${lakesName}  ${labelTitle}  ${unit}`
+            : `${labelTitle}  ${unit}`,
         position: "top",
         font: {
           size: 16,
@@ -124,7 +153,7 @@ export default function useChartHook({ lakeInfo }) {
             return label
           },
           afterTitle() {
-            return `${lakeName}` || "To Fix"
+            return `${lakesName}` || "To Fix"
           },
           beforeBody(context) {
             const { label } = context[0].dataset
@@ -137,6 +166,7 @@ export default function useChartHook({ lakeInfo }) {
         },
       },
       legend: {
+        display: chartData.length === 1,
         position: "top",
         labels: { font: { size: 14 } },
       },
@@ -190,7 +220,7 @@ export default function useChartHook({ lakeInfo }) {
       xAxisKey: "date",
       yAxisKey: "value",
     },
-    animation: false,
+    animation: true,
   }
 
   const setDataLines = (item, obsType, index) => {
