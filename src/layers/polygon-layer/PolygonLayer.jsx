@@ -5,11 +5,12 @@ import { useState, useEffect } from "react"
 import { ButtonPlusMinus } from "@components/button-plus-minus/ButtonPlusMinus"
 import { createRef } from "react"
 
-export const PolygonLayer = ({ data, handleChange }) => {
+export const PolygonLayer = ({ data, handleChange, removeLakeActive }) => {
   const [layer, setLayer] = useState(null)
   const { centerPolygon, getLakeIdName, map } = usePolygonLayerHook({
     data,
     handleChange,
+    removeLakeActive,
   })
 
   const refsById = useMemo(() => {
@@ -54,6 +55,7 @@ export const PolygonLayer = ({ data, handleChange }) => {
                 id={ID_SWOT}
                 name={DAM_NAME}
                 getLakeIdName={getLakeIdName}
+                removeLakeActive={removeLakeActive}
               />
             </Popup>
           </Polygon>
