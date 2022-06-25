@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux"
 import { useDispatch } from "react-redux"
-import { addLake } from "./stores/lakesSlice"
+import { addLake, desactiveLake } from "./stores/lakesSlice"
 
 import {
   AppConfig,
@@ -33,6 +33,10 @@ export function useAppHook() {
       id,
       name,
     })
+  }
+
+  const removeLakeActive = id => {
+    dispatch(desactiveLake({ lakeId: id }))
   }
 
   useEffect(() => {
@@ -164,8 +168,8 @@ export function useAppHook() {
   }, [lakeData])
 
   useEffect(() => {
-    console.log({ lakes: lakes.data })
+    console.log({ lakes })
   }, [lakes])
 
-  return { getLakeIdSwotName, lakeInfo }
+  return { getLakeIdSwotName, lakeInfo, removeLakeActive }
 }

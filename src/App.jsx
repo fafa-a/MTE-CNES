@@ -18,11 +18,14 @@ const StyledContainer = styled("div", {
 
 const App = () => {
 
-  const { getLakeIdSwotName, lakeInfo } = useAppHook()
+  const { getLakeIdSwotName, lakeInfo, removeLakeActive } = useAppHook()
 
   return (
     <>
-      <Map getLakeIdSwotName={getLakeIdSwotName} />
+      <Map
+        getLakeIdSwotName={getLakeIdSwotName}
+        removeLakeActive={removeLakeActive}
+      />
       <StyledContainer>
         <Form />
         <Chart lakeInfo={lakeInfo} />
