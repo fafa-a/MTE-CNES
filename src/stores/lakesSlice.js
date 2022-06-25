@@ -20,7 +20,7 @@ export const lakesSlice = createSlice({
   initialState,
   reducers: {
     addLake: (state, action) => {
-      const { lakeId, dataType, lakeData } = action.payload
+      const { lakeId, dataType, lakeData, lakeName } = action.payload
 
       if (state.data[lakeId]) {
         state.data[lakeId] = {
@@ -39,8 +39,13 @@ export const lakesSlice = createSlice({
         state.loadedLakes.push(lakeId)
       }
 
-      if (!state.activeLakes.includes(lakeId)) {
-        state.activeLakes.push(lakeId)
+      if (!Object.keys(state.activeLakes).includes(lakeId)) {
+        state.activeLakes = {
+          ...state.activeLakes,
+          [lakeId]: {
+            name: lakeName,
+          },
+        }
       }
     },
     desactiveLake: (state, action) => {
