@@ -1,14 +1,25 @@
 import usePolygonLayerHook from "./PolygonLayerHook"
-import { LayerGroup, Polygon, Tooltip } from "react-leaflet"
+import { LayerGroup, Polygon, Popup, Tooltip } from "react-leaflet"
 import { v4 as uuid } from "@lukeed/uuid"
 import { useState, useEffect } from "react"
+import { ButtonPlusMinus } from "@components/button-plus-minus/ButtonPlusMinus"
+import { createRef } from "react"
 
 export const PolygonLayer = ({ data, handleChange }) => {
   const [layer, setLayer] = useState(null)
-  const { centerPolygon, getLakeIdName } = usePolygonLayerHook({
+  const { centerPolygon, getLakeIdName, map } = usePolygonLayerHook({
     data,
     handleChange,
   })
+
+  const refsById = useMemo(() => {
+    const refs = {}
+    data.features.forEach(feature => {
+      const { ID_SWOT } = feature.properties
+      refs[ID_SWOT] = createRef(null)
+    })
+    return refs
+  }, [data])
 
   useEffect(() => {
     setLayer(
@@ -18,6 +29,7 @@ export const PolygonLayer = ({ data, handleChange }) => {
         const reversedMultiPolygons = coordinates[0].map(polygon =>
           polygon.map(p => [p[1], p[0]])
         )
+
         return (
           <Polygon
             key={uuid()}
@@ -28,11 +40,22 @@ export const PolygonLayer = ({ data, handleChange }) => {
                 centerPolygon(el.target.options["data-coordinates"])
                 getLakeIdName(ID_SWOT, DAM_NAME)
               },
+              contextmenu: e => {
+                refsById[ID_SWOT].current.setLatLng(e.latlng).openOn(map)
+              },
             }}
           >
             <Tooltip>
               <h3>{DAM_NAME}</h3>
             </Tooltip>
+            <Popup ref={refsById[ID_SWOT]}>
+              <h3>{DAM_NAME}</h3>
+              <ButtonPlusMinus
+                id={ID_SWOT}
+                name={DAM_NAME}
+                getLakeIdName={getLakeIdName}
+              />
+            </Popup>
           </Polygon>
         )
       })
