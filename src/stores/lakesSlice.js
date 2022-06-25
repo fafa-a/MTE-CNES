@@ -12,6 +12,7 @@ import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
   data: {},
+  activeLakes: [],
   loadedLakes: [],
 }
 export const lakesSlice = createSlice({
@@ -37,11 +38,22 @@ export const lakesSlice = createSlice({
       if (!state.loadedLakes.includes(lakeId)) {
         state.loadedLakes.push(lakeId)
       }
+
+      if (!state.activeLakes.includes(lakeId)) {
+        state.activeLakes.push(lakeId)
+      }
+    },
+    desactiveLake: (state, action) => {
+      const { lakeId } = action.payload
+
+      if (state.activeLakes.includes(lakeId)) {
+        state.activeLakes = state.activeLakes.filter(id => id !== lakeId)
+      }
     },
   },
 })
 
-export const { addLake } = lakesSlice.actions
+export const { addLake, desactiveLake } = lakesSlice.actions
 
 export default lakesSlice.reducer
 
