@@ -17,6 +17,7 @@ export function useAppHook() {
   })
   const [seriePath, setSeriePath] = useState([])
   const [lakeData, setLakeData] = useState([])
+  const [compareLake, setCompareLake] = useState(null)
   const form = useSelector(state => state.form)
   const lakes = useSelector(state => state.lakes)
 
@@ -24,11 +25,20 @@ export function useAppHook() {
   const { getSeriePath } = SeriePathUtils
   const dispatch = useDispatch()
 
-  const getLakeIdSwotName = (id, name) => {
+  const getLakeIdSwotName = ({ id, name }) => {
     setLakeInfo({
       id,
       name,
     })
+    setCompareLake(false)
+  }
+
+  const addLakeToCompare = ({ id, name, compare }) => {
+    setLakeInfo({
+      id,
+      name,
+    })
+    setCompareLake(compare)
   }
 
   const removeLakeActive = id => {
@@ -128,5 +138,5 @@ export function useAppHook() {
     )
   }, [lakeData])
 
-  return { getLakeIdSwotName, lakeInfo, removeLakeActive }
+  return { getLakeIdSwotName, addLakeToCompare, compareLake, removeLakeActive }
 }
