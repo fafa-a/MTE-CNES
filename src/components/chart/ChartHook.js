@@ -11,6 +11,7 @@ export default function useChartHook() {
   const [dataType, setDataType] = useState("")
   const [labelTitle, setLabelTitle] = useState([])
   const [unit, setUnit] = useState("")
+  const [lastDataTypes, setLastDataTypes] = useState()
 
   const form = useSelector(state => state.form)
   const lakes = useSelector(state => state.lakes)
@@ -39,8 +40,8 @@ export default function useChartHook() {
   }, [dataType])
 
   useEffect(() => {
-    console.log({ chartData })
-  }, [chartData])
+    console.log({ lastDataTypes })
+  }, [lastDataTypes])
 
   // set data for one lake
   // useEffect(() => {
@@ -56,9 +57,18 @@ export default function useChartHook() {
       if (!lakesName.includes(name)) {
         setLakesName([...lakesName, name])
       }
-      setChartData([...chartData, [lakes.data[lakeId][dataType]]])
+
+      if (dataType !== lastDataTypes) {
+        setChartData([[lakes.data[lakeId][dataType]]])
+      }
+
+      if (dataType === lastDataTypes) {
+        setChartData([...chartData, [lakes.data[lakeId][dataType]]])
+      }
+      setLastDataTypes(dataType)
     }
   }, [lakes])
+
 
   useEffect(() => {
     const arr = []
