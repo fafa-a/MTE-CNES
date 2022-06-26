@@ -7,7 +7,11 @@ export default function usePolygonLayerHook({ handleChange }) {
   })
 
   const getLakeIdName = useCallback((id, name) => {
-    handleChange(id, name)
+    const obj = {
+      id,
+      name,
+    }
+    handleChange(obj)
   })
 
   return {
