@@ -1,12 +1,7 @@
 import useButtonPlusMinusHook from "./ButtonPlusMinusHook"
-export const ButtonPlusMinus = ({
-  id,
-  name,
-  getLakeIdName,
-  removeLakeActive,
-}) => {
+export const ButtonPlusMinus = ({ id, name, removeLakeActive, addLakeToCompare }) => {
   const { clickPlus, clickMinus } = useButtonPlusMinusHook({
-    getLakeIdName,
+    addLakeToCompare,
     id,
     name,
     removeLakeActive,

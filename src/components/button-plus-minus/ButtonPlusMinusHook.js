@@ -1,7 +1,7 @@
 export default function useButtonPlusMinusHook({
   id,
   name,
-  getLakeIdName,
+  addLakeToCompare,
   removeLakeActive,
 }) {
   const clickMinus = useCallback(() => {
@@ -9,7 +9,8 @@ export default function useButtonPlusMinusHook({
   }, [])
 
   const clickPlus = useCallback(() => {
-    getLakeIdName(id, name)
+    const obj = { id, name, compare: true }
+    addLakeToCompare(obj)
   }, [])
 
   return {
