@@ -1,7 +1,7 @@
 import { AppConfig, ObservationTypes } from "@/config"
 import { useSelector } from "react-redux"
 
-export default function useChartHook() {
+export default function useChartHook({ compareLake }) {
   const [chartData, setChartData] = useState([])
   const [dataSets, setDataSets] = useState([])
   const [id, setId] = useState("")
@@ -31,26 +31,6 @@ export default function useChartHook() {
   }, [form])
 
   useEffect(() => {
-    console.log({ lakes })
-    console.log(lakes.activeLakes)
-  }, [lakes])
-
-  useEffect(() => {
-    console.log({ dataType })
-  }, [dataType])
-
-  useEffect(() => {
-    console.log({ lastDataTypes })
-  }, [lastDataTypes])
-
-  // set data for one lake
-  // useEffect(() => {
-  //   if (!lakes.activatesLakes) return
-  //   setChartData(lakes.data[lakeId][dataType])
-  // }, [lakes, id, dataType])
-
-  // set data for all lakes active
-  useEffect(() => {
     if (!lakes.activeLakes) return
     for (const lakeId of Object.keys(lakes.activeLakes)) {
       const { name } = lakes.activeLakes[lakeId]
@@ -58,32 +38,25 @@ export default function useChartHook() {
         setLakesName([...lakesName, name])
       }
 
-      if (dataType !== lastDataTypes) {
+      if (compareLake === false) {
         setChartData([[lakes.data[lakeId][dataType]]])
       }
 
-      if (dataType === lastDataTypes) {
+      if (dataType !== lastDataTypes && compareLake === true) {
+        setChartData([[lakes.data[lakeId][dataType]]])
+      }
+
+      if (dataType === lastDataTypes && compareLake === true) {
         setChartData([...chartData, [lakes.data[lakeId][dataType]]])
       }
       setLastDataTypes(dataType)
     }
   }, [lakes])
 
-
   useEffect(() => {
     const arr = []
     const allDates = []
 
-    // setDataSets for one lake
-    // chartData.forEach((item, index) => {
-    //   const data = setDataLines(item, obsTypes[index], index)
-    //   const itemDates = item
-    //     .filter(el => !isNaN(el.value) && el.date !== "" && el.value !== "0")
-    //     .map(el => el.date)
-    //   allDates.push(...itemDates)
-    //   arr.push(data)
-    // })
-    // setDataSets(arr)
     for (const key of chartData) {
       key.forEach(item => {
         item.forEach((itm, index) => {
@@ -94,9 +67,6 @@ export default function useChartHook() {
             )
             .map(el => el.date)
           allDates.push(...itemDates)
-          if (arr.includes(data)) {
-            console.log("data exists")
-          }
           arr.push(data)
         })
       })
