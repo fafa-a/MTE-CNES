@@ -11,7 +11,11 @@ const StyledMapContainer = styled(MapContainer, {
   height: "50vh",
 })
 
-export const Map = ({ getLakeIdSwotName, removeLakeActive }) => {
+export const Map = ({
+  getLakeIdSwotName,
+  removeLakeActive,
+  addLakeToCompare,
+}) => {
   return (
     <StyledMapContainer
       center={[36.91, -3.54]}
@@ -37,6 +41,7 @@ export const Map = ({ getLakeIdSwotName, removeLakeActive }) => {
               data={data}
               handleChange={getLakeIdSwotName}
               removeLakeActive={removeLakeActive}
+              addLakeToCompare={addLakeToCompare}
             />
             <MarkerLayerCluster data={data} />
           </div>
