@@ -31,22 +31,22 @@ export default function useChartHook({ compareLake }) {
 
   useEffect(() => {
     if (!lakes.activeLakes) return
-    for (const lakeId of Object.keys(lakes.activeLakes)) {
-      const { name } = lakes.activeLakes[lakeId]
+    for (const lake of lakes.activeLakes) {
+      const { id, name } = lake
       if (!lakesName.includes(name)) {
         setLakesName([...lakesName, name])
       }
 
       if (compareLake === false) {
-        setChartData([[lakes.data[lakeId][dataType]]])
+        setChartData([[lakes.data[id][dataType]]])
       }
 
       if (dataType !== lastDataTypes && compareLake === true) {
-        setChartData([[lakes.data[lakeId][dataType]]])
+        setChartData([[lakes.data[id][dataType]]])
       }
 
       if (dataType === lastDataTypes && compareLake === true) {
-        setChartData([...chartData, [lakes.data[lakeId][dataType]]])
+        setChartData([...chartData, [lakes.data[id][dataType]]])
       }
       setLastDataTypes(dataType)
     }
