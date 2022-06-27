@@ -27,6 +27,14 @@ export const {
       xl: "4rem",
       xxl: "8rem",
     },
+    borderRadius: {
+      xs: "0.25rem",
+      sm: "0.5rem",
+      base: "1rem",
+      lg: "2rem",
+      xl: "4rem",
+      xxl: "8rem",
+    },
   },
 })
 
