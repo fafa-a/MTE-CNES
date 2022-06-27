@@ -56,10 +56,10 @@ export default function useChartHook({ compareLake }) {
     const arr = []
     const allDates = []
 
-    for (const key of chartData) {
+    chartData.forEach((key, index) => {
       key.forEach(item => {
-        item.forEach((itm, index) => {
-          const data = setDataLines(itm, obsTypes[index], index)
+        item.forEach((itm, idx) => {
+          const data = setDataLines(itm, obsTypes[idx], idx, lakesName[index])
           const itemDates = itm
             .filter(
               el => !isNaN(el.value) && el.date !== "" && el.value !== "0"
@@ -69,8 +69,9 @@ export default function useChartHook({ compareLake }) {
           arr.push(data)
         })
       })
-    }
+    })
     setDataSets([...arr])
+
     arr.length = 0
     const allDatesSorted = [...allDates].sort(
       (a, b) => new Date(a) - new Date(b)
@@ -80,7 +81,6 @@ export default function useChartHook({ compareLake }) {
 
     const lastDateGraph = getChartFirstDateNextMonth(allDatesSorted)
     setDateMax(lastDateGraph)
-
   }, [chartData])
 
   const handleValue = (value, unit) => {
@@ -141,8 +141,9 @@ export default function useChartHook({ compareLake }) {
             const { label } = context[0]
             return label
           },
-          afterTitle() {
-            return `${lakesName}` || "To Fix"
+          afterTitle(context) {
+            const { lakeName } = context[0].dataset
+            return `${lakeName}`
           },
           beforeBody(context) {
             const { label } = context[0].dataset
@@ -212,7 +213,7 @@ export default function useChartHook({ compareLake }) {
     animation: true,
   }
 
-  const setDataLines = (item, obsType, index) => {
+  const setDataLines = (item, obsType, index, lakeName) => {
     if (!item) return
     const value = item
       ?.filter(el => !isNaN(el.value) && el.date !== "" && el.value !== "0")
@@ -228,6 +229,7 @@ export default function useChartHook({ compareLake }) {
 
     return {
       label: `${obsType}`,
+      lakeName: `${lakeName}`,
       data: value,
       borderColor,
       backgroundColor,
