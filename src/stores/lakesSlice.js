@@ -39,20 +39,17 @@ export const lakesSlice = createSlice({
         state.loadedLakes.push(lakeId)
       }
 
-      if (!Object.keys(state.activeLakes).includes(lakeId)) {
-        state.activeLakes = {
+      if (!state.activeLakes.map(lake => lake.id).includes(lakeId)) {
+        state.activeLakes = [
           ...state.activeLakes,
-          [lakeId]: {
-            name: lakeName,
-          },
-        }
+          { id: lakeId, name: lakeName },
+        ]
       }
     },
     desactiveLake: (state, action) => {
       const { lakeId } = action.payload
-
-      if (state.activeLakes.includes(lakeId)) {
-        state.activeLakes = state.activeLakes.filter(id => id !== lakeId)
+      if (state.activeLakes.map(lake => lake.id).includes(lakeId)) {
+        state.activeLakes = state.activeLakes.filter(lake => lake.id !== lakeId)
       }
     },
   },
@@ -61,4 +58,3 @@ export const lakesSlice = createSlice({
 export const { addLake, desactiveLake } = lakesSlice.actions
 
 export default lakesSlice.reducer
-
