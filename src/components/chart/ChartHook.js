@@ -1,10 +1,9 @@
-import { AppConfig, ObservationTypes } from "@/config"
+import { AppConfig } from "@/config"
 import { useSelector } from "react-redux"
 
 export default function useChartHook({ compareLake }) {
   const [chartData, setChartData] = useState([])
   const [dataSets, setDataSets] = useState([])
-  const [id, setId] = useState("")
   const [dateMin, setDateMin] = useState(null)
   const [dateMax, setDateMax] = useState(null)
   const [lakesName, setLakesName] = useState([])
@@ -76,22 +75,12 @@ export default function useChartHook({ compareLake }) {
     const allDatesSorted = [...allDates].sort(
       (a, b) => new Date(a) - new Date(b)
     )
+    const firstDateGraph = getChartStartDate(allDatesSorted)
+    setDateMin(firstDateGraph)
 
-    const minDatevalue = new Date(allDatesSorted.shift())
-    const firstDayMonth = new Date(
-      minDatevalue.getFullYear(),
-      minDatevalue.getMonth(),
-      1
-    )
-    setDateMin(firstDayMonth)
+    const lastDateGraph = getChartFirstDateNextMonth(allDatesSorted)
+    setDateMax(lastDateGraph)
 
-    const maxDateValue = new Date(allDatesSorted.at(-1))
-    const nextMonth = new Date(
-      maxDateValue.getFullYear(),
-      maxDateValue.getMonth() + 1,
-      1
-    )
-    setDateMax(nextMonth)
   }, [chartData])
 
   const handleValue = (value, unit) => {
@@ -102,6 +91,26 @@ export default function useChartHook({ compareLake }) {
     } else if (unit === "%") {
       return value
     }
+  }
+
+  const getChartStartDate = arr => {
+    const minDatevalue = new Date(arr.shift())
+    const firstDayMonth = new Date(
+      minDatevalue.getFullYear(),
+      minDatevalue.getMonth(),
+      1
+    )
+    return firstDayMonth
+  }
+
+  const getChartFirstDateNextMonth = arr => {
+    const maxDateValue = new Date(arr.at(-1))
+    const nextMonth = new Date(
+      maxDateValue.getFullYear(),
+      maxDateValue.getMonth() + 1,
+      1
+    )
+    return nextMonth
   }
 
   const options = {
