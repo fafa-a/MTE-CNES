@@ -7,8 +7,7 @@ globalStyles()
 import "leaflet/dist/leaflet.css"
 import "leaflet.markercluster/dist/MarkerCluster.css"
 import "leaflet.markercluster/dist/MarkerCluster.Default.css"
-
-
+import { LakeBoard } from "./components/lake-board/LakeBoard"
 
 const StyledContainer = styled("div", {
   display: "flex",
@@ -17,20 +16,22 @@ const StyledContainer = styled("div", {
 })
 
 const App = () => {
-
   const { getLakeIdSwotName, compareLake, removeLakeActive, addLakeToCompare } =
     useAppHook()
 
   return (
     <>
-      <Map
-        getLakeIdSwotName={getLakeIdSwotName}
-        removeLakeActive={removeLakeActive}
-        addLakeToCompare={addLakeToCompare}
-      />
+      <StyledContainer>
+        <LakeBoard />
+        <Map
+          getLakeIdSwotName={getLakeIdSwotName}
+          removeLakeActive={removeLakeActive}
+          addLakeToCompare={addLakeToCompare}
+        />
+      </StyledContainer>
       <StyledContainer>
         <Form />
-        <Chart compareLake={compareLake} />
+        {/* <Chart compareLake={compareLake} /> */}
       </StyledContainer>
     </>
   )
