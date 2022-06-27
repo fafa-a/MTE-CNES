@@ -31,7 +31,7 @@ const App = () => {
       </StyledContainer>
       <StyledContainer>
         <Form />
-        {/* <Chart compareLake={compareLake} /> */}
+        <Chart compareLake={compareLake} />
       </StyledContainer>
     </>
   )
