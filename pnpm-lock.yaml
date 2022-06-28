@@ -30,6 +30,7 @@ specifiers:
   react-leaflet-markercluster: 3.0.0-rc1
   react-papaparse: ^4.0.2
   react-redux: ^8.0.2
+  react-tooltip: ^4.2.21
   rollup-plugin-geojson: ^0.1.0
   unplugin-auto-import: ^0.8.8
   unplugin-icons: ^0.14.6
@@ -61,6 +62,7 @@ dependencies:
   react-leaflet-markercluster: 3.0.0-rc1_sfoxds7t5ydpegc3knd667wn6m
   react-papaparse: 4.0.2
   react-redux: 8.0.2_zn5uodkvigq2cma2dm4r3u5424
+  react-tooltip: 4.2.21_sfoxds7t5ydpegc3knd667wn6m
   rollup-plugin-geojson: 0.1.0
 
 devDependencies:
@@ -1845,6 +1847,14 @@ packages:
     engines: {node: '>= 0.6.0'}
     dev: false
 
+  /prop-types/15.8.1:
+    resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
+    dependencies:
+      loose-envify: 1.4.0
+      object-assign: 4.1.1
+      react-is: 16.13.1
+    dev: false
+
   /queue-microtask/1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
     dev: true
@@ -1961,6 +1971,19 @@ packages:
     resolution: {integrity: sha512-XP8A9BT0CpRBD+NYLLeIhld/RqG9+gktUjW1FkE+Vm7OCinbG1SshcK5tb9ls4kzvjZr9mOQc7HYgBngEyPAXg==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /react-tooltip/4.2.21_sfoxds7t5ydpegc3knd667wn6m:
+    resolution: {integrity: sha512-zSLprMymBDowknr0KVDiJ05IjZn9mQhhg4PRsqln0OZtURAJ1snt1xi5daZfagsh6vfsziZrc9pErPTDY1ACig==}
+    engines: {npm: '>=6.13'}
+    peerDependencies:
+      react: '>=16.0.0'
+      react-dom: '>=16.0.0'
+    dependencies:
+      prop-types: 15.8.1
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+      uuid: 7.0.3
+    dev: false
 
   /react/17.0.2:
     resolution: {integrity: sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==}
@@ -2245,6 +2268,11 @@ packages:
     resolution: {integrity: sha512-0Pm9hTQ3se5ll1XihRic3FDIku70C+iHUdT/W926rSgHV5QgXsYbKZN8MSC3tJtSkhuROzvsQjAaFENRXr+19A==}
     dependencies:
       inherits: 2.0.3
+    dev: false
+
+  /uuid/7.0.3:
+    resolution: {integrity: sha512-DPSke0pXhTZgoF/d+WSt2QaKMCFSfx7QegxEWT+JOuHF5aWrKEn0G+ztjuJg/gG8/ItK+rbPCD/yNv8yyih6Cg==}
+    hasBin: true
     dev: false
 
   /vite/2.9.9:
