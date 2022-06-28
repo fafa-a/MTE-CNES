@@ -22,7 +22,8 @@ const StyledContainer = styled("div", {
   flexDirection: "column",
   height: "100%",
   padding: theme.space.sm,
-  minWidth: "16vw",
+  minWidth: "17vw",
+  maxWidth: "17vw",
 })
 
 const StyledDiv = styled("div", {
