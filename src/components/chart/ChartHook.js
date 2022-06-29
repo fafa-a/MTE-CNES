@@ -210,7 +210,7 @@ export default function useChartHook({ compareLake }) {
       xAxisKey: "date",
       yAxisKey: "value",
     },
-    animation: true,
+    animation: false,
   }
 
   const setDataLines = (item, obsType, index, lakeName) => {
