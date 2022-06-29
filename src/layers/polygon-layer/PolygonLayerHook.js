@@ -23,6 +23,9 @@ export default function usePolygonLayerHook({ handleChange }) {
     }
     handleChange(obj)
   })
+const closePopup = useCallback(() => {
+  map.closePopup()
+})
 
   return {
     map,

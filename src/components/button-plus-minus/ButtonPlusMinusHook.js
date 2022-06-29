@@ -1,3 +1,4 @@
+import { useMap } from "react-leaflet"
 export default function useButtonPlusMinusHook({
   id,
   name,
@@ -5,6 +6,8 @@ export default function useButtonPlusMinusHook({
   removeLakeActive,
   coordinates,
 }) {
+  const map = useMap()
+
   const clickMinus = useCallback(() => {
     removeLakeActive(id)
   }, [])
@@ -12,6 +15,7 @@ export default function useButtonPlusMinusHook({
   const clickPlus = useCallback(() => {
     const obj = { id, name, coord: coordinates, compare: true }
     addLakeToCompare(obj)
+    map.closePopup()
   }, [])
 
   return {
