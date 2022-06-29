@@ -26,7 +26,6 @@ export const PolygonLayer = ({
     })
     return refs
   }, [data])
-
   useEffect(() => {
     setLayer(
       data.features.map(feature => {
@@ -43,8 +42,10 @@ export const PolygonLayer = ({
             data-coordinates={[LAT_WW, LONG_WW]}
             eventHandlers={{
               click: el => {
-                centerPolygon(el.target.options["data-coordinates"])
-                getLakeIdName(ID_SWOT, DAM_NAME)
+                el.target.closePopup()
+                const coordinates = el.target.options["data-coordinates"]
+                centerPolygon(coordinates)
+                getLakeIdName(ID_SWOT, DAM_NAME, coordinates)
               },
               contextmenu: e => {
                 refsById[ID_SWOT].current.setLatLng(e.latlng).openOn(map)
@@ -59,6 +60,7 @@ export const PolygonLayer = ({
               <ButtonPlusMinus
                 id={ID_SWOT}
                 name={DAM_NAME}
+                coordinates={[LAT_WW, LONG_WW]}
                 addLakeToCompare={addLakeToCompare}
                 removeLakeActive={removeLakeActive}
               />

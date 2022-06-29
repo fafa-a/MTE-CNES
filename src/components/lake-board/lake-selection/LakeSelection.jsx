@@ -44,6 +44,7 @@ const StyledContainerP = styled("div", {
 })
 
 const StyledParagraph = styled("p", {
+  cursor: "pointer",
   fontFamily: "sans-serif",
   paddingLeft: theme.space.sm,
   width: "100%",
@@ -95,8 +96,17 @@ const StyledReactTooltip = styled(ReactTooltip, {
   zIndex: "1111 !important",
 })
 
-export const LakeSelection = ({ id, lakeName }) => {
-  const { handleClick } = useLakeSelectionHook(id)
+export const LakeSelection = ({
+  id,
+  lakeName,
+  coordinates,
+  centerMapOnLake,
+}) => {
+  const { handleClickDesactiveLake, sendCoordinates } = useLakeSelectionHook(
+    id,
+    coordinates,
+    centerMapOnLake
+  )
   return (
     <StyledDiv>
       <StyledDivObservationTypes>
@@ -109,11 +119,15 @@ export const LakeSelection = ({ id, lakeName }) => {
           <StyledSpanLabel>radar</StyledSpanLabel>
         </StyledDivContainerObsTypes>
       </StyledDivObservationTypes>
-      <StyledContainerP>
+      <StyledContainerP onClick={sendCoordinates}>
         <StyledParagraph>{lakeName}</StyledParagraph>
       </StyledContainerP>
       <StyledContainerButton>
-        <StyledButton data-tip data-for="delete" onClick={handleClick}>
+        <StyledButton
+          data-tip
+          data-for="delete"
+          onClick={handleClickDesactiveLake}
+        >
           <IconCarbonTrashCan fontSize={14} />
         </StyledButton>
         <StyledReactTooltip

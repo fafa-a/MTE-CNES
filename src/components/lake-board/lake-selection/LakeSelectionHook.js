@@ -1,14 +1,20 @@
-import { desactiveLake } from "@stores/lakesSlice"
+import { desactiveLake, setCoordinatesLakeToCenter } from "@stores/lakesSlice"
 import { useDispatch } from "react-redux"
 
-export const useLakeSelectionHook = id => {
+export const useLakeSelectionHook = (id, coordinates) => {
   const dispatch = useDispatch()
 
-  const handleClick = useCallback(() => {
+  const handleClickDesactiveLake = useCallback(() => {
     dispatch(desactiveLake({ lakeId: id }))
   })
+
+  const sendCoordinates = useCallback(() => {
+    dispatch(setCoordinatesLakeToCenter({ coordinates }))
+  }, [])
+
   return {
-    handleClick,
+    handleClickDesactiveLake,
+    sendCoordinates,
   }
 }
 export default useLakeSelectionHook

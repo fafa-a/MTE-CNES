@@ -20,7 +20,12 @@ export const LakeBoard = () => {
     <StyledContainer>
       <h3>Selected lakes</h3>
       {activeLakes.map(lake => (
-        <LakeSelection key={uuid()} id={lake.id} lakeName={lake.name} />
+        <LakeSelection
+          key={uuid()}
+          id={lake.id}
+          lakeName={lake.name}
+          coordinates={lake.coordinates}
+        />
       ))}
     </StyledContainer>
   )
