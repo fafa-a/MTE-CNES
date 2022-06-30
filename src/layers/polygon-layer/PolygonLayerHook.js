@@ -15,17 +15,17 @@ export default function usePolygonLayerHook({ handleChange }) {
     map.setView(coord[0], coord[1])
   })
 
-  const getLakeIdName = useCallback((id, name, coord) => {
-    const obj = {
-      id,
-      name,
-      coord,
-    }
-    handleChange(obj)
-  })
-const closePopup = useCallback(() => {
-  map.closePopup()
-})
+  const getLakeIdName = useCallback(
+    (id, name, coord) => {
+      const obj = {
+        id,
+        name,
+        coord,
+      }
+      handleChange(obj)
+    },
+    [handleChange]
+  )
 
   return {
     map,
