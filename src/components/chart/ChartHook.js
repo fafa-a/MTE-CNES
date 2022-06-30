@@ -1,5 +1,6 @@
 import { AppConfig } from "@/config"
 import { useSelector } from "react-redux"
+import { ObservationTypes } from "../../config"
 
 export default function useChartHook({ compareLake }) {
   const [chartData, setChartData] = useState([])
@@ -11,10 +12,9 @@ export default function useChartHook({ compareLake }) {
   const [labelTitle, setLabelTitle] = useState([])
   const [unit, setUnit] = useState("")
   const [lastDataTypes, setLastDataTypes] = useState()
-
   const form = useSelector(state => state.form)
   const lakes = useSelector(state => state.lakes)
-
+  const chart = useSelector(state => state.chart)
   const obsTypes = [
     AppConfig.observationTypes.OPTIC.label,
     AppConfig.observationTypes.RADAR.label,
@@ -59,7 +59,13 @@ export default function useChartHook({ compareLake }) {
     chartData.forEach((key, index) => {
       key.forEach(item => {
         item.forEach((itm, idx) => {
-          const data = setDataLines(itm, obsTypes[idx], idx, lakesName[index])
+          const data = setDataLines(
+            itm,
+            obsTypes[idx],
+            idx,
+            lakesName[index],
+            index
+          )
           const itemDates = itm
             .filter(
               el => !isNaN(el.value) && el.date !== "" && el.value !== "0"
@@ -156,9 +162,9 @@ export default function useChartHook({ compareLake }) {
         },
       },
       legend: {
-        display: chartData.length === 1,
-        position: "top",
-        labels: { font: { size: 14 } },
+        display: false,
+        // position: "top",
+        // labels: { font: { size: 14 } },
       },
       zoom: {
         pan: {
@@ -213,7 +219,7 @@ export default function useChartHook({ compareLake }) {
     animation: false,
   }
 
-  const setDataLines = (item, obsType, index, lakeName) => {
+  const setDataLines = (item, obsType, index, lakeName, indexColor) => {
     if (!item) return
     const value = item
       ?.filter(el => !isNaN(el.value) && el.date !== "" && el.value !== "0")
@@ -223,27 +229,26 @@ export default function useChartHook({ compareLake }) {
           value: handleValue(el.value, unit),
         }
       })
+
     const { borderWidth, tension, pointRadius } = AppConfig.attributes[dataType]
-    const { borderColor, backgroundColor, pointBackgroundColor } =
-      AppConfig.attributes[dataType].style[index]
+    const { backgroundColor, borderColor } =
+      chart[dataType].style[Object.values(ObservationTypes)[index]][indexColor]
 
     return {
+      backgroundColor,
+      borderColor,
+      borderWidth,
+      data: value,
       label: `${obsType}`,
       lakeName: `${lakeName}`,
-      data: value,
-      borderColor,
-      backgroundColor,
-      borderWidth,
-      pointBackgroundColor,
-      tension,
       pointRadius,
+      tension,
     }
   }
 
   const data = {
     datasets: dataSets,
   }
-
   return {
     data,
     options,

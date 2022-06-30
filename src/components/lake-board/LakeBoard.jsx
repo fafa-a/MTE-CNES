@@ -19,12 +19,13 @@ export const LakeBoard = () => {
   return (
     <StyledContainer>
       <h3>Selected lakes</h3>
-      {activeLakes.map(lake => (
+      {activeLakes.map((lake, index) => (
         <LakeSelection
           key={uuid()}
           id={lake.id}
           lakeName={lake.name}
           coordinates={lake.coordinates}
+          indexColor={index}
         />
       ))}
     </StyledContainer>

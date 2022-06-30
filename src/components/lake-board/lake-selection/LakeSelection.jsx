@@ -69,7 +69,6 @@ const StyledDivContainerObsTypes = styled("div", {
 })
 
 const StyledSpanOpticColor = styled("span", {
-  backgroundColor: "#00ff00",
   width: "10px",
   height: "10px",
   display: "inline-block",
@@ -82,7 +81,6 @@ const StyledSpanLabel = styled("span", {
 })
 
 const StyledSpanRadarColor = styled("span", {
-  backgroundColor: "blue",
   width: "10px",
   height: "10px",
   display: "inline-block",
@@ -101,21 +99,19 @@ export const LakeSelection = ({
   lakeName,
   coordinates,
   centerMapOnLake,
+  indexColor,
 }) => {
-  const { handleClickDesactiveLake, sendCoordinates } = useLakeSelectionHook(
-    id,
-    coordinates,
-    centerMapOnLake
-  )
+  const { handleClickDesactiveLake, sendCoordinates, bgOptic, bgRadar } =
+    useLakeSelectionHook(id, coordinates, indexColor)
   return (
     <StyledDiv>
       <StyledDivObservationTypes>
         <StyledDivContainerObsTypes>
-          <StyledSpanOpticColor />
+          <StyledSpanOpticColor style={{ ...bgOptic }} />
           <StyledSpanLabel>optic</StyledSpanLabel>
         </StyledDivContainerObsTypes>
         <StyledDivContainerObsTypes>
-          <StyledSpanRadarColor />
+          <StyledSpanRadarColor style={{ ...bgRadar }} />
           <StyledSpanLabel>radar</StyledSpanLabel>
         </StyledDivContainerObsTypes>
       </StyledDivObservationTypes>
