@@ -94,13 +94,7 @@ const StyledReactTooltip = styled(ReactTooltip, {
   zIndex: "1111 !important",
 })
 
-export const LakeSelection = ({
-  id,
-  lakeName,
-  coordinates,
-  centerMapOnLake,
-  indexColor,
-}) => {
+export const LakeSelection = ({ id, lakeName, coordinates, indexColor }) => {
   const { handleClickDesactiveLake, sendCoordinates, bgOptic, bgRadar } =
     useLakeSelectionHook(id, coordinates, indexColor)
   return (

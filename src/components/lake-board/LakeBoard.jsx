@@ -13,12 +13,16 @@ const StyledContainer = styled("div", {
   minWidth: "13vw",
   maxWidth: "13vw",
 })
+const StyledH3 = styled("h3", {
+  fontFamily: "sans-serif",
+  marginBottom: theme.space.sm,
+})
 
 export const LakeBoard = () => {
   const { activeLakes } = useLakeBoardHook()
   return (
     <StyledContainer>
-      <h3>Selected lakes</h3>
+      <StyledH3>Selected lakes</StyledH3>
       {activeLakes.map((lake, index) => (
         <LakeSelection
           key={uuid()}
