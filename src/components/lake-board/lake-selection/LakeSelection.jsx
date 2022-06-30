@@ -10,7 +10,7 @@ const StyledDiv = styled("div", {
   height: "35px",
   border: "1px solid #ccc",
   borderRadius: theme.borderRadius.sm,
-  marginBottom: theme.space.xxs,
+  marginBottom: theme.space.xs,
 })
 
 const StyledContainerButton = styled("div", {
