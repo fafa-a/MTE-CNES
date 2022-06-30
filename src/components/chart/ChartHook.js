@@ -139,6 +139,7 @@ export default function useChartHook({ compareLake }) {
         },
         padding: {
           top: 10,
+          bottom: 10,
         },
       },
       tooltip: {
