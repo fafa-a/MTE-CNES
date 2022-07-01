@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux"
 import { useDispatch } from "react-redux"
-import { addLake, desactiveLake } from "./stores/lakesSlice"
+import { activeLake, addLake, desactiveLake } from "./stores/lakesSlice"
 
 import {
   AppConfig,
@@ -19,6 +19,7 @@ export function useAppHook() {
   const [seriePath, setSeriePath] = useState([])
   const [lakeData, setLakeData] = useState([])
   const [compareLake, setCompareLake] = useState(null)
+  const [prevDatatype, setPrevDatatype] = useState(null)
   const form = useSelector(state => state.form)
   const lakes = useSelector(state => state.lakes)
 
@@ -27,15 +28,19 @@ export function useAppHook() {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    console.log(lakeInfo)
-  }, [lakeInfo])
+    console.log({ lakes })
+  }, [lakes])
+
+  useEffect(() => {
+    console.log({ OPTIC })
+  }, [OPTIC])
 
   const getLakeIdSwotName = ({ id, name, coord }) => {
-    console.log({ coord })
     setLakeInfo({
       id,
       name,
       coord,
+      compare: false,
     })
     setCompareLake(false)
   }
@@ -45,6 +50,7 @@ export function useAppHook() {
       id,
       name,
       coord,
+      compare,
     })
     setCompareLake(compare)
   }
@@ -101,9 +107,50 @@ export function useAppHook() {
 
   useEffect(() => {
     if (!lakeInfo.id) return
-    const seriePathByday = getSeriePathByDay()
-    const seriePathByPeriod = getSeriePathByPeriod()
-    setSeriePath([...seriePathByday, ...seriePathByPeriod])
+    if (lakes.loadedLakes.includes(lakeInfo.id)) {
+      dispatch(
+        activeLake({
+          lakeId: lakeInfo.id,
+          lakeName: lakeInfo.name,
+          lakeCoord: lakeInfo.coord,
+          compare: lakeInfo.compare,
+        })
+      )
+    }
+    if (!lakes.loadedLakes.includes(lakeInfo.id) && prevDatatype !== dataType) {
+      const seriePathByday = getSeriePathByDay()
+      const seriePathByPeriod = getSeriePathByPeriod()
+      setSeriePath([...seriePathByday, ...seriePathByPeriod])
+    }
+
+
+      const seriePathByday = getSeriePathByDay()
+      const seriePathByPeriod = getSeriePathByPeriod()
+      setSeriePath([...seriePathByday, ...seriePathByPeriod])
+
+
+    // if (prevDatatype !== dataType) {
+    //   for (const item of [lakes.data]) {
+    //     Object.entries(item).forEach(([i, data]) => {
+    //       const missDataType = Object.keys(data)
+    //       if (!missDataType.includes(dataType)) {
+    //         for (const lake of lakes.activeLakes) {
+    //           const { id, name, coordinates } = lake
+    //           if (id !== lakeInfo.id) {
+    //             setLakeInfo({
+    //               id,
+    //               name,
+    //               coordinates,
+    //               compare: true,
+    //             })
+    //             console.log(`${id} miss ${dataType}`)
+    //           }
+    //         }
+    //       }
+    //     })
+    //   }
+    // }
+    setPrevDatatype(dataType)
   }, [dataType, OPTIC, RADAR, DAY, PERIOD, lakeInfo.id])
 
   const handleSeriePath = (dataType, obs, duration) => {
@@ -143,6 +190,7 @@ export function useAppHook() {
         lakeData,
         lakeName: lakeInfo.name,
         lakeCoord: lakeInfo.coord,
+        compare: lakeInfo.compare,
       })
     )
   }, [lakeData])

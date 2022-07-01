@@ -21,7 +21,8 @@ export const lakesSlice = createSlice({
   initialState,
   reducers: {
     addLake: (state, action) => {
-      const { lakeId, dataType, lakeData, lakeName, lakeCoord } = action.payload
+      const { lakeId, dataType, lakeData, lakeName, lakeCoord, compare } =
+        action.payload
 
       if (state.data[lakeId]) {
         state.data[lakeId] = {
@@ -41,10 +42,33 @@ export const lakesSlice = createSlice({
       }
 
       if (!state.activeLakes.map(lake => lake.id).includes(lakeId)) {
-        state.activeLakes = [
-          ...state.activeLakes,
-          { id: lakeId, name: lakeName, coordinates: lakeCoord },
-        ]
+        if (compare) {
+          state.activeLakes = [
+            ...state.activeLakes,
+            { id: lakeId, name: lakeName, coordinates: lakeCoord },
+          ]
+        }
+        if (!compare) {
+          state.activeLakes = [
+            { id: lakeId, name: lakeName, coordinates: lakeCoord },
+          ]
+        }
+      }
+    },
+    activeLake: (state, action) => {
+      const { lakeId, lakeName, lakeCoord, compare } = action.payload
+      if (!state.activeLakes.map(lake => lake.id).includes(lakeId)) {
+        if (compare) {
+          state.activeLakes = [
+            ...state.activeLakes,
+            { id: lakeId, name: lakeName, coordinates: lakeCoord },
+          ]
+        }
+        if (!compare) {
+          state.activeLakes = [
+            { id: lakeId, name: lakeName, coordinates: lakeCoord },
+          ]
+        }
       }
     },
     desactiveLake: (state, action) => {
@@ -60,6 +84,11 @@ export const lakesSlice = createSlice({
   },
 })
 
-export const { addLake, desactiveLake, setCoordinatesLakeToCenter } = lakesSlice.actions
+export const {
+  activeLake,
+  addLake,
+  desactiveLake,
+  setCoordinatesLakeToCenter,
+} = lakesSlice.actions
 
 export default lakesSlice.reducer

@@ -50,7 +50,7 @@ export default function useChartHook({ compareLake }) {
       }
       setLastDataTypes(dataType)
     }
-  }, [lakes])
+  }, [lakes.data])
 
   useEffect(() => {
     const arr = []
