@@ -1,6 +1,7 @@
 import DATA_TYPES from "./DataTypes"
 import OBSERVATION_TYPES from "./ObservationTypes"
 import DURATION_TYPES from "./DurationTypes"
+import CHART_TYPES from "./ChartTypes"
 
 const config = {
   attributes: {
@@ -9,7 +10,7 @@ const config = {
         {
           borderColor: "rgb(255, 0, 0)",
           backgroundColor: "rgba(255, 0, 0)",
-          // pointBackgroundColor: "#760000",
+          //pointBackgroundColor: "#760000",
         },
         {
           borderColor: "rgb(126, 0, 0)",
@@ -19,8 +20,8 @@ const config = {
       ],
       borderWidth: 1.2,
       tension: 0,
-      // pointRadius: 1.4,
-      pointRadius: 0,
+      pointRadius: 1.4,
+      // pointRadius: 0,
       label: "Filling rate",
       filePath: "filling_rate_raw",
       unit: "%",
@@ -87,6 +88,14 @@ const config = {
     [DURATION_TYPES.PERIOD]: {
       abbr: "2",
       label: "10 days",
+    },
+  },
+  chartTypes: {
+    [CHART_TYPES.LINE]: {
+      label: "Line",
+    },
+    [CHART_TYPES.SCATTER]: {
+      label: "Scatter",
     },
   },
 }
