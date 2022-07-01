@@ -8,7 +8,7 @@ import {
   ObservationTypes,
   DurationTypes,
 } from "./config"
-import { dsv } from "d3"
+import { csv } from "d3"
 
 export function useAppHook() {
   const [lakeInfo, setLakeInfo] = useState({
@@ -26,14 +26,6 @@ export function useAppHook() {
   const { OPTIC, RADAR, DAY, PERIOD, dataType } = form
   const { getSeriePath } = SeriePathUtils
   const dispatch = useDispatch()
-
-  useEffect(() => {
-    console.log({ lakes })
-  }, [lakes])
-
-  useEffect(() => {
-    console.log({ OPTIC })
-  }, [OPTIC])
 
   const getLakeIdSwotName = ({ id, name, coord }) => {
     setLakeInfo({
@@ -123,11 +115,9 @@ export function useAppHook() {
       setSeriePath([...seriePathByday, ...seriePathByPeriod])
     }
 
-
-      const seriePathByday = getSeriePathByDay()
-      const seriePathByPeriod = getSeriePathByPeriod()
-      setSeriePath([...seriePathByday, ...seriePathByPeriod])
-
+    const seriePathByday = getSeriePathByDay()
+    const seriePathByPeriod = getSeriePathByPeriod()
+    setSeriePath([...seriePathByday, ...seriePathByPeriod])
 
     // if (prevDatatype !== dataType) {
     //   for (const item of [lakes.data]) {
@@ -154,8 +144,11 @@ export function useAppHook() {
   }, [dataType, OPTIC, RADAR, DAY, PERIOD, lakeInfo.id])
 
   const handleSeriePath = (dataType, obs, duration) => {
+    // replace space by underscore
+    const lakeName = lakeInfo.name.replace(/\s/g, "_")
     const path = getSeriePath(
       lakeInfo.id,
+      lakeName,
       AppConfig.attributes[dataType].filePath,
       AppConfig.observationTypes[obs].abbr,
       AppConfig.duration[duration].abbr
@@ -166,7 +159,7 @@ export function useAppHook() {
   const fetchData = useCallback(async () => {
     const arrTmp = []
     for (const path of seriePath) {
-      const data = await dsv(";", path)
+      const data = await csv(path)
       arrTmp.push(data)
     }
     return arrTmp
