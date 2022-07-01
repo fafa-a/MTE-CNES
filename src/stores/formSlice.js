@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { DataTypes, ObservationTypes, DurationTypes } from "@/config"
+import {
+  DataTypes,
+  ObservationTypes,
+  DurationTypes,
+  ChartTypes,
+} from "@/config"
 
 const initialState = {
   [ObservationTypes.OPTIC]: true,
@@ -7,6 +12,7 @@ const initialState = {
   [DurationTypes.DAY]: false,
   [DurationTypes.PERIOD]: true,
   dataType: DataTypes.FILLING_RATE,
+  charType: ChartTypes.LINE,
   isCleared: false,
 }
 
@@ -35,12 +41,18 @@ export const formSlice = createSlice({
       state.dataType = value
       state.isCleared = false
     },
+    setChartType: (state, action) => {
+      const { value } = action.payload
+      state.charType = value
+      state.isCleared = false
+    },
     cleanForm: state => {
       state.OPTIC = false
       state.RADAR = false
       state.DAY = false
       state.PERIOD = false
       state.dataType = DataTypes.FILLING_RATE
+      state.charType = ChartTypes.LINE
       state.isCleared = true
     },
   },
@@ -52,6 +64,7 @@ export const {
   toggleRadar,
   toggleDay,
   togglePeriod,
+  setChartType,
   setAttributeValue,
 } = formSlice.actions
 

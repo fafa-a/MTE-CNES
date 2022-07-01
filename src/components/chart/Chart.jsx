@@ -10,10 +10,10 @@ import {
   Tooltip,
   Legend,
 } from "chart.js"
-import { Line } from "react-chartjs-2"
+import { Line, Scatter } from "react-chartjs-2"
 import zoomPlugin from "chartjs-plugin-zoom"
 import { styled } from "@stitches/react"
- import "chartjs-adapter-date-fns"
+import "chartjs-adapter-date-fns"
 
 ChartJS.register(
   CategoryScale,
@@ -34,11 +34,12 @@ const StyledDiv = styled("div", {
 })
 
 export const Chart = props => {
+  const { data, options, charType } = useChartHook(props)
 
-  const { data, options } = useChartHook(props)
   return (
     <StyledDiv>
-      <Line options={options} data={data} />
+      {charType === "LINE" && <Line options={options} data={data} />}
+      {charType === "SCATTER" && <Scatter options={options} data={data} />}
     </StyledDiv>
   )
 }

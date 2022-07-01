@@ -13,6 +13,7 @@ export default function useChartHook({ compareLake }) {
   const [unit, setUnit] = useState("")
   const [lastDataTypes, setLastDataTypes] = useState()
   const form = useSelector(state => state.form)
+  const { charType } = form
   const lakes = useSelector(state => state.lakes)
   const chart = useSelector(state => state.chart)
   const obsTypes = [
@@ -87,7 +88,7 @@ export default function useChartHook({ compareLake }) {
 
     const lastDateGraph = getChartFirstDateNextMonth(allDatesSorted)
     setDateMax(lastDateGraph)
-  }, [chartData])
+  }, [chartData, charType])
 
   const handleValue = (value, unit) => {
     if (unit === "hm³") {
@@ -223,21 +224,27 @@ export default function useChartHook({ compareLake }) {
   const setDataLines = (item, obsType, index, lakeName, indexColor) => {
     if (!item) return
     const value = item
-      ?.filter(el => !isNaN(el.value) && el.date !== "" && el.value !== "0")
+      ?.filter(el => {
+        return !isNaN(el.value) && el.date !== "" && el.value !== "0"
+      })
       .map(el => {
         return {
           date: new Date(el.date).toISOString(),
           value: handleValue(el.value, unit),
         }
       })
-
-    const { borderWidth, tension, pointRadius } = AppConfig.attributes[dataType]
-    const { backgroundColor, borderColor } =
+    let { borderWidth, tension, pointRadius } = AppConfig.attributes[dataType]
+    const { backgroundColor, borderColor, pointBackgroundColor } =
       chart[dataType].style[Object.values(ObservationTypes)[index]][indexColor]
+
+    if (charType === "LINE") {
+      pointRadius = 0
+    }
 
     return {
       backgroundColor,
       borderColor,
+      pointBackgroundColor,
       borderWidth,
       data: value,
       label: `${obsType}`,
@@ -250,8 +257,11 @@ export default function useChartHook({ compareLake }) {
   const data = {
     datasets: dataSets,
   }
+  
   return {
     data,
     options,
+    form,
+    charType,
   }
 }

@@ -4,7 +4,7 @@ import { Button } from "@components/button/Button"
 import { Select } from "@components/select/Select"
 import { SelectOption } from "@components/select/SelectOption"
 import { styled, theme } from "@/stitches.config"
-import { DataTypes } from "../../config"
+import { DataTypes, ChartTypes } from "../../config"
 
 import {
   cleanForm,
@@ -12,6 +12,7 @@ import {
   toggleRadar,
   toggleDay,
   togglePeriod,
+  setChartType,
   setAttributeValue,
 } from "../../stores/formSlice"
 
@@ -41,8 +42,13 @@ const StyledH3 = styled("h3", {
 })
 
 export const Form = () => {
-  const { dataTypesValues, observationTypesValues, durationValues, form } =
-    useFormHook()
+  const {
+    chartTypesValues,
+    dataTypesValues,
+    observationTypesValues,
+    durationValues,
+    form,
+  } = useFormHook()
   return (
     <StyledContainer>
       <form action="">
@@ -101,9 +107,21 @@ export const Form = () => {
             />
           </Select>
         </StyledDiv>
+        <StyledDiv>
+          <StyledH3>Chart types</StyledH3>
+          <Select setAttributeValue={setChartType} value={form.chartType}>
+            <SelectOption
+              value={ChartTypes.LINE}
+              label={chartTypesValues.LINE.label}
+            />
+            <SelectOption
+              value={ChartTypes.SCATTER}
+              label={chartTypesValues.SCATTER.label}
+            />
+          </Select>
+        </StyledDiv>
         <Button type="reset" value="clear form" cleanForm={cleanForm} />
       </form>
     </StyledContainer>
   )
 }
-// <StyledOption value="">Please choose an option</StyledOption>
