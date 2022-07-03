@@ -1,25 +1,16 @@
 import usePolygonLayerHook from "./PolygonLayerHook"
-import { LayerGroup, Polygon, Popup, Tooltip } from "react-leaflet"
+import { LayerGroup, Polygon, Tooltip } from "react-leaflet"
 import { v4 as uuid } from "@lukeed/uuid"
 import { useState, useEffect } from "react"
-import { createRef } from "react"
 
 export const PolygonLayer = ({ data, handleChange, removeLakeActive }) => {
   const [layer, setLayer] = useState(null)
-  const { centerPolygon, getLakeIdName, map } = usePolygonLayerHook({
+  const { centerPolygon, getLakeIdName } = usePolygonLayerHook({
     data,
     handleChange,
     removeLakeActive,
   })
 
-  const refsById = useMemo(() => {
-    const refs = {}
-    data.features.forEach(feature => {
-      const { ID_SWOT } = feature.properties
-      refs[ID_SWOT] = createRef(null)
-    })
-    return refs
-  }, [data])
   useEffect(() => {
     setLayer(
       data.features.map(feature => {
@@ -40,9 +31,6 @@ export const PolygonLayer = ({ data, handleChange, removeLakeActive }) => {
                 const coordinates = el.target.options["data-coordinates"]
                 centerPolygon(coordinates)
                 getLakeIdName(ID_SWOT, DAM_NAME, coordinates)
-              },
-              contextmenu: e => {
-                refsById[ID_SWOT].current.setLatLng(e.latlng).openOn(map)
               },
             }}
           >

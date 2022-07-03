@@ -28,7 +28,6 @@ export default function usePolygonLayerHook({ handleChange }) {
   )
 
   return {
-    map,
     centerPolygon,
     getLakeIdName,
   }
