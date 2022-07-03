@@ -13,22 +13,28 @@ export default function useChartHook() {
   const [labelTitle, setLabelTitle] = useState([])
   const [unit, setUnit] = useState("")
   const [lastDataTypes, setLastDataTypes] = useState()
+  const [obsTypes, setObsTypes] = useState([])
   const form = useSelector(state => state.form)
   const { charType } = form
   const lakes = useSelector(state => state.lakes)
   const chart = useSelector(state => state.chart)
-  const obsTypes = [
-    AppConfig.observationTypes.OPTIC.label,
-    AppConfig.observationTypes.RADAR.label,
-  ]
 
   useEffect(() => {
     if (!lakes.activeLakes) return
-    const { dataType } = form
+    const { dataType, OPTIC, RADAR } = form
     const { label, unit } = AppConfig.attributes[dataType]
     setDataType(dataType)
     setLabelTitle(label)
     setUnit(unit)
+    if (OPTIC) {
+      setObsTypes([ObservationTypes.OPTIC])
+    }
+    if (RADAR) {
+      setObsTypes([ObservationTypes.RADAR])
+    }
+    if (OPTIC && RADAR) {
+      setObsTypes([ObservationTypes.OPTIC, ObservationTypes.RADAR])
+    }
   }, [form])
 
   useEffect(() => {
@@ -40,11 +46,11 @@ export default function useChartHook() {
         setLakesId([...lakesId, id])
       }
 
-      if (dataType !== lastDataTypes ) {
+      if (dataType !== lastDataTypes) {
         setChartData([[lakes.data[id][dataType]]])
       }
 
-      if (dataType === lastDataTypes ) {
+      if (dataType === lastDataTypes) {
         setChartData([...chartData, [lakes.data[id][dataType]]])
       }
       setLastDataTypes(dataType)
@@ -253,6 +259,10 @@ export default function useChartHook() {
   }
 
   useEffect(() => {
+    console.log({ dataSets })
+  }, [dataSets])
+
+  useEffect(() => {
     if (!dataSets.length) return
     const newData = [...dataSets]
     const activeLakesIndex = lakes.activeLakes.map(lake => {
@@ -263,6 +273,16 @@ export default function useChartHook() {
     })
     for (const lake of activeLakesIndex) {
       const { index, visible } = lake
+      if (obsTypes.length === 1) {
+        if (visible) {
+          newData[index === 0 ? 0 : index].hidden = false
+        }
+        if (!visible) {
+          newData[index === 0 ? 0 : index].hidden = true
+        }
+        setDataSets(newData)
+      }
+
       if (dataSets.length !== activeLakesIndex.length * 2) return
       if (obsTypes.length === 2) {
         if (visible) {
@@ -273,17 +293,9 @@ export default function useChartHook() {
           newData[index === 0 ? 0 : index * 2].hidden = true
           newData[index === 0 ? 1 : index * 2 + 1].hidden = true
         }
-      }
-      if (obsTypes.length === 1) {
-        if (visible) {
-          newData[index === 0 ? 0 : index * 2].hidden = false
-        }
-        if (!visible) {
-          newData[index === 0 ? 0 : index * 2].hidden = true
-        }
+        setDataSets(newData)
       }
     }
-    setDataSets(newData)
   }, [lakes.activeLakes])
 
   const data = {
