@@ -2,35 +2,9 @@ import usePolygonLayerHook from "./PolygonLayerHook"
 import { LayerGroup, Polygon, Popup, Tooltip } from "react-leaflet"
 import { v4 as uuid } from "@lukeed/uuid"
 import { useState, useEffect } from "react"
-import { ButtonPlusMinus } from "@components/button-plus-minus/ButtonPlusMinus"
 import { createRef } from "react"
-import { styled, theme } from "@/stitches.config"
 
-const StyledPopup = styled(Popup, {
-  [".leaflet-popup-content-wrapper"]: {
-    borderRadius: theme.borderRadius.xs,
-  },
-
-  [".leaflet-popup-content"]: {
-    minWidth: "max-content",
-    margin: "0 10px",
-  },
-
-  [".leaflet-popup-content p"]: {
-    margin: "10px 0",
-  },
-
-  [".leaflet-popup-close-button"]: {
-    display: "none",
-  },
-})
-
-export const PolygonLayer = ({
-  data,
-  handleChange,
-  removeLakeActive,
-  addLakeToCompare,
-}) => {
+export const PolygonLayer = ({ data, handleChange, removeLakeActive }) => {
   const [layer, setLayer] = useState(null)
   const { centerPolygon, getLakeIdName, map } = usePolygonLayerHook({
     data,
@@ -75,15 +49,6 @@ export const PolygonLayer = ({
             <Tooltip>
               <h3>{DAM_NAME}</h3>
             </Tooltip>
-            <StyledPopup ref={refsById[ID_SWOT]}>
-              <ButtonPlusMinus
-                id={ID_SWOT}
-                name={DAM_NAME}
-                coordinates={[LAT_WW, LONG_WW]}
-                addLakeToCompare={addLakeToCompare}
-                removeLakeActive={removeLakeActive}
-              />
-            </StyledPopup>
           </Polygon>
         )
       })

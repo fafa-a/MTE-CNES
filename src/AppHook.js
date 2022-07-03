@@ -18,7 +18,6 @@ export function useAppHook() {
   })
   const [seriePath, setSeriePath] = useState([])
   const [lakeData, setLakeData] = useState([])
-  const [compareLake, setCompareLake] = useState(null)
   const [prevDatatype, setPrevDatatype] = useState(null)
   const form = useSelector(state => state.form)
   const lakes = useSelector(state => state.lakes)
@@ -27,28 +26,16 @@ export function useAppHook() {
   const { getSeriePath } = SeriePathUtils
   const dispatch = useDispatch()
 
-useEffect(() => {
-  console.log({ lakes })
-}, [lakes])
+  useEffect(() => {
+    console.log({ lakes })
+  }, [lakes])
 
   const getLakeIdSwotName = ({ id, name, coord }) => {
     setLakeInfo({
       id,
       name,
       coord,
-      compare: false,
     })
-    setCompareLake(false)
-  }
-
-  const addLakeToCompare = ({ id, name, coord, compare }) => {
-    setLakeInfo({
-      id,
-      name,
-      coord,
-      compare,
-    })
-    setCompareLake(compare)
   }
 
   const removeLakeActive = id => {
@@ -109,7 +96,6 @@ useEffect(() => {
           lakeId: lakeInfo.id,
           lakeName: lakeInfo.name,
           lakeCoord: lakeInfo.coord,
-          compare: lakeInfo.compare,
         })
       )
     }
@@ -123,32 +109,10 @@ useEffect(() => {
     const seriePathByPeriod = getSeriePathByPeriod()
     setSeriePath([...seriePathByday, ...seriePathByPeriod])
 
-    // if (prevDatatype !== dataType) {
-    //   for (const item of [lakes.data]) {
-    //     Object.entries(item).forEach(([i, data]) => {
-    //       const missDataType = Object.keys(data)
-    //       if (!missDataType.includes(dataType)) {
-    //         for (const lake of lakes.activeLakes) {
-    //           const { id, name, coordinates } = lake
-    //           if (id !== lakeInfo.id) {
-    //             setLakeInfo({
-    //               id,
-    //               name,
-    //               coordinates,
-    //               compare: true,
-    //             })
-    //             console.log(`${id} miss ${dataType}`)
-    //           }
-    //         }
-    //       }
-    //     })
-    //   }
-    // }
     setPrevDatatype(dataType)
   }, [dataType, OPTIC, RADAR, DAY, PERIOD, lakeInfo.id])
 
   const handleSeriePath = (dataType, obs, duration) => {
-    // replace space by underscore
     const lakeName = lakeInfo.name.replace(/\s/g, "_")
     const path = getSeriePath(
       lakeInfo.id,
@@ -187,10 +151,9 @@ useEffect(() => {
         lakeData,
         lakeName: lakeInfo.name,
         lakeCoord: lakeInfo.coord,
-        compare: lakeInfo.compare,
       })
     )
   }, [lakeData])
 
-  return { getLakeIdSwotName, addLakeToCompare, compareLake, removeLakeActive }
+  return { getLakeIdSwotName, removeLakeActive }
 }

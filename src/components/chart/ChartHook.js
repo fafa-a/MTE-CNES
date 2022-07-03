@@ -2,14 +2,13 @@ import { AppConfig } from "@/config"
 import { useSelector } from "react-redux"
 import { ObservationTypes } from "../../config"
 
-export default function useChartHook({ compareLake }) {
+export default function useChartHook() {
   const [chartData, setChartData] = useState([])
   const [dataSets, setDataSets] = useState([])
   const [dateMin, setDateMin] = useState(null)
   const [dateMax, setDateMax] = useState(null)
   const [lakesName, setLakesName] = useState([])
   const [lakesId, setLakesId] = useState([])
-  const [isHidden, setIsHidden] = useState(false)
   const [dataType, setDataType] = useState("")
   const [labelTitle, setLabelTitle] = useState([])
   const [unit, setUnit] = useState("")
@@ -41,15 +40,11 @@ export default function useChartHook({ compareLake }) {
         setLakesId([...lakesId, id])
       }
 
-      if (compareLake === false) {
+      if (dataType !== lastDataTypes ) {
         setChartData([[lakes.data[id][dataType]]])
       }
 
-      if (dataType !== lastDataTypes && compareLake === true) {
-        setChartData([[lakes.data[id][dataType]]])
-      }
-
-      if (dataType === lastDataTypes && compareLake === true) {
+      if (dataType === lastDataTypes ) {
         setChartData([...chartData, [lakes.data[id][dataType]]])
       }
       setLastDataTypes(dataType)

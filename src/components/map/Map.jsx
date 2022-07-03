@@ -14,7 +14,6 @@ const StyledMapContainer = styled(MapContainer, {
 export const Map = ({
   getLakeIdSwotName,
   removeLakeActive,
-  addLakeToCompare,
 }) => {
   return (
     <StyledMapContainer
@@ -41,7 +40,6 @@ export const Map = ({
               data={data}
               handleChange={getLakeIdSwotName}
               removeLakeActive={removeLakeActive}
-              addLakeToCompare={addLakeToCompare}
             />
             <MarkerLayerCluster data={data} />
           </div>

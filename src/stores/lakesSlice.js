@@ -21,8 +21,7 @@ export const lakesSlice = createSlice({
   initialState,
   reducers: {
     addLake: (state, action) => {
-      const { lakeId, dataType, lakeData, lakeName, lakeCoord, compare } =
-        action.payload
+      const { lakeId, dataType, lakeData, lakeName, lakeCoord } = action.payload
 
       if (state.data[lakeId]) {
         state.data[lakeId] = {
@@ -42,57 +41,32 @@ export const lakesSlice = createSlice({
       }
 
       if (!state.activeLakes.map(lake => lake.id).includes(lakeId)) {
-        if (compare) {
-          state.activeLakes = [
-            ...state.activeLakes,
-            {
-              id: lakeId,
-              name: lakeName,
-              coordinates: lakeCoord,
-              chartVisible: true,
-            },
-          ]
-          const lastIndex = state.activeLakes.length - 1
-          state.activeLakes[lastIndex].index = lastIndex
-        }
-        if (!compare) {
-          state.activeLakes = [
-            {
-              id: lakeId,
-              name: lakeName,
-              coordinates: lakeCoord,
-              chartVisible: true,
-            },
-          ]
-          const lastIndex = state.activeLakes.length - 1
-          state.activeLakes[lastIndex].index = lastIndex
-        }
+        state.activeLakes = [
+          ...state.activeLakes,
+          {
+            id: lakeId,
+            name: lakeName,
+            coordinates: lakeCoord,
+            chartVisible: true,
+          },
+        ]
+        const lastIndex = state.activeLakes.length - 1
+        state.activeLakes[lastIndex].index = lastIndex
       }
+
     },
     activeLake: (state, action) => {
-      const { lakeId, lakeName, lakeCoord, compare } = action.payload
+      const { lakeId, lakeName, lakeCoord } = action.payload
       if (!state.activeLakes.map(lake => lake.id).includes(lakeId)) {
-        if (compare) {
-          state.activeLakes = [
-            ...state.activeLakes,
-            {
-              id: lakeId,
-              name: lakeName,
-              coordinates: lakeCoord,
-              chartVisible: true,
-            },
-          ]
-        }
-        if (!compare) {
-          state.activeLakes = [
-            {
-              id: lakeId,
-              name: lakeName,
-              coordinates: lakeCoord,
-              chartVisible: true,
-            },
-          ]
-        }
+        state.activeLakes = [
+          ...state.activeLakes,
+          {
+            id: lakeId,
+            name: lakeName,
+            coordinates: lakeCoord,
+            chartVisible: true,
+          },
+        ]
       }
     },
     desactiveLake: (state, action) => {
