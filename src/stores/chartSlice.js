@@ -2,6 +2,14 @@ import { createSlice } from "@reduxjs/toolkit"
 import { DataTypes, ObservationTypes } from "../config"
 
 const initialState = {
+  style: {
+    default: {
+      borderWidth: 1.2,
+    },
+    selected: {
+      borderWidth: 2.2,
+    },
+  },
   [DataTypes.FILLING_RATE]: {
     style: {
       [ObservationTypes.OPTIC]: [

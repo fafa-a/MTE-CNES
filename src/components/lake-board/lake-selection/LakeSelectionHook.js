@@ -2,6 +2,7 @@ import {
   desactiveLake,
   setCoordinatesLakeToCenter,
   toggleLakeChartVisibility,
+  setSelectedLake,
 } from "@stores/lakesSlice"
 import { useDispatch } from "react-redux"
 import { useSelector } from "react-redux"
@@ -39,9 +40,11 @@ export const useLakeSelectionHook = (id, coordinates, index) => {
     dispatch(desactiveLake({ lakeId: id }))
   })
 
-  const sendCoordinates = useCallback(() => {
+  const toggleSelectedLake = useCallback(() => {
+    console.log({ id })
     dispatch(setCoordinatesLakeToCenter({ coordinates }))
-  }, [coordinates])
+    dispatch(setSelectedLake({ lakeId: id }))
+  }, [coordinates, id])
 
   const toggleChartVisibilty = useCallback(() => {
     dispatch(toggleLakeChartVisibility({ lakeId: id }))
@@ -50,10 +53,10 @@ export const useLakeSelectionHook = (id, coordinates, index) => {
   return {
     toggleChartVisibilty,
     handleClickDesactiveLake,
-    sendCoordinates,
     bgOptic,
     bgRadar,
     isVisible,
+    toggleSelectedLake,
   }
 }
 export default useLakeSelectionHook

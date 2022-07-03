@@ -98,10 +98,10 @@ export const LakeSelection = ({ id, lakeName, coordinates, index }) => {
   const {
     toggleChartVisibilty,
     handleClickDesactiveLake,
-    sendCoordinates,
     bgOptic,
     bgRadar,
     isVisible,
+    toggleSelectedLake,
   } = useLakeSelectionHook(id, coordinates, index)
   return (
     <StyledDiv>
@@ -115,7 +115,7 @@ export const LakeSelection = ({ id, lakeName, coordinates, index }) => {
           <StyledSpanLabel>radar</StyledSpanLabel>
         </StyledDivContainerObsTypes>
       </StyledDivObservationTypes>
-      <StyledContainerP onClick={sendCoordinates}>
+      <StyledContainerP onClick={toggleSelectedLake}>
         <StyledParagraph>{lakeName}</StyledParagraph>
       </StyledContainerP>
       <StyledContainerButton>

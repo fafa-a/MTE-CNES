@@ -48,12 +48,12 @@ export const lakesSlice = createSlice({
             name: lakeName,
             coordinates: lakeCoord,
             chartVisible: true,
+            selected: false,
           },
         ]
         const lastIndex = state.activeLakes.length - 1
         state.activeLakes[lastIndex].index = lastIndex
       }
-
     },
     activeLake: (state, action) => {
       const { lakeId, lakeName, lakeCoord } = action.payload
@@ -93,6 +93,21 @@ export const lakesSlice = createSlice({
       const { coordinates } = action.payload
       state.coordinatesLakeToCenter = coordinates
     },
+    setSelectedLake: (state, action) => {
+      const { lakeId } = action.payload
+      state.activeLakes = state.activeLakes.map(lake => {
+        if (lake.id === lakeId) {
+          return {
+            ...lake,
+            selected: !lake.selected,
+          }
+        }
+        return {
+          ...lake,
+          selected: false,
+        }
+      })
+    },
   },
 })
 
@@ -101,9 +116,8 @@ export const {
   addLake,
   desactiveLake,
   setCoordinatesLakeToCenter,
-  hideLakeChart,
-  showLakeChart,
   toggleLakeChartVisibility,
+  setSelectedLake,
 } = lakesSlice.actions
 
 export default lakesSlice.reducer

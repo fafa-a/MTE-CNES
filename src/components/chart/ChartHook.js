@@ -237,7 +237,8 @@ export default function useChartHook() {
           value: handleValue(el.value, unit),
         }
       })
-    let { borderWidth, tension, pointRadius } = AppConfig.attributes[dataType]
+    const { borderWidth } = chart.style.default
+    let { tension, pointRadius } = AppConfig.attributes[dataType]
     const { backgroundColor, borderColor, pointBackgroundColor } =
       chart[dataType].style[Object.values(ObservationTypes)[index]][indexColor]
 
@@ -257,10 +258,52 @@ export default function useChartHook() {
       tension,
     }
   }
+  useEffect(() => {
+    console.log(dataSets)
+  }, [dataSets])
 
   useEffect(() => {
-    console.log({ dataSets })
-  }, [dataSets])
+    if (!dataSets.length) return
+    const newData = [...dataSets]
+    const selectedLakes = lakes.activeLakes.map(lake => {
+      return {
+        selected: lake.selected,
+        index: lake.index,
+      }
+    })
+    for (const lake of selectedLakes) {
+      const { index, selected } = lake
+      if (obsTypes.length === 1) {
+        console.log(dataSets.length, selectedLakes.length)
+        if (dataSets.length !== selectedLakes.length) return
+        if (selected) {
+          newData[index].borderWidth = chart.style.selected.borderWidth
+        }
+        if (!selected) {
+          console.log(newData[index].borderWidth, index)
+          newData[index].borderWidth = chart.style.default.borderWidth
+        }
+        setDataSets(newData)
+      }
+
+      if (obsTypes.length === 2) {
+        if (dataSets.length !== selectedLakes.length * 2) return
+        if (selected) {
+          newData[index === 0 ? 0 : index * 2].borderWidth =
+            chart.style.selected.borderWidth
+          newData[index === 0 ? 1 : index * 2 + 1].borderWidth =
+            chart.style.selected.borderWidth
+        }
+        if (!selected) {
+          newData[index === 0 ? 0 : index * 2].borderWidth =
+            chart.style.default.borderWidth
+          newData[index === 0 ? 1 : index * 2 + 1].borderWidth =
+            chart.style.default.borderWidth
+        }
+        setDataSets(newData)
+      }
+    }
+  }, [lakes.activeLakes])
 
   useEffect(() => {
     if (!dataSets.length) return
@@ -274,17 +317,18 @@ export default function useChartHook() {
     for (const lake of activeLakesIndex) {
       const { index, visible } = lake
       if (obsTypes.length === 1) {
+        if (dataSets.length !== activeLakesIndex.length) return
         if (visible) {
-          newData[index === 0 ? 0 : index].hidden = false
+          newData[index].hidden = false
         }
         if (!visible) {
-          newData[index === 0 ? 0 : index].hidden = true
+          newData[index].hidden = true
         }
         setDataSets(newData)
       }
 
-      if (dataSets.length !== activeLakesIndex.length * 2) return
       if (obsTypes.length === 2) {
+        if (dataSets.length !== activeLakesIndex.length * 2) return
         if (visible) {
           newData[index === 0 ? 0 : index * 2].hidden = false
           newData[index === 0 ? 1 : index * 2 + 1].hidden = false
