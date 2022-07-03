@@ -8,6 +8,8 @@ export default function useChartHook({ compareLake }) {
   const [dateMin, setDateMin] = useState(null)
   const [dateMax, setDateMax] = useState(null)
   const [lakesName, setLakesName] = useState([])
+  const [lakesId, setLakesId] = useState([])
+  const [isHidden, setIsHidden] = useState(false)
   const [dataType, setDataType] = useState("")
   const [labelTitle, setLabelTitle] = useState([])
   const [unit, setUnit] = useState("")
@@ -36,6 +38,7 @@ export default function useChartHook({ compareLake }) {
       const { id, name } = lake
       if (!lakesName.includes(name)) {
         setLakesName([...lakesName, name])
+        setLakesId([...lakesId, id])
       }
 
       if (compareLake === false) {
@@ -254,10 +257,44 @@ export default function useChartHook({ compareLake }) {
     }
   }
 
+  useEffect(() => {
+    if (!dataSets.length) return
+    const newData = [...dataSets]
+    const activeLakesIndex = lakes.activeLakes.map(lake => {
+      return {
+        visible: lake.chartVisible,
+        index: lake.index,
+      }
+    })
+    for (const lake of activeLakesIndex) {
+      const { index, visible } = lake
+      if (dataSets.length !== activeLakesIndex.length * 2) return
+      if (obsTypes.length === 2) {
+        if (visible) {
+          newData[index === 0 ? 0 : index * 2].hidden = false
+          newData[index === 0 ? 1 : index * 2 + 1].hidden = false
+        }
+        if (!visible) {
+          newData[index === 0 ? 0 : index * 2].hidden = true
+          newData[index === 0 ? 1 : index * 2 + 1].hidden = true
+        }
+      }
+      if (obsTypes.length === 1) {
+        if (visible) {
+          newData[index === 0 ? 0 : index * 2].hidden = false
+        }
+        if (!visible) {
+          newData[index === 0 ? 0 : index * 2].hidden = true
+        }
+      }
+    }
+    setDataSets(newData)
+  }, [lakes.activeLakes])
+
   const data = {
     datasets: dataSets,
   }
-  
+
   return {
     data,
     options,

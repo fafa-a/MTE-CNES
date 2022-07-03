@@ -29,7 +29,7 @@ export const LakeBoard = () => {
           id={lake.id}
           lakeName={lake.name}
           coordinates={lake.coordinates}
-          indexColor={index}
+          index={index}
         />
       ))}
     </StyledContainer>

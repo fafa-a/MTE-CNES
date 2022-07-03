@@ -27,6 +27,10 @@ export function useAppHook() {
   const { getSeriePath } = SeriePathUtils
   const dispatch = useDispatch()
 
+useEffect(() => {
+  console.log({ lakes })
+}, [lakes])
+
   const getLakeIdSwotName = ({ id, name, coord }) => {
     setLakeInfo({
       id,

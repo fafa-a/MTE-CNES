@@ -45,13 +45,27 @@ export const lakesSlice = createSlice({
         if (compare) {
           state.activeLakes = [
             ...state.activeLakes,
-            { id: lakeId, name: lakeName, coordinates: lakeCoord },
+            {
+              id: lakeId,
+              name: lakeName,
+              coordinates: lakeCoord,
+              chartVisible: true,
+            },
           ]
+          const lastIndex = state.activeLakes.length - 1
+          state.activeLakes[lastIndex].index = lastIndex
         }
         if (!compare) {
           state.activeLakes = [
-            { id: lakeId, name: lakeName, coordinates: lakeCoord },
+            {
+              id: lakeId,
+              name: lakeName,
+              coordinates: lakeCoord,
+              chartVisible: true,
+            },
           ]
+          const lastIndex = state.activeLakes.length - 1
+          state.activeLakes[lastIndex].index = lastIndex
         }
       }
     },
@@ -61,12 +75,22 @@ export const lakesSlice = createSlice({
         if (compare) {
           state.activeLakes = [
             ...state.activeLakes,
-            { id: lakeId, name: lakeName, coordinates: lakeCoord },
+            {
+              id: lakeId,
+              name: lakeName,
+              coordinates: lakeCoord,
+              chartVisible: true,
+            },
           ]
         }
         if (!compare) {
           state.activeLakes = [
-            { id: lakeId, name: lakeName, coordinates: lakeCoord },
+            {
+              id: lakeId,
+              name: lakeName,
+              coordinates: lakeCoord,
+              chartVisible: true,
+            },
           ]
         }
       }
@@ -75,6 +99,20 @@ export const lakesSlice = createSlice({
       const { lakeId } = action.payload
       if (state.activeLakes.map(lake => lake.id).includes(lakeId)) {
         state.activeLakes = state.activeLakes.filter(lake => lake.id !== lakeId)
+      }
+    },
+    toggleLakeChartVisibility: (state, action) => {
+      const { lakeId } = action.payload
+      if (state.activeLakes.map(lake => lake.id).includes(lakeId)) {
+        state.activeLakes = state.activeLakes.map(lake => {
+          if (lake.id === lakeId) {
+            return {
+              ...lake,
+              chartVisible: !lake.chartVisible,
+            }
+          }
+          return lake
+        })
       }
     },
     setCoordinatesLakeToCenter: (state, action) => {
@@ -89,6 +127,9 @@ export const {
   addLake,
   desactiveLake,
   setCoordinatesLakeToCenter,
+  hideLakeChart,
+  showLakeChart,
+  toggleLakeChartVisibility,
 } = lakesSlice.actions
 
 export default lakesSlice.reducer

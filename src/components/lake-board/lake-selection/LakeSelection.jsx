@@ -94,9 +94,15 @@ const StyledReactTooltip = styled(ReactTooltip, {
   zIndex: "1111 !important",
 })
 
-export const LakeSelection = ({ id, lakeName, coordinates, indexColor }) => {
-  const { handleClickDesactiveLake, sendCoordinates, bgOptic, bgRadar } =
-    useLakeSelectionHook(id, coordinates, indexColor)
+export const LakeSelection = ({ id, lakeName, coordinates, index }) => {
+  const {
+    toggleChartVisibilty,
+    handleClickDesactiveLake,
+    sendCoordinates,
+    bgOptic,
+    bgRadar,
+    isVisible,
+  } = useLakeSelectionHook(id, coordinates, index)
   return (
     <StyledDiv>
       <StyledDivObservationTypes>
@@ -113,6 +119,34 @@ export const LakeSelection = ({ id, lakeName, coordinates, indexColor }) => {
         <StyledParagraph>{lakeName}</StyledParagraph>
       </StyledContainerP>
       <StyledContainerButton>
+        {!isVisible && (
+          <>
+            <StyledButton
+              data-tip
+              data-for="visible"
+              onClick={toggleChartVisibilty}
+            >
+              <IconCarbonView fontSize={14} />
+            </StyledButton>
+            <StyledReactTooltip id="visible" place="top" effect="solid">
+              <span>Visible</span>
+            </StyledReactTooltip>
+          </>
+        )}
+        {isVisible && (
+          <>
+            <StyledButton
+              data-tip
+              data-for="hide"
+              onClick={toggleChartVisibilty}
+            >
+              <IconCarbonViewOff fontSize={14} />
+            </StyledButton>
+            <StyledReactTooltip id="hide" place="top" effect="solid">
+              <span>Hide chart</span>
+            </StyledReactTooltip>
+          </>
+        )}
         <StyledButton
           data-tip
           data-for="delete"

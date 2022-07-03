@@ -5,6 +5,8 @@ declare global {
   const IconCarbonDownload: typeof import('~icons/carbon/download.jsx')['default']
   const IconCarbonInformation: typeof import('~icons/carbon/information.jsx')['default']
   const IconCarbonTrashCan: typeof import('~icons/carbon/trash-can.jsx')['default']
+  const IconCarbonView: typeof import('~icons/carbon/view.jsx')['default']
+  const IconCarbonViewOff: typeof import('~icons/carbon/view-off.jsx')['default']
   const createRef: typeof import('react')['createRef']
   const forwardRef: typeof import('react')['forwardRef']
   const lazy: typeof import('react')['lazy']
