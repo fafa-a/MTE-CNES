@@ -4,27 +4,33 @@ import { useSelector } from "react-redux"
 export default function usePolygonLayerHook({ handleChange }) {
   const [id, setId] = useState(null)
   const [color, setColor] = useState("blue")
-  const map = useMap()
+  const [coordinates, setCoordinates] = useState([])
   const { coordinatesLakeToCenter } = useSelector(state => state.lakes)
+  const map = useMap()
 
   useEffect(() => {
-    if (id) setColor("white")
+    if (!id) return
+    setColor("white")
+    centerPolygon()
   }, [id])
 
   useEffect(() => {
-    if (!coordinatesLakeToCenter.lakeId) return
-    const { lakeId, coordinates } = coordinatesLakeToCenter
-    setId(lakeId)
-    // map.flyTo(coordinates, 12)
-    map.setView(coordinates)
+    centerSelectedPolygon()
   }, [coordinatesLakeToCenter])
 
-  const centerPolygon = useCallback((...coord) => {
-    map.setView(coord[0], coord[1])
+  const centerSelectedPolygon = useCallback(() => {
+    const { lakeId, coordinates } = coordinatesLakeToCenter
+    setCoordinates(coordinates)
+    setId(lakeId)
   })
+
+  const centerPolygon = useCallback(() => {
+    map.setView(coordinates, 12)
+  }, [coordinates])
 
   const getLakeIdName = useCallback(
     (id, name, coord) => {
+      setCoordinates(coord)
       setId(id)
       const obj = {
         id,

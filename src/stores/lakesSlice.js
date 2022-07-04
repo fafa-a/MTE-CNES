@@ -97,7 +97,7 @@ export const lakesSlice = createSlice({
     },
     setCoordinatesLakeToCenter: (state, action) => {
       const { lakeId, coordinates } = action.payload
-      state.coordinatesLakeToCenter= { lakeId, coordinates }
+      state.coordinatesLakeToCenter = { lakeId, coordinates }
 
     },
     setSelectedLake: (state, action) => {

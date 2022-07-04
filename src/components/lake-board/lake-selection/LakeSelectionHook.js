@@ -45,7 +45,7 @@ export const useLakeSelectionHook = (id, coordinates, index) => {
   const toggleSelectedLake = useCallback(() => {
     dispatch(setCoordinatesLakeToCenter({ lakeId: id, coordinates }))
     dispatch(setSelectedLake({ lakeId: id }))
-  }, [coordinates, id])
+  }, [id])
 
   const toggleChartVisibilty = useCallback(() => {
     dispatch(toggleLakeChartVisibility({ lakeId: id }))
