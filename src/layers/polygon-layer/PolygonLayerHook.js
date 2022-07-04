@@ -2,13 +2,21 @@ import { useMap } from "react-leaflet"
 import { useSelector } from "react-redux"
 
 export default function usePolygonLayerHook({ handleChange }) {
+  const [id, setId] = useState(null)
+  const [color, setColor] = useState("blue")
   const map = useMap()
   const { coordinatesLakeToCenter } = useSelector(state => state.lakes)
 
   useEffect(() => {
-    if (coordinatesLakeToCenter.length > 0) {
-      map.flyTo(coordinatesLakeToCenter, 12)
-    }
+    if (id) setColor("white")
+  }, [id])
+
+  useEffect(() => {
+    if (!coordinatesLakeToCenter.lakeId) return
+    const { lakeId, coordinates } = coordinatesLakeToCenter
+    setId(lakeId)
+    // map.flyTo(coordinates, 12)
+    map.setView(coordinates)
   }, [coordinatesLakeToCenter])
 
   const centerPolygon = useCallback((...coord) => {
@@ -17,6 +25,7 @@ export default function usePolygonLayerHook({ handleChange }) {
 
   const getLakeIdName = useCallback(
     (id, name, coord) => {
+      setId(id)
       const obj = {
         id,
         name,
@@ -30,5 +39,7 @@ export default function usePolygonLayerHook({ handleChange }) {
   return {
     centerPolygon,
     getLakeIdName,
+    id,
+    color,
   }
 }

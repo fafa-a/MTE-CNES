@@ -29,6 +29,7 @@ const StyledButton = styled("button", {
   display: "grid",
   placeItems: "center",
   width: "20px",
+  backgroundColor: "transparent",
 
   "&:hover": {
     backgroundColor: "lightgray",
@@ -102,9 +103,15 @@ export const LakeSelection = ({ id, lakeName, coordinates, index }) => {
     bgRadar,
     isVisible,
     toggleSelectedLake,
+    isSelected,
   } = useLakeSelectionHook(id, coordinates, index)
   return (
-    <StyledDiv>
+    <StyledDiv
+      css={{
+        border: isSelected && "1px solid #222",
+        backgroundColor: isSelected && "#E5E5E5",
+      }}
+    >
       <StyledDivObservationTypes>
         <StyledDivContainerObsTypes>
           <StyledSpanOpticColor style={{ ...bgOptic }} />
@@ -116,7 +123,9 @@ export const LakeSelection = ({ id, lakeName, coordinates, index }) => {
         </StyledDivContainerObsTypes>
       </StyledDivObservationTypes>
       <StyledContainerP onClick={toggleSelectedLake}>
-        <StyledParagraph>{lakeName}</StyledParagraph>
+        <StyledParagraph css={{ fontWeight: isSelected && "bold" }}>
+          {lakeName}
+        </StyledParagraph>
       </StyledContainerP>
       <StyledContainerButton>
         {!isVisible && (

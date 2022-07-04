@@ -258,9 +258,6 @@ export default function useChartHook() {
       tension,
     }
   }
-  useEffect(() => {
-    console.log(dataSets)
-  }, [dataSets])
 
   useEffect(() => {
     if (!dataSets.length) return

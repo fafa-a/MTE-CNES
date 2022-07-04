@@ -43,7 +43,7 @@ export const lakesSlice = createSlice({
       if (!state.activeLakes.map(lake => lake.id).includes(lakeId)) {
         state.activeLakes = [
           ...state.activeLakes,
-          {
+    {
             id: lakeId,
             name: lakeName,
             coordinates: lakeCoord,
@@ -54,6 +54,12 @@ export const lakesSlice = createSlice({
         const lastIndex = state.activeLakes.length - 1
         state.activeLakes[lastIndex].index = lastIndex
       }
+      state.activeLakes = state.activeLakes.map(lake => {
+        return {
+          ...lake,
+          selected: false,
+        }
+      })
     },
     activeLake: (state, action) => {
       const { lakeId, lakeName, lakeCoord } = action.payload
@@ -90,8 +96,9 @@ export const lakesSlice = createSlice({
       }
     },
     setCoordinatesLakeToCenter: (state, action) => {
-      const { coordinates } = action.payload
-      state.coordinatesLakeToCenter = coordinates
+      const { lakeId, coordinates } = action.payload
+      state.coordinatesLakeToCenter= { lakeId, coordinates }
+
     },
     setSelectedLake: (state, action) => {
       const { lakeId } = action.payload

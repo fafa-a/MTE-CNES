@@ -11,6 +11,7 @@ export const useLakeSelectionHook = (id, coordinates, index) => {
   const [bgOptic, setBgOptic] = useState({})
   const [bgRadar, setBgRadar] = useState({})
   const [isVisible, setIsVisible] = useState(true)
+  const [isSelected, setIsSelected] = useState(false)
   const dispatch = useDispatch()
   const chartOptions = useSelector(state => state.chart)
   const { dataType } = useSelector(state => state.form)
@@ -22,6 +23,7 @@ export const useLakeSelectionHook = (id, coordinates, index) => {
       .filter(lake => lake.id === id)
       .map(lake => {
         setIsVisible(lake.chartVisible)
+        setIsSelected(lake.selected)
       })
   }, [activeLakes])
 
@@ -41,8 +43,7 @@ export const useLakeSelectionHook = (id, coordinates, index) => {
   })
 
   const toggleSelectedLake = useCallback(() => {
-    console.log({ id })
-    dispatch(setCoordinatesLakeToCenter({ coordinates }))
+    dispatch(setCoordinatesLakeToCenter({ lakeId: id, coordinates }))
     dispatch(setSelectedLake({ lakeId: id }))
   }, [coordinates, id])
 
@@ -57,6 +58,7 @@ export const useLakeSelectionHook = (id, coordinates, index) => {
     bgRadar,
     isVisible,
     toggleSelectedLake,
+    isSelected,
   }
 }
 export default useLakeSelectionHook

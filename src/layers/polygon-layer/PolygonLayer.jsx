@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 
 export const PolygonLayer = ({ data, handleChange, removeLakeActive }) => {
   const [layer, setLayer] = useState(null)
-  const { centerPolygon, getLakeIdName } = usePolygonLayerHook({
+  const { centerPolygon, id, getLakeIdName, color } = usePolygonLayerHook({
     data,
     handleChange,
     removeLakeActive,
@@ -25,9 +25,9 @@ export const PolygonLayer = ({ data, handleChange, removeLakeActive }) => {
             key={uuid()}
             positions={reversedMultiPolygons}
             data-coordinates={[LAT_WW, LONG_WW]}
+            color={ID_SWOT === id ? color : "blue"}
             eventHandlers={{
               click: el => {
-                el.target.closePopup()
                 const coordinates = el.target.options["data-coordinates"]
                 centerPolygon(coordinates)
                 getLakeIdName(ID_SWOT, DAM_NAME, coordinates)
@@ -41,7 +41,7 @@ export const PolygonLayer = ({ data, handleChange, removeLakeActive }) => {
         )
       })
     )
-  }, [])
+  }, [id, color])
 
   return <LayerGroup>{layer}</LayerGroup>
 }
