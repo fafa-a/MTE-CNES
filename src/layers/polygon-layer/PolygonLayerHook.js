@@ -1,5 +1,6 @@
 import { useMap } from "react-leaflet"
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
+import { updateActiveLakes } from "@/stores/lakesSlice"
 
 export default function usePolygonLayerHook({ handleChange }) {
   const [id, setId] = useState(null)
@@ -7,6 +8,7 @@ export default function usePolygonLayerHook({ handleChange }) {
   const [coordinates, setCoordinates] = useState([])
   const { coordinatesLakeToCenter } = useSelector(state => state.lakes)
   const map = useMap()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (!id) return
@@ -28,23 +30,29 @@ export default function usePolygonLayerHook({ handleChange }) {
     map.setView(coordinates, 12)
   }, [coordinates])
 
-  const getLakeIdName = useCallback(
-    (id, name, coord) => {
-      setCoordinates(coord)
-      setId(id)
-      const obj = {
-        id,
-        name,
-        coord,
-      }
-      handleChange(obj)
-    },
-    [handleChange]
-  )
+  // const getLakeIdName = useCallback(
+  //   (id, name, coord) => {
+  //     setCoordinates(coord)
+  //     setId(id)
+  //     const obj = {
+  //       id,
+  //       name,
+  //       coord,
+  //     }
+  //     handleChange(obj)
+  //   },
+  //   [handleChange]
+  // )
+
+  const activeLake = useCallback((id, name, coord) => {
+    dispatch(
+      updateActiveLakes({ lakeId: id, lakeName: name, lakeCoord: coord })
+    )
+  })
 
   return {
+    activeLake,
     centerPolygon,
-    getLakeIdName,
     id,
     color,
   }

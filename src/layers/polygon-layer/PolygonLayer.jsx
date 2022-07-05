@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 
 export const PolygonLayer = ({ data, handleChange, removeLakeActive }) => {
   const [layer, setLayer] = useState(null)
-  const { id, getLakeIdName, color } = usePolygonLayerHook({
+  const { id, activeLake, color } = usePolygonLayerHook({
     data,
     handleChange,
     removeLakeActive,
@@ -27,7 +27,7 @@ export const PolygonLayer = ({ data, handleChange, removeLakeActive }) => {
             color={ID_SWOT === id ? color : "blue"}
             eventHandlers={{
               click: el => {
-                getLakeIdName(ID_SWOT, DAM_NAME, [LAT_WW, LONG_WW])
+                activeLake(ID_SWOT, DAM_NAME, [LAT_WW, LONG_WW])
               },
             }}
           >
