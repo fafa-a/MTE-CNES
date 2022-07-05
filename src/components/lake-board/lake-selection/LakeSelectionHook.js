@@ -19,13 +19,17 @@ export const useLakeSelectionHook = (id, coordinates, index) => {
   const { activeLakes } = useSelector(state => state.lakes)
 
   useEffect(() => {
+    setlakeIconsOptions()
+  }, [])
+
+  const setlakeIconsOptions = useCallback(() => {
     activeLakes
       .filter(lake => lake.id === id)
       .map(lake => {
         setIsVisible(lake.chartVisible)
         setIsSelected(lake.selected)
       })
-  }, [activeLakes])
+  }, [activeLakes, id])
 
   useEffect(() => {
     setBgOptic({

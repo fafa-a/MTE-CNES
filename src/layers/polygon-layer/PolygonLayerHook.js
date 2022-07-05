@@ -12,7 +12,7 @@ export default function usePolygonLayerHook({ handleChange }) {
 
   useEffect(() => {
     if (!id) return
-    setColor("white")
+    setColor("#CDF0EA")
     centerPolygon()
   }, [id])
 
@@ -30,24 +30,12 @@ export default function usePolygonLayerHook({ handleChange }) {
     map.setView(coordinates, 12)
   }, [coordinates])
 
-  // const getLakeIdName = useCallback(
-  //   (id, name, coord) => {
-  //     setCoordinates(coord)
-  //     setId(id)
-  //     const obj = {
-  //       id,
-  //       name,
-  //       coord,
-  //     }
-  //     handleChange(obj)
-  //   },
-  //   [handleChange]
-  // )
-
   const activeLake = useCallback((id, name, coord) => {
     dispatch(
       updateActiveLakes({ lakeId: id, lakeName: name, lakeCoord: coord })
     )
+    setCoordinates(coord)
+    setId(id)
   })
 
   return {

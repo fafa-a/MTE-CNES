@@ -7,7 +7,7 @@ const initialState = {
       borderWidth: 1.2,
     },
     selected: {
-      borderWidth: 2.3,
+      borderWidth: 2.5,
     },
   },
   [DataTypes.FILLING_RATE]: {

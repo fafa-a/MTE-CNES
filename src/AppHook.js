@@ -87,6 +87,7 @@ export function useAppHook() {
   useEffect(() => {
     if (lakes.activeLakes.length === 0) return
     const seriePathTmp = []
+    const seriePathString = JSON.stringify(seriePath)
     lakes.activeLakes
       .map(lake => {
         return { id: lake.id, name: lake.name }
@@ -96,14 +97,19 @@ export function useAppHook() {
         const seriePathByPeriod = getSeriePathByPeriod(lake.id, lake.name)
         seriePathTmp.push([...seriePathByday, ...seriePathByPeriod])
       })
-    setSeriePath(seriePathTmp)
-
+    if (seriePathString !== JSON.stringify(seriePathTmp)) {
+      setSeriePath(seriePathTmp)
+    }
     setPrevDatatype(dataType)
   }, [dataType, OPTIC, RADAR, DAY, PERIOD, charType, lakes.activeLakes])
 
   useEffect(() => {
-    console.log({ lakes })
-  }, [lakes])
+    console.log({ lakeData })
+  }, [lakeData])
+
+  useEffect(() => {
+    console.log({ charType })
+  }, [charType])
 
   const handleSeriePath = (id, name, dataType, obs, duration) => {
     if (!id) return

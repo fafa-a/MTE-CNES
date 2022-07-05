@@ -14,6 +14,7 @@ export default function useChartHook() {
   const [unit, setUnit] = useState("")
   const [lastDataTypes, setLastDataTypes] = useState()
   const [obsTypes, setObsTypes] = useState([])
+  const [lastObstypes, setLastObstypes] = useState([])
   const form = useSelector(state => state.form)
   const { charType } = form
   const lakes = useSelector(state => state.lakes)
@@ -21,7 +22,8 @@ export default function useChartHook() {
 
   useEffect(() => {
     if (!lakes.activeLakes) return
-    const { dataType, OPTIC, RADAR } = form
+
+    const { dataType, OPTIC, RADAR, DAY, PERIOD } = form
     const { label, unit } = AppConfig.attributes[dataType]
     setDataType(dataType)
     setLabelTitle(label)
@@ -35,13 +37,23 @@ export default function useChartHook() {
     if (OPTIC && RADAR) {
       setObsTypes([ObservationTypes.OPTIC, ObservationTypes.RADAR])
     }
+    if (!OPTIC && !RADAR) {
+      setObsTypes([])
+      setChartData([])
+    }
+    if (!DAY && !PERIOD) {
+      setChartData([])
+    }
   }, [form])
 
   useEffect(() => {
-    if (dataType !== lastDataTypes) {
+    if (
+      dataType !== lastDataTypes ||
+      JSON.stringify(obsTypes) !== JSON.stringify(lastObstypes)
+    ) {
       setChartData([])
     }
-  }, [dataType])
+  }, [dataType, obsTypes])
 
   useEffect(() => {
     if (!lakes.activeLakes) return
@@ -59,6 +71,7 @@ export default function useChartHook() {
     }
     setChartData([...chartData, ...dataTmp])
     setLastDataTypes(dataType)
+    setLastObstypes(obsTypes)
   }, [lakes.data])
 
   useEffect(() => {
@@ -97,7 +110,6 @@ export default function useChartHook() {
     const lastDateGraph = getChartFirstDateNextMonth(allDatesSorted)
     setDateMax(lastDateGraph)
   }, [chartData, charType])
-
   const handleValue = (value, unit) => {
     if (unit === "hm³") {
       return (1 * value) / 1_000_000
@@ -239,6 +251,7 @@ export default function useChartHook() {
         }
       })
     const { borderWidth } = chart.style.default
+
     let { tension, pointRadius } = AppConfig.attributes[dataType]
     const { backgroundColor, borderColor, pointBackgroundColor } =
       chart[dataType].style[Object.values(ObservationTypes)[index]][indexColor]
@@ -272,18 +285,15 @@ export default function useChartHook() {
     for (const lake of selectedLakes) {
       const { index, selected } = lake
       if (obsTypes.length === 1) {
-        console.log(dataSets.length, selectedLakes.length)
         if (dataSets.length !== selectedLakes.length) return
         if (selected) {
           newData[index].borderWidth = chart.style.selected.borderWidth
         }
         if (!selected) {
-          console.log(newData[index].borderWidth, index)
           newData[index].borderWidth = chart.style.default.borderWidth
         }
         setDataSets(newData)
       }
-
       if (obsTypes.length === 2) {
         if (dataSets.length !== selectedLakes.length * 2) return
         if (selected) {
@@ -312,6 +322,7 @@ export default function useChartHook() {
         index: lake.index,
       }
     })
+
     for (const lake of activeLakesIndex) {
       const { index, visible } = lake
       if (obsTypes.length === 1) {
