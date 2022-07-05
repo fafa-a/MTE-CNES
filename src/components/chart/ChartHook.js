@@ -38,23 +38,27 @@ export default function useChartHook() {
   }, [form])
 
   useEffect(() => {
+    if (dataType !== lastDataTypes) {
+      setChartData([])
+    }
+  }, [dataType])
+
+  useEffect(() => {
     if (!lakes.activeLakes) return
+    const dataTmp = []
+    const chartDataString = JSON.stringify(chartData)
     for (const lake of lakes.activeLakes) {
       const { id, name } = lake
       if (!lakesName.includes(name)) {
         setLakesName([...lakesName, name])
         setLakesId([...lakesId, id])
       }
-
-      if (dataType !== lastDataTypes) {
-        setChartData([[lakes.data[id][dataType]]])
+      if (!chartDataString.includes(JSON.stringify(lakes.data[id][dataType]))) {
+        dataTmp.push([lakes.data[id][dataType]])
       }
-
-      if (dataType === lastDataTypes) {
-        setChartData([...chartData, [lakes.data[id][dataType]]])
-      }
-      setLastDataTypes(dataType)
     }
+    setChartData([...chartData, ...dataTmp])
+    setLastDataTypes(dataType)
   }, [lakes.data])
 
   useEffect(() => {
@@ -134,10 +138,7 @@ export default function useChartHook() {
     plugins: {
       title: {
         display: true,
-        text:
-          chartData.length === 1
-            ? `${lakesName}  ${labelTitle}  ${unit}`
-            : `${labelTitle}  ${unit}`,
+        text: `${labelTitle}  ${unit}`,
         position: "top",
         font: {
           size: 16,
