@@ -21,7 +21,7 @@ export const lakesSlice = createSlice({
   initialState,
   reducers: {
     addLake: (state, action) => {
-      const { lakeId, dataType, lakeData, lakeName, lakeCoord } = action.payload
+      const { lakeId, dataType, lakeData } = action.payload
 
       if (state.data[lakeId]) {
         state.data[lakeId] = {
@@ -39,29 +39,8 @@ export const lakesSlice = createSlice({
       if (!state.loadedLakes.includes(lakeId)) {
         state.loadedLakes.push(lakeId)
       }
-
-      if (!state.activeLakes.map(lake => lake.id).includes(lakeId)) {
-        state.activeLakes = [
-          ...state.activeLakes,
-    {
-            id: lakeId,
-            name: lakeName,
-            coordinates: lakeCoord,
-            chartVisible: true,
-            selected: false,
-          },
-        ]
-        const lastIndex = state.activeLakes.length - 1
-        state.activeLakes[lastIndex].index = lastIndex
-      }
-      state.activeLakes = state.activeLakes.map(lake => {
-        return {
-          ...lake,
-          selected: false,
-        }
-      })
     },
-    activeLake: (state, action) => {
+    updateActiveLakes: (state, action) => {
       const { lakeId, lakeName, lakeCoord } = action.payload
       if (!state.activeLakes.map(lake => lake.id).includes(lakeId)) {
         state.activeLakes = [
@@ -73,7 +52,15 @@ export const lakesSlice = createSlice({
             chartVisible: true,
           },
         ]
+        const lastIndex = state.activeLakes.length - 1
+        state.activeLakes[lastIndex].index = lastIndex
       }
+      state.activeLakes = state.activeLakes.map(lake => {
+        return {
+          ...lake,
+          selected: false,
+        }
+      })
     },
     desactiveLake: (state, action) => {
       const { lakeId } = action.payload
@@ -98,7 +85,6 @@ export const lakesSlice = createSlice({
     setCoordinatesLakeToCenter: (state, action) => {
       const { lakeId, coordinates } = action.payload
       state.coordinatesLakeToCenter = { lakeId, coordinates }
-
     },
     setSelectedLake: (state, action) => {
       const { lakeId } = action.payload
@@ -119,7 +105,7 @@ export const lakesSlice = createSlice({
 })
 
 export const {
-  activeLake,
+  updateActiveLakes,
   addLake,
   desactiveLake,
   setCoordinatesLakeToCenter,
