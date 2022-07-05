@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux"
 import { useDispatch } from "react-redux"
-import { activeLake, addLake, desactiveLake } from "./stores/lakesSlice"
+import { updateActiveLakes, addLake, desactiveLake } from "./stores/lakesSlice"
 
 import {
   AppConfig,
@@ -22,26 +22,20 @@ export function useAppHook() {
   const form = useSelector(state => state.form)
   const lakes = useSelector(state => state.lakes)
 
-  const { OPTIC, RADAR, DAY, PERIOD, dataType } = form
+  const { OPTIC, RADAR, DAY, PERIOD, dataType, charType } = form
   const { getSeriePath } = SeriePathUtils
   const dispatch = useDispatch()
-
-  const getLakeIdSwotName = ({ id, name, coord }) => {
-    setLakeInfo({
-      id,
-      name,
-      coord,
-    })
-  }
 
   const removeLakeActive = id => {
     dispatch(desactiveLake({ lakeId: id }))
   }
 
-  const getSeriePathByDay = () => {
+  const getSeriePathByDay = (id, name) => {
     const arrTmp = []
     if (OPTIC && DAY) {
       const path = handleSeriePath(
+        id,
+        name,
         dataType,
         ObservationTypes.OPTIC,
         DurationTypes.DAY
@@ -51,6 +45,8 @@ export function useAppHook() {
 
     if (RADAR && DAY) {
       const path = handleSeriePath(
+        id,
+        name,
         dataType,
         ObservationTypes.RADAR,
         DurationTypes.DAY
@@ -61,10 +57,12 @@ export function useAppHook() {
     return arrTmp
   }
 
-  const getSeriePathByPeriod = () => {
+  const getSeriePathByPeriod = (id, name) => {
     const arrTmp = []
     if (OPTIC && PERIOD) {
       const path = handleSeriePath(
+        id,
+        name,
         dataType,
         ObservationTypes.OPTIC,
         DurationTypes.PERIOD
@@ -74,6 +72,8 @@ export function useAppHook() {
 
     if (RADAR && PERIOD) {
       const path = handleSeriePath(
+        id,
+        name,
         dataType,
         ObservationTypes.RADAR,
         DurationTypes.PERIOD
@@ -85,33 +85,31 @@ export function useAppHook() {
   }
 
   useEffect(() => {
-    if (!lakeInfo.id) return
-    if (lakes.loadedLakes.includes(lakeInfo.id)) {
-      dispatch(
-        activeLake({
-          lakeId: lakeInfo.id,
-          lakeName: lakeInfo.name,
-          lakeCoord: lakeInfo.coord,
-        })
-      )
-    }
-    if (!lakes.loadedLakes.includes(lakeInfo.id) && prevDatatype !== dataType) {
-      const seriePathByday = getSeriePathByDay()
-      const seriePathByPeriod = getSeriePathByPeriod()
-      setSeriePath([...seriePathByday, ...seriePathByPeriod])
-    }
-
-    const seriePathByday = getSeriePathByDay()
-    const seriePathByPeriod = getSeriePathByPeriod()
-    setSeriePath([...seriePathByday, ...seriePathByPeriod])
+    if (lakes.activeLakes.length === 0) return
+    const seriePathTmp = []
+    lakes.activeLakes
+      .map(lake => {
+        return { id: lake.id, name: lake.name }
+      })
+      .forEach(lake => {
+        const seriePathByday = getSeriePathByDay(lake.id, lake.name)
+        const seriePathByPeriod = getSeriePathByPeriod(lake.id, lake.name)
+        seriePathTmp.push([...seriePathByday, ...seriePathByPeriod])
+      })
+    setSeriePath(seriePathTmp)
 
     setPrevDatatype(dataType)
-  }, [dataType, OPTIC, RADAR, DAY, PERIOD, lakeInfo.id])
+  }, [dataType, OPTIC, RADAR, DAY, PERIOD, charType, lakes.activeLakes])
 
-  const handleSeriePath = (dataType, obs, duration) => {
-    const lakeName = lakeInfo.name.replace(/\s/g, "_")
+  useEffect(() => {
+    console.log({ lakes })
+  }, [lakes])
+
+  const handleSeriePath = (id, name, dataType, obs, duration) => {
+    if (!id) return
+    const lakeName = name.replace(/\s/g, "_")
     const path = getSeriePath(
-      lakeInfo.id,
+      id,
       lakeName,
       AppConfig.attributes[dataType].filePath,
       AppConfig.observationTypes[obs].abbr,
@@ -122,9 +120,13 @@ export function useAppHook() {
 
   const fetchData = useCallback(async () => {
     const arrTmp = []
-    for (const path of seriePath) {
-      const data = await csv(path)
-      arrTmp.push(data)
+    for (const lake of seriePath) {
+      const dataTmp = []
+      for (const path of lake) {
+        const data = await csv(path)
+        dataTmp.push(data)
+      }
+      arrTmp.push([dataTmp])
     }
     return arrTmp
   }, [seriePath])
@@ -139,17 +141,17 @@ export function useAppHook() {
   }, [fetchData])
 
   useEffect(() => {
-    if (!lakeInfo.id) return
-    dispatch(
-      addLake({
-        lakeId: lakeInfo.id,
-        dataType,
-        lakeData,
-        lakeName: lakeInfo.name,
-        lakeCoord: lakeInfo.coord,
-      })
-    )
+    if (!lakeData.length) return
+    lakeData.forEach(([data], index) => {
+      dispatch(
+        addLake({
+          lakeId: lakes.activeLakes[index].id,
+          dataType,
+          lakeData: data,
+        })
+      )
+    })
   }, [lakeData])
 
-  return { getLakeIdSwotName, removeLakeActive }
+  return { removeLakeActive }
 }
