@@ -14,6 +14,7 @@ import {
   togglePeriod,
   setChartType,
   setAttributeValue,
+  toggleReference,
 } from "../../stores/formSlice"
 
 const StyledContainer = styled("div", {
@@ -48,6 +49,7 @@ export const Form = () => {
     observationTypesValues,
     durationValues,
     form,
+    compareTypesValues,
   } = useFormHook()
   return (
     <StyledContainer>
@@ -68,6 +70,12 @@ export const Form = () => {
               label={observationTypesValues.RADAR.label}
               abbr={observationTypesValues.RADAR.abbr}
               value={form.RADAR}
+            />
+            <Checkbox
+              storeAction={toggleReference}
+              id={compareTypesValues.REFERENCE.label}
+              label={compareTypesValues.REFERENCE.label}
+              value={form.REFERENCE}
             />
           </StyledFlexRowDiv>
         </StyledDiv>

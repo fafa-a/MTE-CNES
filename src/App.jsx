@@ -29,7 +29,7 @@ const App = () => {
       </StyledContainer>
       <StyledContainer>
         <Form />
-        <Chart />
+        {/* <Chart /> */}
       </StyledContainer>
     </>
   )

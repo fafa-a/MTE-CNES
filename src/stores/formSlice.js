@@ -4,6 +4,7 @@ import {
   ObservationTypes,
   DurationTypes,
   ChartTypes,
+  CompareTypes,
 } from "@/config"
 
 const initialState = {
@@ -13,6 +14,8 @@ const initialState = {
   [DurationTypes.PERIOD]: true,
   dataType: DataTypes.FILLING_RATE,
   charType: ChartTypes.LINE,
+  [CompareTypes.REFERENCE]: false,
+  [CompareTypes.YEAR]: false,
   isCleared: false,
 }
 
@@ -46,6 +49,14 @@ export const formSlice = createSlice({
       state.charType = value
       state.isCleared = false
     },
+    toggleReference: state => {
+      state.REFERENCE = !state.REFERENCE
+      state.isCleared = false
+    },
+    toggleYear: state => {
+      state.YEAR = !state.YEAR
+      state.isCleared = false
+    },
     cleanForm: state => {
       state.OPTIC = false
       state.RADAR = false
@@ -53,6 +64,8 @@ export const formSlice = createSlice({
       state.PERIOD = false
       state.dataType = DataTypes.FILLING_RATE
       state.charType = ChartTypes.LINE
+      state.REFERENCE = false
+      state.YEAR = false
       state.isCleared = true
     },
   },
@@ -66,6 +79,8 @@ export const {
   togglePeriod,
   setChartType,
   setAttributeValue,
+  toggleReference,
+  toggleYear,
 } = formSlice.actions
 
 export default formSlice.reducer

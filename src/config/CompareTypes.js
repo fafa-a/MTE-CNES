@@ -1,0 +1,5 @@
+const COMPARE_TYPES = {
+  REFERENCE: "REFERENCE",
+  YEAR: "YEAR",
+}
+export default COMPARE_TYPES

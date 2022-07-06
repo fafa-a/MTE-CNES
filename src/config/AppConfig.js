@@ -2,6 +2,7 @@ import DATA_TYPES from "./DataTypes"
 import OBSERVATION_TYPES from "./ObservationTypes"
 import DURATION_TYPES from "./DurationTypes"
 import CHART_TYPES from "./ChartTypes"
+import COMPARE_TYPES from "./CompareTypes"
 
 const config = {
   attributes: {
@@ -96,6 +97,14 @@ const config = {
     },
     [CHART_TYPES.SCATTER]: {
       label: "Scatter",
+    },
+  },
+  compareTypes: {
+    [COMPARE_TYPES.REFERENCE]: {
+      label: "Reference",
+    },
+    [COMPARE_TYPES.YEAR]: {
+      label: "Year",
     },
   },
 }

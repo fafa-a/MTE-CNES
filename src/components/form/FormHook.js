@@ -7,12 +7,13 @@ export default function useFormHook() {
   const observationTypesValues = AppConfig.observationTypes
   const durationValues = AppConfig.duration
   const chartTypesValues = AppConfig.chartTypes
-  
-  return {
-    dataTypesValues,
-    observationTypesValues,
-    durationValues,
-    form,
-    chartTypesValues,
-  }
+ const compareTypesValues = AppConfig.compareTypes
+ return {
+   dataTypesValues,
+   compareTypesValues,
+   observationTypesValues,
+   durationValues,
+   form,
+   chartTypesValues,
+ }
 }
