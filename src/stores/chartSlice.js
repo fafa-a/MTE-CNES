@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { DataTypes, ObservationTypes } from "../config"
+import { CompareTypes, DataTypes, ObservationTypes } from "../config"
 
 const initialState = {
   style: {
@@ -8,6 +8,13 @@ const initialState = {
     },
     selected: {
       borderWidth: 2.5,
+    },
+  },
+  [CompareTypes.REFERENCE]: {
+    style: {
+      borderColor: "rgb(63, 78, 79)",
+      backgroundColor: "rgba(63, 78, 79)",
+      pointBackgroundColor: "rgba(63, 78, 79)",
     },
   },
   [DataTypes.FILLING_RATE]: {

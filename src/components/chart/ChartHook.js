@@ -1,6 +1,6 @@
 import { AppConfig } from "@/config"
 import { useSelector } from "react-redux"
-import { ObservationTypes } from "../../config"
+import { CompareTypes, ObservationTypes } from "../../config"
 
 export default function useChartHook() {
   const [chartData, setChartData] = useState([])
@@ -15,19 +15,28 @@ export default function useChartHook() {
   const [lastDataTypes, setLastDataTypes] = useState()
   const [obsTypes, setObsTypes] = useState([])
   const [lastObstypes, setLastObstypes] = useState([])
+  const [reference, setReference] = useState(false)
   const form = useSelector(state => state.form)
   const { charType } = form
   const lakes = useSelector(state => state.lakes)
   const chart = useSelector(state => state.chart)
 
   useEffect(() => {
+    console.log({ chartData })
+  }, [chartData])
+  useEffect(() => {
+    console.log({ obsTypes })
+  }, [obsTypes])
+
+  useEffect(() => {
     if (!lakes.activeLakes) return
 
-    const { dataType, OPTIC, RADAR, DAY, PERIOD } = form
+    const { dataType, OPTIC, RADAR, DAY, PERIOD, REFERENCE } = form
     const { label, unit } = AppConfig.attributes[dataType]
     setDataType(dataType)
     setLabelTitle(label)
     setUnit(unit)
+    setReference(REFERENCE)
     if (OPTIC) {
       setObsTypes([ObservationTypes.OPTIC])
     }
@@ -36,6 +45,19 @@ export default function useChartHook() {
     }
     if (OPTIC && RADAR) {
       setObsTypes([ObservationTypes.OPTIC, ObservationTypes.RADAR])
+    }
+    if (OPTIC && REFERENCE) {
+      setObsTypes([ObservationTypes.OPTIC, CompareTypes.REFERENCE])
+    }
+    if (RADAR && REFERENCE) {
+      setObsTypes([ObservationTypes.RADAR, CompareTypes.REFERENCE])
+    }
+    if (OPTIC && RADAR && REFERENCE) {
+      setObsTypes([
+        ObservationTypes.OPTIC,
+        ObservationTypes.RADAR,
+        CompareTypes.REFERENCE,
+      ])
     }
     if (!OPTIC && !RADAR) {
       setObsTypes([])
@@ -253,8 +275,30 @@ export default function useChartHook() {
     const { borderWidth } = chart.style.default
 
     let { tension, pointRadius } = AppConfig.attributes[dataType]
-    const { backgroundColor, borderColor, pointBackgroundColor } =
-      chart[dataType].style[Object.values(ObservationTypes)[index]][indexColor]
+
+    let backgroundColor
+    let borderColor
+    let pointBackgroundColor
+
+    if (obsType === "REFERENCE") {
+      console.log("reference", { obsType })
+      backgroundColor = chart.REFERENCE.style.backgroundColor
+      borderColor = chart.REFERENCE.style.borderColor
+      pointBackgroundColor = chart.REFERENCE.style.pointBackgroundColor
+    }
+    if (obsType === "OPTIC" || obsType === "RADAR") {
+      console.log("optic ou radar", { obsType })
+      console.log(
+        chart[dataType].style[obsType][indexColor].pointBackgroundColor
+      )
+
+      backgroundColor =
+        chart[dataType].style[obsType][indexColor].pointBackgroundColor
+      borderColor = chart[dataType].style[obsType][indexColor].borderColor
+      pointBackgroundColor =
+        chart[dataType].style[obsType][indexColor].pointBackgroundColor
+      // pointBackgroundColor = chart.REFERENCE.style.pointBackgroundColor
+    }
 
     if (charType === "LINE") {
       pointRadius = 0

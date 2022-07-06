@@ -117,7 +117,7 @@ export function useAppHook() {
 
   useEffect(() => {
     if (!lakeData?.length) return
-    lakeData.forEach((lake, index) => {
+    lakeData.forEach(lake => {
       setDataReference(
         lake[0]
           .at(-1)
@@ -125,7 +125,7 @@ export function useAppHook() {
             data =>
               data.hour === "00:00:00" &&
               data.date >= "2018-01-01" &&
-              data.date <= "2021-01-01"
+              data.date <= "2020-12-31"
           )
       )
     })
