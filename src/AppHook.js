@@ -20,7 +20,6 @@ export function useAppHook() {
   const [fillingRateReference, setFillingRateReference] = useState([])
   const [surfaceReference, setSurfaceReference] = useState([])
   const [volumeReference, setVolumeReference] = useState([])
-  const [prevDatatype, setPrevDatatype] = useState(null)
   const form = useSelector(state => state.form)
   const lakes = useSelector(state => state.lakes)
 
@@ -31,6 +30,10 @@ export function useAppHook() {
   const removeLakeActive = id => {
     dispatch(desactiveLake({ lakeId: id }))
   }
+
+  useEffect(() => {
+    console.log({ lakes })
+  }, [lakes])
 
   const getSeriePathByDay = (id, name) => {
     const arrTmp = []
@@ -89,7 +92,6 @@ export function useAppHook() {
   useEffect(() => {
     if (lakes.activeLakes.length === 0) return
     const seriePathTmp = []
-    const seriePathString = JSON.stringify(seriePath)
     lakes.activeLakes
       .map(lake => {
         return { id: lake.id, name: lake.name }
@@ -104,10 +106,8 @@ export function useAppHook() {
           referencePath,
         ])
       })
-    if (seriePathString !== JSON.stringify(seriePathTmp)) {
-      setSeriePath(seriePathTmp)
-    }
-    setPrevDatatype(dataType)
+    if (JSON.stringify(seriePathTmp) === JSON.stringify(seriePath)) return
+    setSeriePath(seriePathTmp)
   }, [
     dataType,
     OPTIC,
@@ -149,6 +149,10 @@ export function useAppHook() {
     )
     return path
   }
+
+  useEffect(() => {
+    console.log({ seriePath })
+  }, [seriePath])
 
   const fetchData = useCallback(async () => {
     const arrTmp = []
