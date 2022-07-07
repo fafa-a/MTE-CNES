@@ -75,6 +75,7 @@ export const Form = () => {
               storeAction={toggleReference}
               id={compareTypesValues.REFERENCE.label}
               label={compareTypesValues.REFERENCE.label}
+              abbr={compareTypesValues.REFERENCE.label}
               value={form.REFERENCE}
             />
           </StyledFlexRowDiv>

@@ -12,11 +12,6 @@ import {
 import { csv } from "d3"
 
 export function useAppHook() {
-  const [lakeInfo, setLakeInfo] = useState({
-    id: "",
-    name: "",
-    coord: [],
-  })
   const [seriePath, setSeriePath] = useState([])
   const [lakeData, setLakeData] = useState([])
   const [dataReference, setDataReference] = useState([])
@@ -29,7 +24,7 @@ export function useAppHook() {
   const form = useSelector(state => state.form)
   const lakes = useSelector(state => state.lakes)
 
-  const { OPTIC, RADAR, DAY, PERIOD, dataType, charType } = form
+  const { OPTIC, RADAR, DAY, PERIOD, REFERENCE, dataType, charType } = form
   const { getSeriePath, getTimeseriesPath } = SeriePathUtils
   const dispatch = useDispatch()
 
@@ -113,7 +108,20 @@ export function useAppHook() {
       setSeriePath(seriePathTmp)
     }
     setPrevDatatype(dataType)
-  }, [dataType, OPTIC, RADAR, DAY, PERIOD, charType, lakes.activeLakes])
+  }, [
+    dataType,
+    OPTIC,
+    RADAR,
+    DAY,
+    PERIOD,
+    charType,
+    REFERENCE,
+    lakes.activeLakes,
+  ])
+  useEffect(() => {
+    console.log({ seriePath })
+  }, [seriePath])
+
 
   useEffect(() => {
     if (!lakeData?.length) return
@@ -219,20 +227,19 @@ export function useAppHook() {
     if (!lakeData.length) return
     if (dataType === DataTypes.FILLING_RATE && !fillingRateReference.length)
       return
+    const arrTmp = []
     lakeData.forEach((lake, index) => {
       if (dataType === DataTypes.FILLING_RATE) {
-        setLakeDataWithReference([
-          ...lakeDataWithReference,
-          [lake[0][0], lake[0][1], fillingRateReference],
-        ])
+        arrTmp.push([lake[0][0], lake[0][1], fillingRateReference])
       }
       if (dataType === DataTypes.SURFACE) {
-        setLakeDataWithReference([[lake[0][0], lake[0][1], surfaceReference]])
+        arrTmp.push([lake[0][0], lake[0][1], surfaceReference])
       }
       if (dataType === DataTypes.VOLUME) {
-        setLakeDataWithReference([[lake[0][0], lake[0][1], volumeReference]])
+        arrTmp.push([lake[0][0], lake[0][1], volumeReference])
       }
     })
+    setLakeDataWithReference(arrTmp)
   }, [surfaceReference, volumeReference, fillingRateReference])
 
   const handleFetchData = useCallback(async () => {
@@ -247,7 +254,6 @@ export function useAppHook() {
   useEffect(() => {
     if (!lakeData) return
     console.log({ lakeDataWithReference })
-
     lakeDataWithReference.forEach((lake, index) => {
       if (!lake[2].length) return
       dispatch(

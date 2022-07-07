@@ -14,7 +14,7 @@ const initialState = {
   [DurationTypes.PERIOD]: true,
   dataType: DataTypes.FILLING_RATE,
   charType: ChartTypes.LINE,
-  [CompareTypes.REFERENCE]: false,
+  [CompareTypes.REFERENCE]: true,
   [CompareTypes.YEAR]: false,
   isCleared: false,
 }

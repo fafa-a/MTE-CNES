@@ -1,15 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
 
-// Initial state
-// {
-//   dataLakes:{
-//     $idSwot:{
-//       $dataType:[$data],
-//     }
-//   }
-//   loadedLakes:[$idSwot,$idSwot,$idSwot]
-// }
-
 const initialState = {
   data: {},
   activeLakes: [],

@@ -22,15 +22,7 @@ export default function useChartHook() {
   const chart = useSelector(state => state.chart)
 
   useEffect(() => {
-    console.log({ chartData })
-  }, [chartData])
-  useEffect(() => {
-    console.log({ obsTypes })
-  }, [obsTypes])
-
-  useEffect(() => {
     if (!lakes.activeLakes) return
-
     const { dataType, OPTIC, RADAR, DAY, PERIOD, REFERENCE } = form
     const { label, unit } = AppConfig.attributes[dataType]
     setDataType(dataType)
@@ -66,7 +58,7 @@ export default function useChartHook() {
     if (!DAY && !PERIOD) {
       setChartData([])
     }
-  }, [form])
+  }, [form, lakes.activeLakes])
 
   useEffect(() => {
     if (
@@ -80,21 +72,24 @@ export default function useChartHook() {
   useEffect(() => {
     if (!lakes.activeLakes) return
     const dataTmp = []
-    const chartDataString = JSON.stringify(chartData)
+
     for (const lake of lakes.activeLakes) {
       const { id, name } = lake
       if (!lakesName.includes(name)) {
         setLakesName([...lakesName, name])
         setLakesId([...lakesId, id])
       }
-      if (!chartDataString.includes(JSON.stringify(lakes.data[id][dataType]))) {
+      if (!reference) {
+        dataTmp.push([lakes.data[id][dataType].slice(0, 2)])
+      }
+      if (reference) {
         dataTmp.push([lakes.data[id][dataType]])
       }
     }
-    setChartData([...chartData, ...dataTmp])
+    setChartData(dataTmp)
     setLastDataTypes(dataType)
     setLastObstypes(obsTypes)
-  }, [lakes.data])
+  }, [lakes.data, reference])
 
   useEffect(() => {
     const arr = []
@@ -281,23 +276,16 @@ export default function useChartHook() {
     let pointBackgroundColor
 
     if (obsType === "REFERENCE") {
-      console.log("reference", { obsType })
       backgroundColor = chart.REFERENCE.style.backgroundColor
       borderColor = chart.REFERENCE.style.borderColor
       pointBackgroundColor = chart.REFERENCE.style.pointBackgroundColor
     }
     if (obsType === "OPTIC" || obsType === "RADAR") {
-      console.log("optic ou radar", { obsType })
-      console.log(
-        chart[dataType].style[obsType][indexColor].pointBackgroundColor
-      )
-
       backgroundColor =
         chart[dataType].style[obsType][indexColor].pointBackgroundColor
       borderColor = chart[dataType].style[obsType][indexColor].borderColor
       pointBackgroundColor =
         chart[dataType].style[obsType][indexColor].pointBackgroundColor
-      // pointBackgroundColor = chart.REFERENCE.style.pointBackgroundColor
     }
 
     if (charType === "LINE") {
@@ -354,6 +342,26 @@ export default function useChartHook() {
         }
         setDataSets(newData)
       }
+      if (obsTypes.length === 3) {
+        if (dataSets.length !== selectedLakes.length * 3) return
+        if (selected) {
+          newData[index === 0 ? 0 : index * 3].borderWidth =
+            chart.style.selected.borderWidth
+          newData[index === 0 ? 1 : index * 3 + 1].borderWidth =
+            chart.style.selected.borderWidth
+          newData[index === 0 ? 2 : index * 3 + 2].borderWidth =
+            chart.style.selected.borderWidth
+        }
+        if (!selected) {
+          newData[index === 0 ? 0 : index * 3].borderWidth =
+            chart.style.default.borderWidth
+          newData[index === 0 ? 1 : index * 3 + 1].borderWidth =
+            chart.style.default.borderWidth
+          newData[index === 0 ? 2 : index * 3 + 2].borderWidth =
+            chart.style.default.borderWidth
+        }
+        setDataSets(newData)
+      }
     }
   }, [lakes.activeLakes])
 
@@ -392,8 +400,27 @@ export default function useChartHook() {
         }
         setDataSets(newData)
       }
+      if (obsTypes.length === 3) {
+        if (dataSets.length !== activeLakesIndex.length * 3) return
+        if (visible) {
+          console.log(index)
+          newData[index === 0 ? 0 : index * 3].hidden = false
+          newData[index === 0 ? 1 : index * 3 + 1].hidden = false
+          newData[index === 0 ? 2 : index * 3 + 2].hidden = false
+        }
+        if (!visible) {
+          newData[index === 0 ? 0 : index * 3].hidden = true
+          newData[index === 0 ? 1 : index * 3 + 1].hidden = true
+          newData[index === 0 ? 2 : index * 3 + 2].hidden = true
+        }
+        setDataSets(newData)
+      }
     }
   }, [lakes.activeLakes])
+
+  useEffect(() => {
+    console.log(dataSets)
+  }, [dataSets])
 
   const data = {
     datasets: dataSets,
