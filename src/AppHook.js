@@ -118,15 +118,12 @@ export function useAppHook() {
     REFERENCE,
     lakes.activeLakes,
   ])
-  useEffect(() => {
-    console.log({ seriePath })
-  }, [seriePath])
-
 
   useEffect(() => {
     if (!lakeData?.length) return
+    const dataRefDateFiltered = []
     lakeData.forEach(lake => {
-      setDataReference(
+      dataRefDateFiltered.push(
         lake[0]
           .at(-1)
           .filter(
@@ -137,15 +134,8 @@ export function useAppHook() {
           )
       )
     })
+    setDataReference(dataRefDateFiltered)
   }, [lakeData])
-
-  useEffect(() => {
-    console.log({ form })
-  }, [form])
-
-  useEffect(() => {
-    console.log({ lakes })
-  }, [lakes])
 
   const handleSeriePath = (id, name, dataType, obs, duration) => {
     if (!id) return
@@ -176,68 +166,93 @@ export function useAppHook() {
   useEffect(() => {
     if (!dataReference.length) return
 
-    const surfaceRef = dataReference.map(data => {
-      return {
-        date: data.date,
-        value: data.area,
-      }
+    const surfaceRef = dataReference.map(lake => {
+      return lake.map(data => {
+        return {
+          date: data.date,
+          value: data.area,
+        }
+      })
     })
 
-    const volumeRef = dataReference.map(data => {
-      return {
-        date: data.date,
-        value: data.volume,
-      }
+    const volumeRef = dataReference.map(lake => {
+      return lake.map(data => {
+        return {
+          date: data.date,
+          value: data.volume,
+        }
+      })
     })
 
-    const fillingRateRef = dataReference.map(data => {
-      return {
-        date: data.date,
-        value: data.level,
-      }
+    const fillingRateRef = dataReference.map(lake => {
+      return lake.map(data => {
+        return {
+          date: data.date,
+          value: data.level,
+        }
+      })
     })
-
     setSurfaceReference(surfaceRef)
     setVolumeReference(volumeRef)
     setTmpFillingRateReference(fillingRateRef)
   }, [dataReference])
 
   const calculateFillingRate = useCallback(() => {
-    const rateRef =
-      tmpFillingRateReference
-        .map(data => Number(data.value))
-        .reduce((acc, curr) => acc + curr) / tmpFillingRateReference.length
+    const rateRef = tmpFillingRateReference.map(days => {
+      return (
+        days.map(day => Number(day.value)).reduce((acc, curr) => acc + curr) /
+        days.length
+      )
+    })
     return rateRef
   })
 
   useEffect(() => {
     if (!tmpFillingRateReference.length) return
     const rateRef = calculateFillingRate()
-    const fillingRateValues = tmpFillingRateReference.map(data => {
-      return {
-        date: data.date,
-        value: (data.value / rateRef) * 100,
-      }
+    const fillingRateTmp = []
+    tmpFillingRateReference.map((lake, index) => {
+      fillingRateTmp.push(
+        lake.map(data => {
+          return {
+            date: data.date,
+            value: (data.value / rateRef[index]) * 100,
+          }
+        })
+      )
     })
-
-    setFillingRateReference(fillingRateValues)
+    setFillingRateReference(fillingRateTmp)
   }, [tmpFillingRateReference])
 
   useEffect(() => {
     if (!lakeData.length) return
-    if (dataType === DataTypes.FILLING_RATE && !fillingRateReference.length)
+    if (
+      dataType === DataTypes.FILLING_RATE &&
+      fillingRateReference.length !== lakeData.length
+    )
       return
     const arrTmp = []
     lakeData.forEach((lake, index) => {
-      if (dataType === DataTypes.FILLING_RATE) {
-        arrTmp.push([lake[0][0], lake[0][1], fillingRateReference])
+      let data = []
+
+      if (!OPTIC || !RADAR) {
+        data = [lake[0][0]]
       }
-      if (dataType === DataTypes.SURFACE) {
-        arrTmp.push([lake[0][0], lake[0][1], surfaceReference])
+
+      if (OPTIC && RADAR) {
+        data = [lake[0][0], lake[0][1]]
       }
-      if (dataType === DataTypes.VOLUME) {
-        arrTmp.push([lake[0][0], lake[0][1], volumeReference])
+
+      if (dataType === DataTypes.FILLING_RATE && REFERENCE) {
+        data = [...data, fillingRateReference[index]]
       }
+      if (dataType === DataTypes.SURFACE && REFERENCE) {
+        data = [...data, surfaceReference[index]]
+      }
+      if (dataType === DataTypes.VOLUME && REFERENCE) {
+        data = [...data, volumeReference[index]]
+      }
+      arrTmp.push(data)
     })
     setLakeDataWithReference(arrTmp)
   }, [surfaceReference, volumeReference, fillingRateReference])
@@ -253,14 +268,14 @@ export function useAppHook() {
 
   useEffect(() => {
     if (!lakeData) return
-    console.log({ lakeDataWithReference })
-    lakeDataWithReference.forEach((lake, index) => {
-      if (!lake[2].length) return
+    if (dataType === DataTypes.FILLING_RATE && !fillingRateReference.length)
+      return
+    lakeDataWithReference.forEach((data, index) => {
       dispatch(
         addLake({
           lakeId: lakes.activeLakes[index].id,
           dataType,
-          lakeData: lake,
+          lakeData: data,
         })
       )
     })

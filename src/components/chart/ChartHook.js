@@ -35,6 +35,9 @@ export default function useChartHook() {
     if (RADAR) {
       setObsTypes([ObservationTypes.RADAR])
     }
+    if (REFERENCE) {
+      setObsTypes([CompareTypes.REFERENCE])
+    }
     if (OPTIC && RADAR) {
       setObsTypes([ObservationTypes.OPTIC, ObservationTypes.RADAR])
     }
@@ -59,6 +62,14 @@ export default function useChartHook() {
       setChartData([])
     }
   }, [form, lakes.activeLakes])
+
+  useEffect(() => {
+    console.log({ obsTypes })
+  }, [obsTypes])
+
+  useEffect(() => {
+    console.log({ dataSets })
+  }, [dataSets])
 
   useEffect(() => {
     if (
@@ -126,7 +137,8 @@ export default function useChartHook() {
 
     const lastDateGraph = getChartFirstDateNextMonth(allDatesSorted)
     setDateMax(lastDateGraph)
-  }, [chartData, charType])
+  }, [lakes.data, chartData, charType])
+
   const handleValue = (value, unit) => {
     if (unit === "hm³") {
       return (1 * value) / 1_000_000
@@ -403,7 +415,6 @@ export default function useChartHook() {
       if (obsTypes.length === 3) {
         if (dataSets.length !== activeLakesIndex.length * 3) return
         if (visible) {
-          console.log(index)
           newData[index === 0 ? 0 : index * 3].hidden = false
           newData[index === 0 ? 1 : index * 3 + 1].hidden = false
           newData[index === 0 ? 2 : index * 3 + 2].hidden = false
@@ -417,10 +428,6 @@ export default function useChartHook() {
       }
     }
   }, [lakes.activeLakes])
-
-  useEffect(() => {
-    console.log(dataSets)
-  }, [dataSets])
 
   const data = {
     datasets: dataSets,
