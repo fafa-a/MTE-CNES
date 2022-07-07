@@ -203,10 +203,11 @@ export function useAppHook() {
 
   const calculateFillingRate = useCallback(() => {
     const rateRef = tmpFillingRateReference.map(days => {
-      return (
-        days.map(day => Number(day.value)).reduce((acc, curr) => acc + curr) /
-        days.length
-      )
+      // filter and return max value
+      const max = days.reduce((acc, curr) => {
+        return acc.value > curr.value ? acc : curr
+      }, 0)
+      return max.value
     })
     return rateRef
   })
