@@ -14,7 +14,7 @@ export const useLakeSelectionHook = (id, coordinates, index) => {
   const [isSelected, setIsSelected] = useState(false)
   const dispatch = useDispatch()
   const chartOptions = useSelector(state => state.chart)
-  const { dataType } = useSelector(state => state.form)
+  const { dataType, OPTIC, RADAR } = useSelector(state => state.form)
 
   const { activeLakes } = useSelector(state => state.lakes)
 
@@ -63,6 +63,8 @@ export const useLakeSelectionHook = (id, coordinates, index) => {
     isVisible,
     toggleSelectedLake,
     isSelected,
+    OPTIC,
+    RADAR,
   }
 }
 export default useLakeSelectionHook

@@ -50,6 +50,26 @@ const initialState = {
           backgroundColor: "rgba(255, 0, 255)",
           pointBackgroundColor: "rgb(255, 0, 255)",
         },
+        {
+          borderColor: "rgba(0, 100, 255)",
+          backgroundColor: "rgba(0, 100, 255)",
+          pointBackgroundColor: "rgb(0, 100, 255)",
+        },
+        {
+          borderColor: "rgba(255, 100, 0)",
+          backgroundColor: "rgba(255, 100, 0)",
+          pointBackgroundColor: "rgb(255, 100, 0)",
+        },
+        {
+          borderColor: "rgba(0, 255, 100)",
+          backgroundColor: "rgba(0, 255, 100)",
+          pointBackgroundColor: "rgb(0, 255, 100)",
+        },
+        {
+          borderColor: "rgba(255, 0, 100)",
+          backgroundColor: "rgba(255, 0, 100)",
+          pointBackgroundColor: "rgb(255, 0, 100)",
+        },
       ],
       [ObservationTypes.RADAR]: [
         {
@@ -81,6 +101,26 @@ const initialState = {
           borderColor: "rgba(126, 0, 126)",
           backgroundColor: "rgba(126, 0, 126)",
           pointBackgroundColor: "rgb(126, 0, 126)",
+        },
+        {
+          borderColor: "rgba(0, 100, 126)",
+          backgroundColor: "rgba(0, 100, 126)",
+          pointBackgroundColor: "rgb(0, 100, 126)",
+        },
+        {
+          borderColor: "rgba(126, 100, 0)",
+          backgroundColor: "rgba(126, 100, 0)",
+          pointBackgroundColor: "rgb(126, 100, 0)",
+        },
+        {
+          borderColor: "rgba(0, 126, 200)",
+          backgroundColor: "rgba(0, 126, 200)",
+          pointBackgroundColor: "rgb(0, 126, 200)",
+        },
+        {
+          borderColor: "rgba(126, 0, 200)",
+          backgroundColor: "rgba(126, 0, 200)",
+          pointBackgroundColor: "rgb(126, 0, 200)",
         },
       ],
     },
@@ -118,6 +158,26 @@ const initialState = {
           backgroundColor: "rgba(255,199,132)",
           pointBackgroundColor: "rgb(255,199,132)",
         },
+        {
+          borderColor: "rgba(255, 99, 232)",
+          backgroundColor: "rgba(255, 99, 232)",
+          pointBackgroundColor: "rgb(255, 99, 232)",
+        },
+        {
+          borderColor: "rgba(75, 192, 292)",
+          backgroundColor: "rgba(75, 192, 292)",
+          pointBackgroundColor: "rgb(75, 192, 292)",
+        },
+        {
+          borderColor: "rgba(153, 202, 255)",
+          backgroundColor: "rgba(153, 202, 255)",
+          pointBackgroundColor: "rgb(153, 202, 255)",
+        },
+        {
+          borderColor: "rgba(255,199,232)",
+          backgroundColor: "rgba(255,199,232)",
+          pointBackgroundColor: "rgb(255,199,232)",
+        },
       ],
       [ObservationTypes.RADAR]: [
         {
@@ -149,6 +209,26 @@ const initialState = {
           borderColor: "rgba(186, 0, 100)",
           backgroundColor: "rgba(186, 0, 100)",
           pointBackgroundColor: "rgb(186, 0, 100)",
+        },
+        {
+          borderColor: "rgba(0, 186, 0)",
+          backgroundColor: "rgba(0, 186, 0)",
+          pointBackgroundColor: "rgb(0, 186, 0)",
+        },
+        {
+          borderColor: "rgba(186, 0, 0)",
+          backgroundColor: "rgba(186, 0, 0)",
+          pointBackgroundColor: "rgb(186, 0, 0)",
+        },
+        {
+          borderColor: "rgba(0, 186, 186)",
+          backgroundColor: "rgba(0, 186, 186)",
+          pointBackgroundColor: "rgb(0, 186, 186)",
+        },
+        {
+          borderColor: "rgba(186, 0, 186)",
+          backgroundColor: "rgba(186, 0, 186)",
+          pointBackgroundColor: "rgb(186, 0, 186)",
         },
       ],
     },
@@ -186,6 +266,26 @@ const initialState = {
           backgroundColor: "rgba(255, 0, 127)",
           pointBackgroundColor: "rgb(255, 0, 127)",
         },
+        {
+          borderColor: "rgba(127, 0, 0)",
+          backgroundColor: "rgba(127, 0, 0)",
+          pointBackgroundColor: "rgb(127, 0, 0)",
+        },
+        {
+          borderColor: "rgba(0, 127, 0)",
+          backgroundColor: "rgba(0, 127, 0)",
+          pointBackgroundColor: "rgb(0, 127, 0)",
+        },
+        {
+          borderColor: "rgba(0, 0, 127)",
+          backgroundColor: "rgba(0, 0, 127)",
+          pointBackgroundColor: "rgb(0, 0, 127)",
+        },
+        {
+          borderColor: "rgba(127, 0, 127)",
+          backgroundColor: "rgba(127, 0, 127)",
+          pointBackgroundColor: "rgb(127, 0, 127)",
+        },
       ],
       [ObservationTypes.RADAR]: [
         {
@@ -217,6 +317,26 @@ const initialState = {
           borderColor: "rgba(137, 190, 222)",
           backgroundColor: "rgba(137, 190, 222)",
           pointBackgroundColor: "rgb(137, 190, 222)",
+        },
+        {
+          borderColor: "rgba(222, 137, 190)",
+          backgroundColor: "rgba(222, 137, 190)",
+          pointBackgroundColor: "rgb(222, 137, 190)",
+        },
+        {
+          borderColor: "rgba(190, 137, 222)",
+          backgroundColor: "rgba(190, 137, 222)",
+          pointBackgroundColor: "rgb(190, 137, 222)",
+        },
+        {
+          borderColor: "rgba(222, 190, 137)",
+          backgroundColor: "rgba(222, 190, 137)",
+          pointBackgroundColor: "rgb(222, 190, 137)",
+        },
+        {
+          borderColor: "rgba(190, 222, 137)",
+          backgroundColor: "rgba(190, 222, 137)",
+          pointBackgroundColor: "rgb(190, 222, 137)",
         },
       ],
     },

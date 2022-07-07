@@ -59,6 +59,7 @@ const StyledDivObservationTypes = styled("div", {
   height: "100%",
   display: "flex",
   flexDirection: "column",
+  justifyContent: "space-evenly",
   width: "20%",
   marginLeft: theme.space.xs,
 })
@@ -104,6 +105,8 @@ export const LakeSelection = ({ id, lakeName, coordinates, index }) => {
     isVisible,
     toggleSelectedLake,
     isSelected,
+    OPTIC,
+    RADAR,
   } = useLakeSelectionHook(id, coordinates, index)
   return (
     <StyledDiv
@@ -113,14 +116,18 @@ export const LakeSelection = ({ id, lakeName, coordinates, index }) => {
       }}
     >
       <StyledDivObservationTypes>
-        <StyledDivContainerObsTypes>
-          <StyledSpanOpticColor style={{ ...bgOptic }} />
-          <StyledSpanLabel>optic</StyledSpanLabel>
-        </StyledDivContainerObsTypes>
-        <StyledDivContainerObsTypes>
-          <StyledSpanRadarColor style={{ ...bgRadar }} />
-          <StyledSpanLabel>radar</StyledSpanLabel>
-        </StyledDivContainerObsTypes>
+        {OPTIC && (
+          <StyledDivContainerObsTypes>
+            <StyledSpanOpticColor style={{ ...bgOptic }} />
+            <StyledSpanLabel>optic</StyledSpanLabel>
+          </StyledDivContainerObsTypes>
+        )}
+        {RADAR && (
+          <StyledDivContainerObsTypes>
+            <StyledSpanRadarColor style={{ ...bgRadar }} />
+            <StyledSpanLabel>radar</StyledSpanLabel>
+          </StyledDivContainerObsTypes>
+        )}
       </StyledDivObservationTypes>
       <StyledContainerP onClick={toggleSelectedLake}>
         <StyledParagraph css={{ fontWeight: isSelected && "bold" }}>
