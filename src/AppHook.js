@@ -198,12 +198,11 @@ export function useAppHook() {
     })
     setSurfaceReference(surfaceRef)
     setVolumeReference(volumeRef)
-    setTmpFillingRateReference(fillingRateRef)
+    setTmpFillingRateReference(volumeRef)
   }, [dataReference])
 
   const calculateFillingRate = useCallback(() => {
     const rateRef = tmpFillingRateReference.map(days => {
-      // filter and return max value
       const max = days.reduce((acc, curr) => {
         return acc.value > curr.value ? acc : curr
       }, 0)
