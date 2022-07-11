@@ -148,7 +148,7 @@ export default function useChartHook() {
     }
 
     if (displayByYear) {
-      chartData.forEach((obs, index) => {
+      chartData.forEach((obs, i) => {
         obs.forEach(year => {
           year.forEach(obsByYear => {
             Object.values(obsByYear).forEach((itm, idx) => {
@@ -157,7 +157,7 @@ export default function useChartHook() {
                   item,
                   obsTypes[index],
                   idx,
-                  lakesName[index],
+                  lakesName[i],
                   idx
                 )
 
@@ -373,6 +373,7 @@ export default function useChartHook() {
 
   const setDataLines = (item, obsType, index, lakeName, indexColor) => {
     if (!item) return
+    console.log({ index, indexColor })
     let value
     if (!displayByYear) {
       value = item
@@ -430,6 +431,24 @@ export default function useChartHook() {
       if (index === 0) xAxisID = "x2018"
       if (index === 1) xAxisID = "x2019"
       if (index === 2) xAxisID = "x2020"
+    }
+    if (displayByYear && obsType === "OPTIC") {
+      backgroundColor = chart.YEAR.style[xAxisID].OPTIC.backgroundColor
+      borderColor = chart.YEAR.style[xAxisID].OPTIC.borderColor
+      pointBackgroundColor =
+        chart.YEAR.style[xAxisID].OPTIC.pointBackgroundColor
+    }
+    if (displayByYear && obsType === "RADAR") {
+      backgroundColor = chart.YEAR.style[xAxisID].RADAR.backgroundColor
+      borderColor = chart.YEAR.style[xAxisID].RADAR.borderColor
+      pointBackgroundColor =
+        chart.YEAR.style[xAxisID].RADAR.pointBackgroundColor
+    }
+    if (displayByYear && obsType === "REFERENCE") {
+      backgroundColor = chart.YEAR.style[xAxisID].REFERENCE.backgroundColor
+      borderColor = chart.YEAR.style[xAxisID].REFERENCE.borderColor
+      pointBackgroundColor =
+        chart.YEAR.style[xAxisID].REFERENCE.pointBackgroundColor
     }
     if (!displayByYear) {
       xAxisID = "x"

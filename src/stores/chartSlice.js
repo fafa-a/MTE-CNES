@@ -17,6 +17,61 @@ const initialState = {
       pointBackgroundColor: "rgba(63, 78, 79)",
     },
   },
+  [CompareTypes.YEAR]: {
+    style: {
+      x2018: {
+        [ObservationTypes.OPTIC]: {
+          backgroundColor: "rgba(255, 0, 0,0.5)",
+          borderColor: "rgba(255, 0, 0,0.5)",
+          pointBackgroundColor: "rgba(255, 0, 0,0.5)",
+        },
+        [ObservationTypes.RADAR]: {
+          backgroundColor: "rgba(255, 0, 0)",
+          borderColor: "rgb(255, 0, 0)",
+          pointBackgroundColor: "rgb(255, 0, 0)",
+        },
+        [CompareTypes.REFERENCE]: {
+          backgroundColor: "rgba(255, 0, 0,0.75)",
+          borderColor: "rgb(255, 0, 0,0.75)",
+          pointBackgroundColor: "rgb(255, 0, 0,0.75)",
+        },
+      },
+      x2019: {
+        [ObservationTypes.OPTIC]: {
+          backgroundColor: "rgba(255, 125, 0,0.5)",
+          borderColor: "rgba(255, 125, 0,0.5)",
+          pointBackgroundColor: "rgba(255, 125, 0,0.5)",
+        },
+        [ObservationTypes.RADAR]: {
+          backgroundColor: "rgb(255, 125, 0)",
+          borderColor: "rgb(255, 125, 0)",
+          pointBackgroundColor: "rgb(255, 125, 0)",
+        },
+        [CompareTypes.REFERENCE]: {
+          backgroundColor: "rgba(255, 125, 0,0.75)",
+          borderColor: "rgb(255, 125, 0,0.75)",
+          pointBackgroundColor: "rgb(255, 125, 0,0.75)",
+        },
+      },
+      x2020: {
+        [ObservationTypes.OPTIC]: {
+          backgroundColor: "rgba(0, 0, 255,0.5)",
+          borderColor: "rgba(0, 0, 255,0.5)",
+          pointBackgroundColor: "rgba(0, 0, 255,0.5)",
+        },
+        [ObservationTypes.RADAR]: {
+          backgroundColor: "rgb(0, 0, 255)",
+          borderColor: "rgb(0, 0, 255)",
+          pointBackgroundColor: "rgb(0, 0, 255)",
+        },
+        [CompareTypes.REFERENCE]: {
+          backgroundColor: "rgba(0, 0, 255,0.75)",
+          borderColor: "rgb(0, 0, 255,0.75)",
+          pointBackgroundColor: "rgb(0, 0, 255,0.75)",
+        },
+      },
+    },
+  },
   [DataTypes.FILLING_RATE]: {
     style: {
       [ObservationTypes.OPTIC]: [
