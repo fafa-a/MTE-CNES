@@ -11,17 +11,23 @@ export const lakesSlice = createSlice({
   initialState,
   reducers: {
     addLake: (state, action) => {
-      const { lakeId, dataType, lakeData } = action.payload
+      const { lakeId, dataType, lakeData, lakeDataByYear } = action.payload
       if (state.data[lakeId]) {
         state.data[lakeId] = {
           ...state.data[lakeId],
-          [dataType]: lakeData,
+          [dataType]: {
+            raw: lakeData,
+            byYear: lakeDataByYear,
+          },
         }
       }
 
       if (!state.data[lakeId]) {
         state.data[lakeId] = {
-          [dataType]: lakeData,
+          [dataType]: {
+            raw: lakeData,
+            byYear: { lakeDataByYear },
+          },
         }
       }
 

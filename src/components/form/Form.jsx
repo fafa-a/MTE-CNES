@@ -15,6 +15,7 @@ import {
   setChartType,
   setAttributeValue,
   toggleReference,
+  toggleYear,
 } from "../../stores/formSlice"
 
 const StyledContainer = styled("div", {
@@ -96,6 +97,13 @@ export const Form = () => {
               label={durationValues.PERIOD.label}
               abbr={durationValues.PERIOD.abbr}
               value={form.PERIOD}
+            />
+            <Checkbox
+              storeAction={toggleYear}
+              id={compareTypesValues.YEAR.label}
+              label={compareTypesValues.YEAR.label}
+              abbr={compareTypesValues.YEAR.label}
+              value={form.YEAR}
             />
           </StyledFlexRowDiv>
         </StyledDiv>

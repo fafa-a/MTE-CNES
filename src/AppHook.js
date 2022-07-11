@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux"
 import { useDispatch } from "react-redux"
-import { updateActiveLakes, addLake, desactiveLake } from "./stores/lakesSlice"
+import { addLake, desactiveLake } from "./stores/lakesSlice"
 
 import {
   AppConfig,
@@ -10,6 +10,7 @@ import {
   DataTypes,
 } from "./config"
 import { csv } from "d3"
+import { extractDataByYear, groupDataByYear } from "./utils"
 
 export function useAppHook() {
   const [seriePath, setSeriePath] = useState([])
@@ -20,10 +21,12 @@ export function useAppHook() {
   const [fillingRateReference, setFillingRateReference] = useState([])
   const [surfaceReference, setSurfaceReference] = useState([])
   const [volumeReference, setVolumeReference] = useState([])
+  const [lakeDataByYear, setLakeDataByYear] = useState([])
   const form = useSelector(state => state.form)
   const lakes = useSelector(state => state.lakes)
 
-  const { OPTIC, RADAR, DAY, PERIOD, REFERENCE, dataType, charType } = form
+  const { OPTIC, RADAR, DAY, PERIOD, REFERENCE, YEAR, dataType, charType } =
+    form
   const { getSeriePath, getTimeseriesPath } = SeriePathUtils
   const dispatch = useDispatch()
 
@@ -151,8 +154,18 @@ export function useAppHook() {
   }
 
   useEffect(() => {
-    console.log({ seriePath })
-  }, [seriePath])
+    let lakeDataTmp = []
+    lakeDataWithReference.forEach(lake => {
+      lake.forEach(data => {
+        const dataYear = extractDataByYear(data)
+        lakeDataTmp.push(dataYear)
+      })
+      const dataByYear = groupDataByYear(lakeDataTmp)
+      lakeDataTmp = []
+      lakeDataTmp.push(dataByYear)
+    })
+    setLakeDataByYear(lakeDataTmp)
+  }, [lakeDataWithReference])
 
   const fetchData = useCallback(async () => {
     const arrTmp = []
@@ -280,10 +293,11 @@ export function useAppHook() {
           lakeId: lakes.activeLakes[index].id,
           dataType,
           lakeData: data,
+          lakeDataByYear,
         })
       )
     })
-  }, [lakeDataWithReference])
+  }, [lakeDataWithReference, lakeDataByYear])
 
   return { removeLakeActive }
 }
