@@ -96,7 +96,7 @@ const StyledReactTooltip = styled(ReactTooltip, {
   zIndex: "1111 !important",
 })
 
-export const LakeSelection = ({ id, lakeName, coordinates, index }) => {
+export const LakeSelection = ({ id, lakeName, coordinates, index, year }) => {
   const {
     toggleChartVisibilty,
     handleClickDesactiveLake,
@@ -131,7 +131,7 @@ export const LakeSelection = ({ id, lakeName, coordinates, index }) => {
       </StyledDivObservationTypes>
       <StyledContainerP onClick={toggleSelectedLake}>
         <StyledParagraph css={{ fontWeight: isSelected && "bold" }}>
-          {lakeName}
+          {year ? year : lakeName}
         </StyledParagraph>
       </StyledContainerP>
       <StyledContainerButton>

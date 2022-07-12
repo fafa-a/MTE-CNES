@@ -19,15 +19,16 @@ const StyledH3 = styled("h3", {
 })
 
 export const LakeBoard = () => {
-  const { activeLakes } = useLakeBoardHook()
+  const { dataSelection } = useLakeBoardHook()
   return (
     <StyledContainer>
       <StyledH3>Selected lakes</StyledH3>
-      {activeLakes.map((lake, index) => (
+      {dataSelection.map((lake, index) => (
         <LakeSelection
           key={uuid()}
           id={lake.id}
           lakeName={lake.name}
+          year={lake.year}
           coordinates={lake.coordinates}
           index={index}
         />
