@@ -20,6 +20,7 @@
     "chartjs-plugin-zoom": "^1.2.1",
     "d3": "^7.4.4",
     "date-fns": "^2.28.0",
+    "file-saver": "^2.0.5",
     "leaflet": "^1.8.0",
     "leaflet.markercluster": "^1.5.3",
     "papaparse": "^5.3.2",

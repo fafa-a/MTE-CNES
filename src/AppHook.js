@@ -34,9 +34,9 @@ export function useAppHook() {
     dispatch(desactiveLake({ lakeId: id }))
   }
 
-  // useEffect(() => {
-  //   console.log({ lakes })
-  // }, [lakes])
+  useEffect(() => {
+    console.log({ lakes })
+  }, [lakes])
 
   const getSeriePathByDay = (id, name) => {
     const arrTmp = []
@@ -277,6 +277,9 @@ export function useAppHook() {
   useEffect(() => {
     handleFetchData()
   }, [fetchData])
+  useEffect(() => {
+    console.log({ seriePath })
+  }, [seriePath])
 
   useEffect(() => {
     if (!lakeData) return
@@ -289,6 +292,7 @@ export function useAppHook() {
           dataType,
           lakeData: data,
           lakeDataByYear,
+          seriePath: seriePath[index],
         })
       )
     })

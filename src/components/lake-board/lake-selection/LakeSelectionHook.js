@@ -6,9 +6,10 @@ import {
   toggleYearsChartVisibility,
   toggleYearSelection,
 } from "@stores/lakesSlice"
+import { saveAs } from "file-saver"
 import { useDispatch, useSelector } from "react-redux"
 
-export const useLakeSelectionHook = (id, coordinates, index) => {
+export const useLakeSelectionHook = (id, name, coordinates, index) => {
   const [bgOptic, setBgOptic] = useState({})
   const [bgRadar, setBgRadar] = useState({})
   const [bgReference, setBgReference] = useState({})
@@ -110,9 +111,17 @@ export const useLakeSelectionHook = (id, coordinates, index) => {
     }
   }, [id])
 
+  const handleDownloadFile = useCallback(() => {
+    for (const path of data[id][dataType].seriePath) {
+      const fileName = path.split("/").pop().split(".")[0]
+      saveAs(path, fileName)
+    }
+  })
+
   return {
     toggleChartVisibilty,
     handleClickDesactiveLake,
+    handleDownloadFile,
     bgOptic,
     bgRadar,
     isVisible,
@@ -126,4 +135,3 @@ export const useLakeSelectionHook = (id, coordinates, index) => {
     activeLakes,
   }
 }
-export default useLakeSelectionHook

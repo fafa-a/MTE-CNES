@@ -1,4 +1,4 @@
-import useLakeSelectionHook from "./LakeSelectionHook"
+import { useLakeSelectionHook } from "./LakeSelectionHook"
 import { styled, theme } from "@/stitches.config"
 import ReactTooltip from "react-tooltip"
 
@@ -92,6 +92,7 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
   const {
     toggleChartVisibilty,
     handleClickDesactiveLake,
+    handleDownloadFile,
     bgOptic,
     bgRadar,
     bgReference,
@@ -103,7 +104,8 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
     REFERENCE,
     YEAR,
     activeLakes,
-  } = useLakeSelectionHook(id, coordinates, index)
+  } = useLakeSelectionHook(id, name, coordinates, index)
+
   return (
     <StyledDiv
       css={{
@@ -192,7 +194,11 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
             <StyledReactTooltip id="info" place="top" effect="solid">
               <span>Info</span>
             </StyledReactTooltip>
-            <StyledButton data-tip data-for="download">
+            <StyledButton
+              data-tip
+              data-for="download"
+              onClick={handleDownloadFile}
+            >
               <IconCarbonDownload fontSize={14} />
             </StyledButton>
             <StyledReactTooltip id="download" place="top" effect="solid">

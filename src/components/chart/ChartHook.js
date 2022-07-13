@@ -684,9 +684,7 @@ export default function useChartHook() {
       }
     }
   }, [lakes.activeYears])
-  useEffect(() => {
-    console.log({ options })
-  }, [options])
+
   const data = {
     datasets: dataSets,
   }
