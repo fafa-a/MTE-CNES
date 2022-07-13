@@ -40,8 +40,6 @@ const StyledContainerP = styled("div", {
   width: "50%",
   maxWidth: "50%",
   maxHeigth: "100%",
-  display: "flex",
-  justifyContent: "flex-end",
 })
 
 const StyledParagraph = styled("p", {
@@ -103,6 +101,8 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
     OPTIC,
     RADAR,
     REFERENCE,
+    YEAR,
+    activeLakes,
   } = useLakeSelectionHook(id, coordinates, index)
   return (
     <StyledDiv
@@ -131,12 +131,16 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
           </StyledDivContainerObsTypes>
         )}
       </StyledDivObservationTypes>
-      <StyledContainerP onClick={toggleSelectedLake}>
+      <StyledContainerP
+        onClick={toggleSelectedLake}
+        css={YEAR && { width: "70%", maxWidth: "70%" }}
+      >
         <StyledParagraph css={{ fontWeight: isSelected && "bold" }}>
-          {name}
+          {YEAR && `${name} ${activeLakes.at(-1).name}`}
+          {!YEAR && name}
         </StyledParagraph>
       </StyledContainerP>
-      <StyledContainerButton>
+      <StyledContainerButton css={{ width: YEAR && "10%" }}>
         {!isVisible && (
           <>
             <StyledButton
@@ -165,33 +169,37 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
             </StyledReactTooltip>
           </>
         )}
-        <StyledButton
-          data-tip
-          data-for="delete"
-          onClick={handleClickDesactiveLake}
-        >
-          <IconCarbonTrashCan fontSize={14} />
-        </StyledButton>
-        <StyledReactTooltip
-          id="delete"
-          place="top"
-          effect="solid"
-          type="warning"
-        >
-          <span>Delete</span>
-        </StyledReactTooltip>
-        <StyledButton data-tip data-for="info">
-          <IconCarbonInformation fontSize={14} />
-        </StyledButton>
-        <StyledReactTooltip id="info" place="top" effect="solid">
-          <span>Info</span>
-        </StyledReactTooltip>
-        <StyledButton data-tip data-for="download">
-          <IconCarbonDownload fontSize={14} />
-        </StyledButton>
-        <StyledReactTooltip id="download" place="top" effect="solid">
-          <span>Download CSV</span>
-        </StyledReactTooltip>
+        {!YEAR && (
+          <>
+            <StyledButton
+              data-tip
+              data-for="delete"
+              onClick={handleClickDesactiveLake}
+            >
+              <IconCarbonCloseOutline fontSize={14} />
+            </StyledButton>
+            <StyledReactTooltip
+              id="delete"
+              place="top"
+              effect="solid"
+              type="warning"
+            >
+              <span>Delete</span>
+            </StyledReactTooltip>
+            <StyledButton data-tip data-for="info">
+              <IconCarbonInformation fontSize={14} />
+            </StyledButton>
+            <StyledReactTooltip id="info" place="top" effect="solid">
+              <span>Info</span>
+            </StyledReactTooltip>
+            <StyledButton data-tip data-for="download">
+              <IconCarbonDownload fontSize={14} />
+            </StyledButton>
+            <StyledReactTooltip id="download" place="top" effect="solid">
+              <span>Download CSV</span>
+            </StyledReactTooltip>
+          </>
+        )}
       </StyledContainerButton>
     </StyledDiv>
   )

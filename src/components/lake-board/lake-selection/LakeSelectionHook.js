@@ -122,6 +122,8 @@ export const useLakeSelectionHook = (id, coordinates, index) => {
     RADAR,
     REFERENCE,
     bgReference,
+    YEAR,
+    activeLakes,
   }
 }
 export default useLakeSelectionHook
