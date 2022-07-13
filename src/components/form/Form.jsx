@@ -42,7 +42,11 @@ const StyledH3 = styled("h3", {
   fontFamily: "sans-serif",
   marginBottom: theme.space.sm,
 })
-
+const StyledButton = styled("button", {
+  fontFamily: "sans-serif",
+  textTransform: "capitalize",
+  marginTop: theme.space.sm,
+})
 export const Form = () => {
   const {
     chartTypesValues,
@@ -51,6 +55,7 @@ export const Form = () => {
     durationValues,
     form,
     compareTypesValues,
+    downloadChartImage,
   } = useFormHook()
   return (
     <StyledContainer>
@@ -138,6 +143,9 @@ export const Form = () => {
           </Select>
         </StyledDiv>
         <Button type="reset" value="clear form" cleanForm={cleanForm} />
+        <StyledButton onClick={downloadChartImage}>
+          Download chart image
+        </StyledButton>
       </form>
     </StyledContainer>
   )

@@ -24,7 +24,18 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  zoomPlugin
+  zoomPlugin,
+  {
+    id: "customBackground",
+    beforeDraw: (chart, args, opts) => {
+      const ctx = chart.canvas.getContext("2d")
+      ctx.save()
+      ctx.globalCompositeOperation = "destination-over"
+      ctx.fillStyle = "white"
+      ctx.fillRect(0, 0, chart.width, chart.height)
+      ctx.restore()
+    },
+  }
 )
 
 const StyledDiv = styled("div", {

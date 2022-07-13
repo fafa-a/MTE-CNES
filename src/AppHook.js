@@ -38,6 +38,10 @@ export function useAppHook() {
     console.log({ lakes })
   }, [lakes])
 
+  useEffect(() => {
+    console.log({ form })
+  }, [form])
+  
   const getSeriePathByDay = (id, name) => {
     const arrTmp = []
     if (OPTIC && DAY) {
