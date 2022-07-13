@@ -34,9 +34,9 @@ export function useAppHook() {
     dispatch(desactiveLake({ lakeId: id }))
   }
 
-  useEffect(() => {
-    console.log({ lakes })
-  }, [lakes])
+  // useEffect(() => {
+  //   console.log({ lakes })
+  // }, [lakes])
 
   const getSeriePathByDay = (id, name) => {
     const arrTmp = []
@@ -251,7 +251,9 @@ export function useAppHook() {
       if (OPTIC && RADAR) {
         data = [lake[0][0], lake[0][1]]
       }
-
+      if (!OPTIC && !RADAR && REFERENCE) {
+        data = []
+      }
       if (dataType === DataTypes.FILLING_RATE && REFERENCE) {
         data = [...data, fillingRateReference[index]]
       }
@@ -261,6 +263,7 @@ export function useAppHook() {
       if (dataType === DataTypes.VOLUME && REFERENCE) {
         data = [...data, volumeReference[index]]
       }
+
       arrTmp.push(data)
     })
     setLakeDataWithReference(arrTmp)

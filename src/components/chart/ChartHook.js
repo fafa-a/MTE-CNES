@@ -227,6 +227,9 @@ export default function useChartHook() {
             tooltipFormat: "dd MMM yyyy",
           },
         },
+        y: {
+          beginAtZero: true,
+        },
       })
     }
     if (displayByYear) {
@@ -271,6 +274,9 @@ export default function useChartHook() {
             },
             tooltipFormat: "dd MMM yyyy",
           },
+        },
+        y: {
+          beginAtZero: true,
         },
       })
     }
@@ -678,11 +684,9 @@ export default function useChartHook() {
       }
     }
   }, [lakes.activeYears])
-
   useEffect(() => {
-    console.log({ dataSets })
-  }, [dataSets])
-
+    console.log({ options })
+  }, [options])
   const data = {
     datasets: dataSets,
   }
