@@ -201,14 +201,6 @@ export function useAppHook() {
       })
     })
 
-    const fillingRateRef = dataReference.map(lake => {
-      return lake.map(data => {
-        return {
-          date: data.date,
-          value: data.level,
-        }
-      })
-    })
     setSurfaceReference(surfaceRef)
     setVolumeReference(volumeRef)
     setTmpFillingRateReference(volumeRef)

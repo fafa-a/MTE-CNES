@@ -65,14 +65,14 @@ const StyledDivObservationTypes = styled("div", {
 })
 
 const StyledDivContainerObsTypes = styled("div", {
-  height: "50%",
+  height: "33%",
   display: "flex",
   alignItems: "center",
 })
 
-const StyledSpanOpticColor = styled("span", {
-  width: "10px",
-  height: "10px",
+const StyledSpanObsColor = styled("span", {
+  width: "8px",
+  height: "8px",
   display: "inline-block",
 })
 
@@ -80,12 +80,6 @@ const StyledSpanLabel = styled("span", {
   fontFamily: "sans-serif",
   marginLeft: theme.space.xs,
   fontSize: theme.fontSizes.xs,
-})
-
-const StyledSpanRadarColor = styled("span", {
-  width: "10px",
-  height: "10px",
-  display: "inline-block",
 })
 
 const StyledReactTooltip = styled(ReactTooltip, {
@@ -96,17 +90,19 @@ const StyledReactTooltip = styled(ReactTooltip, {
   zIndex: "1111 !important",
 })
 
-export const LakeSelection = ({ id, lakeName, coordinates, index, year }) => {
+export const LakeSelection = ({ id, name, coordinates, index }) => {
   const {
     toggleChartVisibilty,
     handleClickDesactiveLake,
     bgOptic,
     bgRadar,
+    bgReference,
     isVisible,
     toggleSelectedLake,
     isSelected,
     OPTIC,
     RADAR,
+    REFERENCE,
   } = useLakeSelectionHook(id, coordinates, index)
   return (
     <StyledDiv
@@ -118,20 +114,26 @@ export const LakeSelection = ({ id, lakeName, coordinates, index, year }) => {
       <StyledDivObservationTypes>
         {OPTIC && (
           <StyledDivContainerObsTypes>
-            <StyledSpanOpticColor style={{ ...bgOptic }} />
+            <StyledSpanObsColor style={{ ...bgOptic }} />
             <StyledSpanLabel>optic</StyledSpanLabel>
           </StyledDivContainerObsTypes>
         )}
         {RADAR && (
           <StyledDivContainerObsTypes>
-            <StyledSpanRadarColor style={{ ...bgRadar }} />
+            <StyledSpanObsColor style={{ ...bgRadar }} />
             <StyledSpanLabel>radar</StyledSpanLabel>
+          </StyledDivContainerObsTypes>
+        )}
+        {REFERENCE && (
+          <StyledDivContainerObsTypes>
+            <StyledSpanObsColor style={{ ...bgReference }} />
+            <StyledSpanLabel>ref</StyledSpanLabel>
           </StyledDivContainerObsTypes>
         )}
       </StyledDivObservationTypes>
       <StyledContainerP onClick={toggleSelectedLake}>
         <StyledParagraph css={{ fontWeight: isSelected && "bold" }}>
-          {year ? year : lakeName}
+          {name}
         </StyledParagraph>
       </StyledContainerP>
       <StyledContainerButton>

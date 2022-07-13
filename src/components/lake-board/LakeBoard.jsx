@@ -23,13 +23,12 @@ export const LakeBoard = () => {
   return (
     <StyledContainer>
       <StyledH3>Selected lakes</StyledH3>
-      {dataSelection.map((lake, index) => (
+      {dataSelection.map((item, index) => (
         <LakeSelection
           key={uuid()}
-          id={lake.id}
-          lakeName={lake.name}
-          year={lake.year}
-          coordinates={lake.coordinates}
+          id={item.id}
+          name={item.name}
+          coordinates={item.coordinates}
           index={index}
         />
       ))}

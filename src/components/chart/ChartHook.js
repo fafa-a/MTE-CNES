@@ -5,8 +5,6 @@ import { CompareTypes, ObservationTypes } from "../../config"
 export default function useChartHook() {
   const [chartData, setChartData] = useState([])
   const [dataSets, setDataSets] = useState([])
-  const [dataSetsTmp, setDataSetsTmp] = useState([])
-  const [xAxesToDisplay, setXAxesToDisplay] = useState({})
   const [dateMin, setDateMin] = useState()
   const [dateMax, setDateMax] = useState()
   const [lakesName, setLakesName] = useState([])
@@ -59,7 +57,7 @@ export default function useChartHook() {
         CompareTypes.REFERENCE,
       ])
     }
-    if (!OPTIC && !RADAR) {
+    if (!OPTIC && !RADAR && !REFERENCE) {
       setObsTypes([])
       setChartData([])
     }
@@ -90,6 +88,7 @@ export default function useChartHook() {
       const dataRaw = lakes.data[id][dataType].raw
       const dataByYear = Object.values(lakes.data[id][dataType].byYear)
       if (displayByYear && !reference) {
+        console.log({ dataByYear })
         const dataByYearWithoutRef = dataByYear.map(obs => obs.slice(0, 2))
         dataTmp.push([dataByYearWithoutRef])
       }
@@ -107,12 +106,6 @@ export default function useChartHook() {
     setLastDataTypes(dataType)
     setLastObstypes(obsTypes)
   }, [lakes.data, reference, displayByYear])
-
-  useEffect(() => {
-    console.log({ dataSets })
-    console.log({ options })
-    console.log({ xAxesToDisplay })
-  }, [dataSets, xAxesToDisplay])
 
   useEffect(() => {
     const arr = []
@@ -169,7 +162,6 @@ export default function useChartHook() {
 
                 const datesSorted = itemDates[0].sort((a, b) => a - b)
                 // const firstDateGraph = getChartStartDate(datesSorted)
-                // console.log({ dateMin, dateMax })
                 // setDateMin(firstDateGraph)
                 // const lastDateGraph = getChartFirstDateNextMonth(datesSorted)
                 // setDateMax(lastDateGraph)
@@ -185,10 +177,6 @@ export default function useChartHook() {
     arr.length = 0
   }, [lakes.data, chartData, charType])
 
-  useEffect(() => {
-    console.log({ dateMin, dateMax })
-  }, [dateMin, dateMax])
-
   const handleValue = (value, unit) => {
     if (unit === "hm³") {
       return (1 * value) / 1_000_000
@@ -199,10 +187,10 @@ export default function useChartHook() {
     }
   }
 
-  useEffect(() => {
-    if (!dataSets.length) return
-    setDataSetsTmp([dataSets[0], dataSets[1], dataSets[2]])
-  }, [dataSets])
+  // useEffect(() => {
+  //   if (!dataSets.length) return
+  //   setDataSetsTmp([dataSets[0], dataSets[1], dataSets[2]])
+  // }, [dataSets])
 
   const getChartStartDate = arr => {
     const minDatevalue = new Date(arr.shift())
@@ -245,7 +233,9 @@ export default function useChartHook() {
       setScales({
         x2018: {
           type: "time",
-          max: new Date("2018-12-31"),
+          parsing: false,
+          min: new Date("2018-01-01"),
+          max: new Date("2019-01-01"),
           time: {
             displayFormats: {
               month: "MMM yyyy",
@@ -257,8 +247,9 @@ export default function useChartHook() {
         x2019: {
           type: "time",
           parsing: false,
+          display: false,
           min: new Date("2019-01-01"),
-          max: new Date("2019-12-31"),
+          max: new Date("2020-01-01"),
           time: {
             displayFormats: {
               month: "MMM yyyy",
@@ -266,14 +257,13 @@ export default function useChartHook() {
             },
             tooltipFormat: "dd MMM yyyy",
           },
-          display: false,
         },
         x2020: {
           type: "time",
           parsing: false,
           display: false,
           min: new Date("2020-01-01"),
-          max: new Date("2020-12-31"),
+          max: new Date("2021-01-01"),
           time: {
             displayFormats: {
               month: "MMM yyyy",
@@ -284,7 +274,7 @@ export default function useChartHook() {
         },
       })
     }
-  }, [dataSets, displayByYear])
+  }, [dataSets, displayByYear, lakes.activeYears])
 
   const options = {
     responsive: true,
@@ -373,7 +363,6 @@ export default function useChartHook() {
 
   const setDataLines = (item, obsType, index, lakeName, indexColor) => {
     if (!item) return
-    console.log({ index, indexColor })
     let value
     if (!displayByYear) {
       value = item
@@ -410,12 +399,7 @@ export default function useChartHook() {
     let borderColor
     let pointBackgroundColor
 
-    if (obsType === "REFERENCE") {
-      backgroundColor = chart.REFERENCE.style.backgroundColor
-      borderColor = chart.REFERENCE.style.borderColor
-      pointBackgroundColor = chart.REFERENCE.style.pointBackgroundColor
-    }
-    if (obsType === "OPTIC" || obsType === "RADAR") {
+    if (["OPTIC", "RADAR", "REFERENCE"].includes(obsType)) {
       backgroundColor =
         chart[dataType].style[obsType][indexColor].pointBackgroundColor
       borderColor = chart[dataType].style[obsType][indexColor].borderColor
@@ -445,6 +429,7 @@ export default function useChartHook() {
         chart.YEAR.style[xAxisID].RADAR.pointBackgroundColor
     }
     if (displayByYear && obsType === "REFERENCE") {
+      console.log(chart.YEAR.style[xAxisID])
       backgroundColor = chart.YEAR.style[xAxisID].REFERENCE.backgroundColor
       borderColor = chart.YEAR.style[xAxisID].REFERENCE.borderColor
       pointBackgroundColor =
@@ -579,6 +564,124 @@ export default function useChartHook() {
       }
     }
   }, [lakes.activeLakes])
+
+  useEffect(() => {
+    if (!dataSets.length) return
+    const newData = [...dataSets]
+    const activeYearsChartVisible = Object.values(lakes.activeYears).map(
+      year => {
+        return {
+          visible: year.chartVisible,
+          index: year.index,
+        }
+      }
+    )
+
+    for (const lake of activeYearsChartVisible) {
+      const { index, visible } = lake
+      if (obsTypes.length === 1) {
+        if (dataSets.length !== activeYearsChartVisible.length) return
+        if (visible) {
+          newData[index].hidden = false
+        }
+        if (!visible) {
+          newData[index].hidden = true
+        }
+        setDataSets(newData)
+      }
+
+      if (obsTypes.length === 2) {
+        if (dataSets.length !== activeYearsChartVisible.length * 2) return
+        if (visible) {
+          newData[index === 0 ? 0 : index * 2].hidden = false
+          newData[index === 0 ? 1 : index * 2 + 1].hidden = false
+        }
+        if (!visible) {
+          newData[index === 0 ? 0 : index * 2].hidden = true
+          newData[index === 0 ? 1 : index * 2 + 1].hidden = true
+        }
+        setDataSets(newData)
+      }
+      if (obsTypes.length === 3) {
+        if (dataSets.length !== activeYearsChartVisible.length * 3) return
+        if (visible) {
+          newData[index === 0 ? 0 : index * 3].hidden = false
+          newData[index === 0 ? 1 : index * 3 + 1].hidden = false
+          newData[index === 0 ? 2 : index * 3 + 2].hidden = false
+        }
+        if (!visible) {
+          newData[index === 0 ? 0 : index * 3].hidden = true
+          newData[index === 0 ? 1 : index * 3 + 1].hidden = true
+          newData[index === 0 ? 2 : index * 3 + 2].hidden = true
+        }
+        setDataSets(newData)
+      }
+    }
+  }, [lakes.activeYears])
+
+  useEffect(() => {
+    if (!dataSets.length) return
+    const newData = [...dataSets]
+    const activeYearsSelected = Object.values(lakes.activeYears).map(year => {
+      return {
+        selected: year.selected,
+        index: year.index,
+      }
+    })
+    for (const lake of activeYearsSelected) {
+      const { index, selected } = lake
+      if (obsTypes.length === 1) {
+        if (dataSets.length !== activeYearsSelected.length) return
+        if (selected) {
+          newData[index].borderWidth = chart.style.selected.borderWidth
+        }
+        if (!selected) {
+          newData[index].borderWidth = chart.style.default.borderWidth
+        }
+        setDataSets(newData)
+      }
+      if (obsTypes.length === 2) {
+        if (dataSets.length !== activeYearsSelected.length * 2) return
+        if (selected) {
+          newData[index === 0 ? 0 : index * 2].borderWidth =
+            chart.style.selected.borderWidth
+          newData[index === 0 ? 1 : index * 2 + 1].borderWidth =
+            chart.style.selected.borderWidth
+        }
+        if (!selected) {
+          newData[index === 0 ? 0 : index * 2].borderWidth =
+            chart.style.default.borderWidth
+          newData[index === 0 ? 1 : index * 2 + 1].borderWidth =
+            chart.style.default.borderWidth
+        }
+        setDataSets(newData)
+      }
+      if (obsTypes.length === 3) {
+        if (dataSets.length !== activeYearsSelected.length * 3) return
+        if (selected) {
+          newData[index === 0 ? 0 : index * 3].borderWidth =
+            chart.style.selected.borderWidth
+          newData[index === 0 ? 1 : index * 3 + 1].borderWidth =
+            chart.style.selected.borderWidth
+          newData[index === 0 ? 2 : index * 3 + 2].borderWidth =
+            chart.style.selected.borderWidth
+        }
+        if (!selected) {
+          newData[index === 0 ? 0 : index * 3].borderWidth =
+            chart.style.default.borderWidth
+          newData[index === 0 ? 1 : index * 3 + 1].borderWidth =
+            chart.style.default.borderWidth
+          newData[index === 0 ? 2 : index * 3 + 2].borderWidth =
+            chart.style.default.borderWidth
+        }
+        setDataSets(newData)
+      }
+    }
+  }, [lakes.activeYears])
+
+  useEffect(() => {
+    console.log({ dataSets })
+  }, [dataSets])
 
   const data = {
     datasets: dataSets,

@@ -3,6 +3,8 @@ import {
   setCoordinatesLakeToCenter,
   toggleLakeChartVisibility,
   setSelectedLake,
+  toggleYearsChartVisibility,
+  toggleYearSelection,
 } from "@stores/lakesSlice"
 import { useDispatch, useSelector } from "react-redux"
 
@@ -15,50 +17,56 @@ export const useLakeSelectionHook = (id, coordinates, index) => {
   const [isSelected, setIsSelected] = useState(false)
   const dispatch = useDispatch()
   const chartOptions = useSelector(state => state.chart)
-  const { dataType, OPTIC, RADAR, YEAR } = useSelector(state => state.form)
+  const { dataType, OPTIC, RADAR, YEAR, REFERENCE } = useSelector(
+    state => state.form
+  )
 
-  const { activeLakes, data } = useSelector(state => state.lakes)
+  const { activeLakes, data, activeYears } = useSelector(state => state.lakes)
 
   useEffect(() => {
     setlakeIconsOptions()
   }, [])
 
   const setlakeIconsOptions = useCallback(() => {
-    activeLakes
-      .filter(lake => lake.id === id)
-      .map(lake => {
-        setIsVisible(lake.chartVisible)
-        setIsSelected(lake.selected)
-      })
-  }, [activeLakes, id])
-
-  useEffect(() => {
     if (!YEAR) {
-      setBgOptic({
-        backgroundColor:
-          chartOptions[dataType].style.OPTIC[index].backgroundColor,
-      })
-      setBgRadar({
-        backgroundColor:
-          chartOptions[dataType].style.RADAR[index].backgroundColor,
+      activeLakes
+        .filter(lake => lake.id === id)
+        .map(lake => {
+          setIsVisible(lake.chartVisible)
+          setIsSelected(lake.selected)
+        })
+    }
+    if (YEAR) {
+      Object.values(activeYears).map(year => {
+        if (year.id === id) {
+          setIsVisible(year.chartVisible)
+          setIsSelected(year.selected)
+        }
       })
     }
+  }, [activeLakes, activeYears])
+
+  useEffect(() => {
+    if (YEAR) return
+    setBgOptic({
+      backgroundColor:
+        chartOptions[dataType].style.OPTIC[index].backgroundColor,
+    })
+    setBgRadar({
+      backgroundColor:
+        chartOptions[dataType].style.RADAR[index].backgroundColor,
+    })
+    setBgReference({
+      backgroundColor:
+        chartOptions[dataType].style.REFERENCE[index].backgroundColor,
+    })
   }, [dataType])
 
   useEffect(() => {
     if (!YEAR) return
-  }, [index])
-
-  useEffect(() => {
-    console.log({ index, year })
-  }, [year])
-
-  useEffect(() => {
     if (!data[activeLakes[0].id]) return
     if (data[activeLakes[0].id][dataType].byYear[0]) {
-      const yearData = Object.keys(
-        data[activeLakes[0].id][dataType].byYear[0]
-      ).map(year => `x${year}`)
+      const yearData = Object.keys(activeYears).map(year => `x${year}`)
       setYear(yearData)
     }
   }, [data])
@@ -77,20 +85,30 @@ export const useLakeSelectionHook = (id, coordinates, index) => {
       backgroundColor:
         chartOptions.YEAR.style[year[index]].REFERENCE.backgroundColor,
     })
-  }, [year])
+  }, [year, index])
 
   const handleClickDesactiveLake = useCallback(() => {
     dispatch(desactiveLake({ lakeId: id }))
   })
 
   const toggleSelectedLake = useCallback(() => {
-    dispatch(setCoordinatesLakeToCenter({ lakeId: id, coordinates }))
-    dispatch(setSelectedLake({ lakeId: id }))
+    if (!YEAR) {
+      dispatch(setCoordinatesLakeToCenter({ lakeId: id, coordinates }))
+      dispatch(setSelectedLake({ lakeId: id }))
+    }
+    if (YEAR) {
+      dispatch(toggleYearSelection({ yearId: id }))
+    }
   }, [id])
 
   const toggleChartVisibilty = useCallback(() => {
-    dispatch(toggleLakeChartVisibility({ lakeId: id }))
-  })
+    if (!YEAR) {
+      dispatch(toggleLakeChartVisibility({ lakeId: id }))
+    }
+    if (YEAR) {
+      dispatch(toggleYearsChartVisibility({ yearId: id }))
+    }
+  }, [id])
 
   return {
     toggleChartVisibilty,
@@ -102,7 +120,8 @@ export const useLakeSelectionHook = (id, coordinates, index) => {
     isSelected,
     OPTIC,
     RADAR,
-    year,
+    REFERENCE,
+    bgReference,
   }
 }
 export default useLakeSelectionHook

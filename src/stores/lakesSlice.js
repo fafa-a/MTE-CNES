@@ -3,6 +3,29 @@ import { createSlice } from "@reduxjs/toolkit"
 const initialState = {
   data: {},
   activeLakes: [],
+  activeYears: {
+    2018: {
+      id: 2018,
+      name: "2018",
+      selected: false,
+      chartVisible: true,
+      index: 0,
+    },
+    2019: {
+      id: 2019,
+      name: "2019",
+      selected: false,
+      chartVisible: true,
+      index: 1,
+    },
+    2020: {
+      id: 2020,
+      name: "2020",
+      selected: false,
+      chartVisible: true,
+      index: 2,
+    },
+  },
   loadedLakes: [],
   coordinatesLakeToCenter: [],
 }
@@ -96,6 +119,20 @@ export const lakesSlice = createSlice({
         }
       })
     },
+    toggleYearsChartVisibility: (state, action) => {
+      const { yearId } = action.payload
+      if (state.activeYears[yearId]) {
+        state.activeYears[yearId].chartVisible =
+          !state.activeYears[yearId].chartVisible
+      }
+    },
+    toggleYearSelection: (state, action) => {
+      const { yearId } = action.payload
+      console.log("toggleYearSelection", yearId)
+      if (state.activeYears[yearId]) {
+        state.activeYears[yearId].selected = !state.activeYears[yearId].selected
+      }
+    },
   },
 })
 
@@ -106,6 +143,8 @@ export const {
   setCoordinatesLakeToCenter,
   toggleLakeChartVisibility,
   setSelectedLake,
+  toggleYearsChartVisibility,
+  toggleYearSelection,
 } = lakesSlice.actions
 
 export default lakesSlice.reducer
