@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { useDispatch } from "react-redux"
 
 export default function useButtonHook(cleanForm) {
@@ -5,7 +6,7 @@ export default function useButtonHook(cleanForm) {
 
   const onClick = useCallback(() => {
     dispatch(cleanForm())
-  })
+  }, [dispatch, cleanForm])
 
   return { onClick }
 }

@@ -1,7 +1,9 @@
+import useMapHook from "./MapHook"
 import { LayersControl, MapContainer, TileLayer } from "react-leaflet"
 import { styled } from "@stitches/react"
 import { MarkerLayerCluster } from "@layers/marker-layer-cluster/MarkerLayerCluster"
 import { PolygonLayer } from "@layers/polygon-layer/PolygonLayer"
+import { PropTypes } from "prop-types"
 
 const files = import.meta.globEager("/src/data/geojson/*.geojson")
 const dataGeojson = Object.entries(files).map(([, data]) => data)
@@ -11,16 +13,10 @@ const StyledMapContainer = styled(MapContainer, {
   height: "50vh",
 })
 
-export const Map = ({
-  getLakeIdSwotName,
-  removeLakeActive,
-}) => {
+export const Map = () => {
+  const { coordinates } = useMapHook()
   return (
-    <StyledMapContainer
-      center={[36.91, -3.54]}
-      zoom={12}
-      scrollWheelZoom={true}
-    >
+    <StyledMapContainer center={coordinates} zoom={12} scrollWheelZoom={true}>
       <LayersControl position="topright">
         <LayersControl.BaseLayer name="OSM Strets">
           <TileLayer
@@ -36,15 +32,15 @@ export const Map = ({
         </LayersControl.BaseLayer>
         {dataGeojson.map((data, index) => (
           <div key={index.toString()}>
-            <PolygonLayer
-              data={data}
-              handleChange={getLakeIdSwotName}
-              removeLakeActive={removeLakeActive}
-            />
+            <PolygonLayer data={data} />
             <MarkerLayerCluster data={data} />
           </div>
         ))}
       </LayersControl>
     </StyledMapContainer>
   )
+}
+Map.propTypes = {
+  getLakeIdSwotName: PropTypes.func,
+  removeLakeActive: PropTypes.func,
 }

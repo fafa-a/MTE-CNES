@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { useDispatch } from "react-redux"
 
 export default function useSelectHook(setAttributesValue) {
@@ -5,7 +6,7 @@ export default function useSelectHook(setAttributesValue) {
 
   const onChange = useCallback(e => {
     dispatch(setAttributesValue({ value: e.target.value }))
-  }, [])
+  }, [dispatch, setAttributesValue])
 
   return { onChange }
 }

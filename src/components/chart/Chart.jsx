@@ -27,7 +27,7 @@ ChartJS.register(
   zoomPlugin,
   {
     id: "customBackground",
-    beforeDraw: (chart, args, opts) => {
+    beforeDraw: chart => {
       const ctx = chart.canvas.getContext("2d")
       ctx.save()
       ctx.globalCompositeOperation = "destination-over"
@@ -44,8 +44,8 @@ const StyledDiv = styled("div", {
   width: "100%",
 })
 
-export const Chart = props => {
-  const { data, options, charType } = useChartHook(props)
+export const Chart = () => {
+  const { data, options, charType } = useChartHook()
 
   return (
     <StyledDiv>

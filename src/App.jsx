@@ -16,23 +16,19 @@ const StyledContainer = styled("div", {
 })
 
 const App = () => {
-  const { getLakeIdSwotName, removeLakeActive } = useAppHook()
-
-  return (
-    <>
-      <StyledContainer>
-        <LakeBoard />
-        <Map
-          getLakeIdSwotName={getLakeIdSwotName}
-          removeLakeActive={removeLakeActive}
-        />
-      </StyledContainer>
-      <StyledContainer>
-        <Form />
-        <Chart />
-      </StyledContainer>
-    </>
-  )
+useAppHook()
+return (
+  <>
+    <StyledContainer>
+      <LakeBoard />
+      <Map />
+    </StyledContainer>
+    <StyledContainer>
+      <Form />
+      <Chart />
+    </StyledContainer>
+  </>
+)
 }
 
 export default App

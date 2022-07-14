@@ -1,3 +1,4 @@
+import { PropTypes } from "prop-types"
 import { styled, theme } from "@/stitches.config"
 
 const StyledOption = styled("option", {
@@ -8,4 +9,9 @@ const StyledOption = styled("option", {
 
 export const SelectOption = ({ label, value }) => {
   return <StyledOption value={value}>{label}</StyledOption>
+}
+
+SelectOption.propTypes = {
+  label: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
 }

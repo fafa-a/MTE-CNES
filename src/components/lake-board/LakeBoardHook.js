@@ -1,9 +1,10 @@
+/* eslint-disable no-undef */
 import { useSelector } from "react-redux"
 
 export default function useLakeBoardHook() {
   const [dataSelection, setDataSelection] = useState([])
   const { activeLakes, data, activeYears } = useSelector(state => state.lakes)
-  const { dataType, YEAR } = useSelector(state => state.form)
+  const { YEAR } = useSelector(state => state.form)
 
   useEffect(() => {
     if (!activeLakes.length) return
@@ -13,11 +14,7 @@ export default function useLakeBoardHook() {
     if (YEAR) {
       setDataSelection(Object.values(activeYears))
     }
-  }, [YEAR, activeLakes, data])
-
-  useEffect(() => {
-    console.log({ dataSelection })
-  }, [dataSelection])
+  }, [YEAR, activeLakes, activeYears, data])
 
   return {
     dataSelection,

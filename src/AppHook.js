@@ -1,6 +1,7 @@
+/* eslint-disable no-undef */
 import { useSelector } from "react-redux"
 import { useDispatch } from "react-redux"
-import { addLake, desactiveLake } from "./stores/lakesSlice"
+import { addLake } from "./stores/lakesSlice"
 
 import {
   AppConfig,
@@ -22,84 +23,102 @@ export function useAppHook() {
   const [surfaceReference, setSurfaceReference] = useState([])
   const [volumeReference, setVolumeReference] = useState([])
   const [lakeDataByYear, setLakeDataByYear] = useState([])
-  const form = useSelector(state => state.form)
-  const lakes = useSelector(state => state.lakes)
 
-  const { OPTIC, RADAR, DAY, PERIOD, REFERENCE, YEAR, dataType, charType } =
-    form
+  const form = useSelector(state => state.form)
+  const { activeLakes } = useSelector(state => state.lakes)
+
+  const { OPTIC, RADAR, DAY, PERIOD, REFERENCE, dataType, charType } = form
   const { getSeriePath, getTimeseriesPath } = SeriePathUtils
   const dispatch = useDispatch()
 
-  const removeLakeActive = id => {
-    dispatch(desactiveLake({ lakeId: id }))
-  }
-
   useEffect(() => {
-    console.log({ lakes })
-  }, [lakes])
+    console.log({ activeLakes })
+  }, [activeLakes])
 
   useEffect(() => {
     console.log({ form })
   }, [form])
-  
-  const getSeriePathByDay = (id, name) => {
-    const arrTmp = []
-    if (OPTIC && DAY) {
-      const path = handleSeriePath(
+
+  const handleSeriePath = useCallback(
+    (id, name, dataType, obs, duration) => {
+      if (!id) return
+      const lakeName = name.replace(/\s/g, "_")
+      const path = getSeriePath(
         id,
-        name,
-        dataType,
-        ObservationTypes.OPTIC,
-        DurationTypes.DAY
+        lakeName,
+        AppConfig.attributes[dataType].filePath,
+        AppConfig.observationTypes[obs].abbr,
+        AppConfig.duration[duration].abbr
       )
-      arrTmp.push(path)
-    }
+      return path
+    },
+    [getSeriePath]
+  )
 
-    if (RADAR && DAY) {
-      const path = handleSeriePath(
-        id,
-        name,
-        dataType,
-        ObservationTypes.RADAR,
-        DurationTypes.DAY
-      )
-      arrTmp.push(path)
-    }
+  const getSeriePathByDay = useCallback(
+    (id, name) => {
+      const arrTmp = []
+      if (OPTIC && DAY) {
+        const path = handleSeriePath(
+          id,
+          name,
+          dataType,
+          ObservationTypes.OPTIC,
+          DurationTypes.DAY
+        )
+        arrTmp.push(path)
+      }
 
-    return arrTmp
-  }
+      if (RADAR && DAY) {
+        const path = handleSeriePath(
+          id,
+          name,
+          dataType,
+          ObservationTypes.RADAR,
+          DurationTypes.DAY
+        )
+        arrTmp.push(path)
+      }
 
-  const getSeriePathByPeriod = (id, name) => {
-    const arrTmp = []
-    if (OPTIC && PERIOD) {
-      const path = handleSeriePath(
-        id,
-        name,
-        dataType,
-        ObservationTypes.OPTIC,
-        DurationTypes.PERIOD
-      )
-      arrTmp.push(path)
-    }
+      return arrTmp
+    },
+    [OPTIC, DAY, RADAR, handleSeriePath, dataType]
+  )
 
-    if (RADAR && PERIOD) {
-      const path = handleSeriePath(
-        id,
-        name,
-        dataType,
-        ObservationTypes.RADAR,
-        DurationTypes.PERIOD
-      )
-      arrTmp.push(path)
-    }
+  const getSeriePathByPeriod = useCallback(
+    (id, name) => {
+      const arrTmp = []
+      if (OPTIC && PERIOD) {
+        const path = handleSeriePath(
+          id,
+          name,
+          dataType,
+          ObservationTypes.OPTIC,
+          DurationTypes.PERIOD
+        )
+        arrTmp.push(path)
+      }
 
-    return arrTmp
-  }
+      if (RADAR && PERIOD) {
+        const path = handleSeriePath(
+          id,
+          name,
+          dataType,
+          ObservationTypes.RADAR,
+          DurationTypes.PERIOD
+        )
+        arrTmp.push(path)
+      }
+
+      return arrTmp
+    },
+    [OPTIC, PERIOD, RADAR, handleSeriePath, dataType]
+  )
 
   useEffect(() => {
-    if (lakes.activeLakes.length === 0) return
+    if (activeLakes.length === 0) return
     const seriePathTmp = []
-    lakes.activeLakes
+    activeLakes
       .map(lake => {
         return { id: lake.id, name: lake.name }
       })
@@ -123,7 +142,11 @@ export function useAppHook() {
     PERIOD,
     charType,
     REFERENCE,
-    lakes.activeLakes,
+    activeLakes,
+    seriePath,
+    getSeriePathByDay,
+    getSeriePathByPeriod,
+    getTimeseriesPath,
   ])
 
   useEffect(() => {
@@ -143,19 +166,6 @@ export function useAppHook() {
     })
     setDataReference(dataRefDateFiltered)
   }, [lakeData])
-
-  const handleSeriePath = (id, name, dataType, obs, duration) => {
-    if (!id) return
-    const lakeName = name.replace(/\s/g, "_")
-    const path = getSeriePath(
-      id,
-      lakeName,
-      AppConfig.attributes[dataType].filePath,
-      AppConfig.observationTypes[obs].abbr,
-      AppConfig.duration[duration].abbr
-    )
-    return path
-  }
 
   useEffect(() => {
     let lakeDataTmp = []
@@ -218,7 +228,7 @@ export function useAppHook() {
       return max.value
     })
     return rateRef
-  })
+  }, [tmpFillingRateReference])
 
   useEffect(() => {
     if (!tmpFillingRateReference.length) return
@@ -235,7 +245,7 @@ export function useAppHook() {
       )
     })
     setFillingRateReference(fillingRateTmp)
-  }, [tmpFillingRateReference])
+  }, [calculateFillingRate, tmpFillingRateReference])
 
   useEffect(() => {
     if (!lakeData.length) return
@@ -271,7 +281,16 @@ export function useAppHook() {
       arrTmp.push(data)
     })
     setLakeDataWithReference(arrTmp)
-  }, [surfaceReference, volumeReference, fillingRateReference])
+  }, [
+    surfaceReference,
+    volumeReference,
+    fillingRateReference,
+    lakeData,
+    dataType,
+    OPTIC,
+    RADAR,
+    REFERENCE,
+  ])
 
   const handleFetchData = useCallback(async () => {
     const data = await fetchData()
@@ -280,10 +299,7 @@ export function useAppHook() {
 
   useEffect(() => {
     handleFetchData()
-  }, [fetchData])
-  useEffect(() => {
-    console.log({ seriePath })
-  }, [seriePath])
+  }, [fetchData, handleFetchData])
 
   useEffect(() => {
     if (!lakeData) return
@@ -292,7 +308,7 @@ export function useAppHook() {
     lakeDataWithReference.forEach((data, index) => {
       dispatch(
         addLake({
-          lakeId: lakes.activeLakes[index].id,
+          lakeId: activeLakes[index].id,
           dataType,
           lakeData: data,
           lakeDataByYear,
@@ -300,7 +316,14 @@ export function useAppHook() {
         })
       )
     })
-  }, [lakeDataWithReference, lakeDataByYear])
-
-  return { removeLakeActive }
+  }, [
+    lakeDataWithReference,
+    lakeDataByYear,
+    lakeData,
+    dataType,
+    fillingRateReference.length,
+    dispatch,
+    activeLakes,
+    seriePath,
+  ])
 }

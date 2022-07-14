@@ -7,7 +7,7 @@ export const extractDataByYear = data => {
         value: item.value,
       }
     })
-    .map((item, index) => {
+    .map((item) => {
       const year = item.date.getFullYear()
       if (!dataByYear[year]) {
         dataByYear[year] = []

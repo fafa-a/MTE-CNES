@@ -1,6 +1,8 @@
+/* eslint-disable react/jsx-no-undef */
 import { useLakeSelectionHook } from "./LakeSelectionHook"
 import { styled, theme } from "@/stitches.config"
 import ReactTooltip from "react-tooltip"
+import { PropTypes } from "prop-types"
 
 const StyledDiv = styled("div", {
   display: "flex",
@@ -88,6 +90,22 @@ const StyledReactTooltip = styled(ReactTooltip, {
   zIndex: "1111 !important",
 })
 
+const backgroundBorderColored = {
+  borderColor: "#222",
+  backgroundColor: "#E5E5E5",
+}
+
+const increaseWidth = {
+  width: "70%",
+  maxWidth: "70%",
+}
+
+const fontBold = { fontWeight: "bold" }
+
+const decreaseWidth = {
+  width: "10%",
+}
+
 export const LakeSelection = ({ id, name, coordinates, index }) => {
   const {
     toggleChartVisibilty,
@@ -104,45 +122,40 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
     REFERENCE,
     YEAR,
     activeLakes,
-  } = useLakeSelectionHook(id, name, coordinates, index)
+  } = useLakeSelectionHook({ id, name, coordinates, index })
 
   return (
-    <StyledDiv
-      css={{
-        border: isSelected && "1px solid #222",
-        backgroundColor: isSelected && "#E5E5E5",
-      }}
-    >
+    <StyledDiv css={isSelected && backgroundBorderColored}>
       <StyledDivObservationTypes>
         {OPTIC && (
           <StyledDivContainerObsTypes>
-            <StyledSpanObsColor style={{ ...bgOptic }} />
+            <StyledSpanObsColor style={bgOptic} />
             <StyledSpanLabel>optic</StyledSpanLabel>
           </StyledDivContainerObsTypes>
         )}
         {RADAR && (
           <StyledDivContainerObsTypes>
-            <StyledSpanObsColor style={{ ...bgRadar }} />
+            <StyledSpanObsColor style={bgRadar} />
             <StyledSpanLabel>radar</StyledSpanLabel>
           </StyledDivContainerObsTypes>
         )}
         {REFERENCE && (
           <StyledDivContainerObsTypes>
-            <StyledSpanObsColor style={{ ...bgReference }} />
+            <StyledSpanObsColor style={bgReference} />
             <StyledSpanLabel>ref</StyledSpanLabel>
           </StyledDivContainerObsTypes>
         )}
       </StyledDivObservationTypes>
       <StyledContainerP
         onClick={toggleSelectedLake}
-        css={YEAR && { width: "70%", maxWidth: "70%" }}
+        css={YEAR && increaseWidth}
       >
-        <StyledParagraph css={{ fontWeight: isSelected && "bold" }}>
+        <StyledParagraph css={isSelected && fontBold}>
           {YEAR && `${name} ${activeLakes.at(-1).name}`}
           {!YEAR && name}
         </StyledParagraph>
       </StyledContainerP>
-      <StyledContainerButton css={{ width: YEAR && "10%" }}>
+      <StyledContainerButton css={YEAR && decreaseWidth}>
         {!isVisible && (
           <>
             <StyledButton
@@ -209,4 +222,11 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
       </StyledContainerButton>
     </StyledDiv>
   )
+}
+
+LakeSelection.propTypes = {
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  coordinates: PropTypes.array.isRequired,
+  index: PropTypes.number.isRequired,
 }

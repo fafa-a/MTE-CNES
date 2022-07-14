@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
-  data: {},
+  dataLakes: {},
   activeLakes: [],
   activeYears: {
     2018: {
@@ -36,9 +36,9 @@ export const lakesSlice = createSlice({
     addLake: (state, action) => {
       const { lakeId, dataType, lakeData, lakeDataByYear, seriePath } =
         action.payload
-      if (state.data[lakeId]) {
-        state.data[lakeId] = {
-          ...state.data[lakeId],
+      if (state.dataLakes[lakeId]) {
+        state.dataLakes[lakeId] = {
+          ...state.dataLakes[lakeId],
           [dataType]: {
             raw: lakeData,
             byYear: lakeDataByYear,
@@ -47,8 +47,8 @@ export const lakesSlice = createSlice({
         }
       }
 
-      if (!state.data[lakeId]) {
-        state.data[lakeId] = {
+      if (!state.dataLakes[lakeId]) {
+        state.dataLakes[lakeId] = {
           [dataType]: {
             raw: lakeData,
             byYear: { lakeDataByYear },

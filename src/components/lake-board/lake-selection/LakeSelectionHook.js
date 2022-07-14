@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import {
   desactiveLake,
   setCoordinatesLakeToCenter,
@@ -9,7 +10,7 @@ import {
 import { saveAs } from "file-saver"
 import { useDispatch, useSelector } from "react-redux"
 
-export const useLakeSelectionHook = (id, name, coordinates, index) => {
+export const useLakeSelectionHook = ({ id, coordinates, index }) => {
   const [bgOptic, setBgOptic] = useState({})
   const [bgRadar, setBgRadar] = useState({})
   const [bgReference, setBgReference] = useState({})
@@ -23,11 +24,6 @@ export const useLakeSelectionHook = (id, name, coordinates, index) => {
   )
 
   const { activeLakes, data, activeYears } = useSelector(state => state.lakes)
-
-  useEffect(() => {
-    setlakeIconsOptions()
-  }, [])
-
   const setlakeIconsOptions = useCallback(() => {
     if (!YEAR) {
       activeLakes
@@ -45,7 +41,11 @@ export const useLakeSelectionHook = (id, name, coordinates, index) => {
         }
       })
     }
-  }, [activeLakes, activeYears])
+  }, [YEAR, activeLakes, activeYears, id])
+
+  useEffect(() => {
+    setlakeIconsOptions()
+  }, [setlakeIconsOptions])
 
   useEffect(() => {
     if (YEAR) return
@@ -61,7 +61,7 @@ export const useLakeSelectionHook = (id, name, coordinates, index) => {
       backgroundColor:
         chartOptions[dataType].style.REFERENCE[index].backgroundColor,
     })
-  }, [dataType])
+  }, [YEAR, chartOptions, dataType, index])
 
   useEffect(() => {
     if (!YEAR) return
@@ -70,7 +70,7 @@ export const useLakeSelectionHook = (id, name, coordinates, index) => {
       const yearData = Object.keys(activeYears).map(year => `x${year}`)
       setYear(yearData)
     }
-  }, [data])
+  }, [YEAR, activeLakes, activeYears, data, dataType])
 
   useEffect(() => {
     if (!year.length) return
@@ -86,11 +86,11 @@ export const useLakeSelectionHook = (id, name, coordinates, index) => {
       backgroundColor:
         chartOptions.YEAR.style[year[index]].REFERENCE.backgroundColor,
     })
-  }, [year, index])
+  }, [year, index, chartOptions.YEAR.style])
 
   const handleClickDesactiveLake = useCallback(() => {
     dispatch(desactiveLake({ lakeId: id }))
-  })
+  }, [dispatch, id])
 
   const toggleSelectedLake = useCallback(() => {
     if (!YEAR) {
@@ -100,7 +100,7 @@ export const useLakeSelectionHook = (id, name, coordinates, index) => {
     if (YEAR) {
       dispatch(toggleYearSelection({ yearId: id }))
     }
-  }, [id])
+  }, [YEAR, coordinates, dispatch, id])
 
   const toggleChartVisibilty = useCallback(() => {
     if (!YEAR) {
@@ -109,14 +109,14 @@ export const useLakeSelectionHook = (id, name, coordinates, index) => {
     if (YEAR) {
       dispatch(toggleYearsChartVisibility({ yearId: id }))
     }
-  }, [id])
+  }, [YEAR, dispatch, id])
 
   const handleDownloadFile = useCallback(() => {
     for (const path of data[id][dataType].seriePath) {
       const fileName = path.split("/").pop().split(".")[0]
       saveAs(path, fileName)
     }
-  })
+  }, [data, id, dataType])
 
   return {
     toggleChartVisibilty,

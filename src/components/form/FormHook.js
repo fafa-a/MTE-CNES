@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { AppConfig } from "@/config"
 import { useSelector } from "react-redux"
 import { saveAs } from "file-saver"
@@ -13,14 +14,17 @@ export default function useFormHook() {
   const chartTypesValues = AppConfig.chartTypes
   const compareTypesValues = AppConfig.compareTypes
 
-  const downloadChartImage = useCallback(e => {
-    e.preventDefault()
-    const img = document.getElementsByTagName("canvas")
-    saveAs(
-      img[1].toDataURL("image/png"),
-      `${filenameLakes}_${form.dataType.toLowerCase()}_chart.png`
-    )
-  })
+  const downloadChartImage = useCallback(
+    e => {
+      e.preventDefault()
+      const img = document.getElementsByTagName("canvas")
+      saveAs(
+        img[1].toDataURL("image/png"),
+        `${filenameLakes}_${form.dataType.toLowerCase()}_chart.png`
+      )
+    },
+    [filenameLakes, form.dataType]
+  )
 
   return {
     dataTypesValues,

@@ -46,8 +46,6 @@ const config = {
       pointRadius: 0,
       label: "Surface",
       filePath: "surface",
-      label: "Surface",
-      filePath: "surface_raw",
       unit: "ha",
     },
     [DATA_TYPES.VOLUME]: {

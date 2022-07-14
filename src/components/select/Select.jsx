@@ -1,6 +1,6 @@
 import useSelectHook from "./SelectHook"
+import { PropTypes } from "prop-types"
 import { styled, theme } from "@/stitches.config"
-
 const StyledSelect = styled("select", {
   fontFamily: "sans-serif",
   fontSize: theme.fontSizes.base,
@@ -15,4 +15,10 @@ export const Select = ({ id, value, children, setAttributeValue }) => {
       {children}
     </StyledSelect>
   )
+}
+Select.propTypes = {
+  id: PropTypes.string,
+  value: PropTypes.string,
+  children: PropTypes.node.isRequired,
+  setAttributeValue: PropTypes.func.isRequired,
 }

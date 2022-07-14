@@ -2,13 +2,12 @@ import usePolygonLayerHook from "./PolygonLayerHook"
 import { LayerGroup, Polygon, Tooltip } from "react-leaflet"
 import { v4 as uuid } from "@lukeed/uuid"
 import { useState, useEffect } from "react"
+import { PropTypes } from "prop-types"
 
-export const PolygonLayer = ({ data, handleChange, removeLakeActive }) => {
+export const PolygonLayer = ({ data }) => {
   const [layer, setLayer] = useState(null)
   const { id, activeLake, color } = usePolygonLayerHook({
     data,
-    handleChange,
-    removeLakeActive,
   })
 
   useEffect(() => {
@@ -26,7 +25,7 @@ export const PolygonLayer = ({ data, handleChange, removeLakeActive }) => {
             positions={reversedMultiPolygons}
             color={ID_SWOT === id ? color : "blue"}
             eventHandlers={{
-              click: el => {
+              click: () => {
                 activeLake(ID_SWOT, DAM_NAME, [LAT_WW, LONG_WW])
               },
             }}
@@ -38,7 +37,10 @@ export const PolygonLayer = ({ data, handleChange, removeLakeActive }) => {
         )
       })
     )
-  }, [id, color])
+  }, [id, color, data.features, activeLake])
 
   return <LayerGroup>{layer}</LayerGroup>
+}
+PolygonLayer.propTypes = {
+  data: PropTypes.object.isRequired,
 }

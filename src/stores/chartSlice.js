@@ -557,12 +557,6 @@ const initialState = {
 export const chartSlice = createSlice({
   name: "chart",
   initialState,
-  reducers: {
-    reserveLakeColors: (state, action) => {
-      // je réserve 3 couleur pour l'id lake passé en paramètre
-      //state.lakes.length -> nombre de lac déjà chargé
-    },
-  },
 })
 
 export const { addChartData } = chartSlice.actions

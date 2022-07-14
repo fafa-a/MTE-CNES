@@ -1,5 +1,7 @@
 import useButtonHook from "./ButtonHook"
 import { styled } from "@stitches/react"
+import { PropTypes } from "prop-types"
+
 const StyledButton = styled("button", {
   fontFamily: "sans-serif",
   textTransform: "capitalize",
@@ -13,4 +15,9 @@ export const Button = ({ type, value, cleanForm }) => {
       {value}
     </StyledButton>
   )
+}
+Button.propTypes = {
+  type: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  cleanForm: PropTypes.func.isRequired,
 }
