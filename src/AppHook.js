@@ -311,7 +311,7 @@ export function useAppHook() {
           lakeId: activeLakes[index].id,
           dataType,
           lakeData: data,
-          lakeDataByYear,
+          byYear: lakeDataByYear,
           seriePath: seriePath[index],
         })
       )
