@@ -5,21 +5,21 @@ const initialState = {
   activeLakes: [],
   activeYears: {
     2018: {
-      id: 2018,
+      id: "2018",
       name: "2018",
       selected: false,
       chartVisible: true,
       index: 0,
     },
     2019: {
-      id: 2019,
+      id: "2019",
       name: "2019",
       selected: false,
       chartVisible: true,
       index: 1,
     },
     2020: {
-      id: 2020,
+      id: "2020",
       name: "2020",
       selected: false,
       chartVisible: true,
@@ -34,14 +34,13 @@ export const lakesSlice = createSlice({
   initialState,
   reducers: {
     addLake: (state, action) => {
-      const { lakeId, dataType, lakeData, lakeDataByYear, seriePath } =
-        action.payload
+      const { lakeId, dataType, lakeData, byYear, seriePath } = action.payload
       if (state.dataLakes[lakeId]) {
         state.dataLakes[lakeId] = {
           ...state.dataLakes[lakeId],
           [dataType]: {
             raw: lakeData,
-            byYear: lakeDataByYear,
+            byYear,
             seriePath,
           },
         }
@@ -51,7 +50,7 @@ export const lakesSlice = createSlice({
         state.dataLakes[lakeId] = {
           [dataType]: {
             raw: lakeData,
-            byYear: { lakeDataByYear },
+            byYear,
             seriePath,
           },
         }

@@ -23,7 +23,9 @@ export const useLakeSelectionHook = ({ id, coordinates, index }) => {
     state => state.form
   )
 
-  const { activeLakes, data, activeYears } = useSelector(state => state.lakes)
+  const { activeLakes, dataLakes, activeYears } = useSelector(
+    state => state.lakes
+  )
   const setlakeIconsOptions = useCallback(() => {
     if (!YEAR) {
       activeLakes
@@ -65,12 +67,10 @@ export const useLakeSelectionHook = ({ id, coordinates, index }) => {
 
   useEffect(() => {
     if (!YEAR) return
-    if (!data[activeLakes[0].id]) return
-    if (data[activeLakes[0].id][dataType].byYear[0]) {
-      const yearData = Object.keys(activeYears).map(year => `x${year}`)
-      setYear(yearData)
-    }
-  }, [YEAR, activeLakes, activeYears, data, dataType])
+    if (!Object.keys(dataLakes).length) return
+    const yearData = Object.keys(activeYears).map(year => `x${year}`)
+    setYear(yearData)
+  }, [YEAR, activeYears, dataLakes])
 
   useEffect(() => {
     if (!year.length) return
@@ -112,11 +112,11 @@ export const useLakeSelectionHook = ({ id, coordinates, index }) => {
   }, [YEAR, dispatch, id])
 
   const handleDownloadFile = useCallback(() => {
-    for (const path of data[id][dataType].seriePath) {
+    for (const path of dataLakes[id][dataType].seriePath) {
       const fileName = path.split("/").pop().split(".")[0]
       saveAs(path, fileName)
     }
-  }, [data, id, dataType])
+  }, [dataLakes, id, dataType])
 
   return {
     toggleChartVisibilty,

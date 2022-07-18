@@ -227,6 +227,6 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 LakeSelection.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  coordinates: PropTypes.array.isRequired,
+  coordinates: PropTypes.array,
   index: PropTypes.number.isRequired,
 }
