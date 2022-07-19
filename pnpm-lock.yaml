@@ -26,6 +26,7 @@ specifiers:
   leaflet.markercluster: ^1.5.3
   papaparse: ^5.3.2
   path: ^0.12.7
+  prettier: 2.7.1
   prop-types: ^15.8.1
   rc-util: ^5.21.0
   react: ^17.0.2
@@ -80,6 +81,7 @@ devDependencies:
   eslint-config-react-app: 7.0.1_eslint@8.19.0
   eslint-plugin-react: 7.30.1_eslint@8.19.0
   eslint-plugin-react-hooks: 4.6.0_eslint@8.19.0
+  prettier: 2.7.1
   unplugin-auto-import: 0.8.8_vite@2.9.9
   unplugin-icons: 0.14.6_j363qlmpa7zvwl56r3elcfv4ce
   vite: 2.9.9
@@ -4370,6 +4372,12 @@ packages:
   /prelude-ls/1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
+    dev: true
+
+  /prettier/2.7.1:
+    resolution: {integrity: sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
     dev: true
 
   /process/0.11.10:
