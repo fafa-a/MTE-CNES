@@ -1,11 +1,11 @@
 /* eslint-disable no-undef */
 import {
-  desactiveLake,
-  setCoordinatesLakeToCenter,
-  toggleLakeChartVisibility,
-  setSelectedLake,
-  toggleYearsChartVisibility,
-  toggleYearSelection,
+	updateLakeIdToDesactivate,
+	setCoordinatesLakeToCenter,
+	toggleLakeChartVisibility,
+	setSelectedLake,
+	toggleYearsChartVisibility,
+	toggleYearSelection,
 } from "@stores/lakesSlice"
 import { saveAs } from "file-saver"
 import { useDispatch, useSelector } from "react-redux"
@@ -89,27 +89,28 @@ export const useLakeSelectionHook = ({ id, coordinates, index }) => {
   }, [year, index, chartOptions.YEAR.style])
 
   const handleClickDesactiveLake = useCallback(() => {
-    dispatch(desactiveLake({ lakeId: id }))
-  }, [dispatch, id])
+		dispatch(updateLakeIdToDesactivate({ lakeId: id }))
+	}, [dispatch, id])
 
-  const toggleSelectedLake = useCallback(() => {
-    if (!YEAR) {
-      dispatch(setCoordinatesLakeToCenter({ lakeId: id, coordinates }))
-      dispatch(setSelectedLake({ lakeId: id }))
-    }
-    if (YEAR) {
-      dispatch(toggleYearSelection({ yearId: id }))
-    }
-  }, [YEAR, coordinates, dispatch, id])
+	const toggleSelectedLake = useCallback(() => {
+		if (!YEAR) {
+			dispatch(setCoordinatesLakeToCenter({ lakeId: id, coordinates }))
+			dispatch(setSelectedLake({ lakeId: id }))
+		}
+		if (YEAR) {
+			dispatch(toggleYearSelection({ yearId: id }))
+		}
+	}, [YEAR, coordinates, dispatch, id])
 
-  const toggleChartVisibilty = useCallback(() => {
-    if (!YEAR) {
-      dispatch(toggleLakeChartVisibility({ lakeId: id }))
-    }
-    if (YEAR) {
-      dispatch(toggleYearsChartVisibility({ yearId: id }))
-    }
-  }, [YEAR, dispatch, id])
+	const toggleChartVisibilty = useCallback(() => {
+		if (!YEAR) {
+			dispatch(toggleLakeChartVisibility({ lakeId: id }))
+		}
+
+		if (YEAR) {
+			dispatch(toggleYearsChartVisibility({ yearId: id }))
+		}
+	}, [YEAR, dispatch, id])
 
   const handleDownloadFile = useCallback(() => {
     for (const path of dataLakes[id][dataType].seriePath) {

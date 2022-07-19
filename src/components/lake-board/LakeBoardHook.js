@@ -7,7 +7,10 @@ export default function useLakeBoardHook() {
   const { YEAR } = useSelector(state => state.form)
 
   useEffect(() => {
-    if (!activeLakes.length) return
+    if (!activeLakes.length) {
+			setDataSelection([])
+			return
+		}
     if (!YEAR) {
       setDataSelection(activeLakes)
     }

@@ -125,103 +125,103 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
   } = useLakeSelectionHook({ id, name, coordinates, index })
 
   return (
-    <StyledDiv css={isSelected && backgroundBorderColored}>
-      <StyledDivObservationTypes>
-        {OPTIC && (
-          <StyledDivContainerObsTypes>
-            <StyledSpanObsColor style={bgOptic} />
-            <StyledSpanLabel>optic</StyledSpanLabel>
-          </StyledDivContainerObsTypes>
-        )}
-        {RADAR && (
-          <StyledDivContainerObsTypes>
-            <StyledSpanObsColor style={bgRadar} />
-            <StyledSpanLabel>radar</StyledSpanLabel>
-          </StyledDivContainerObsTypes>
-        )}
-        {REFERENCE && (
-          <StyledDivContainerObsTypes>
-            <StyledSpanObsColor style={bgReference} />
-            <StyledSpanLabel>ref</StyledSpanLabel>
-          </StyledDivContainerObsTypes>
-        )}
-      </StyledDivObservationTypes>
-      <StyledContainerP
-        onClick={toggleSelectedLake}
-        css={YEAR && increaseWidth}
-      >
-        <StyledParagraph css={isSelected && fontBold}>
-          {YEAR && `${name} ${activeLakes.at(-1).name}`}
-          {!YEAR && name}
-        </StyledParagraph>
-      </StyledContainerP>
-      <StyledContainerButton css={YEAR && decreaseWidth}>
-        {!isVisible && (
-          <>
-            <StyledButton
-              data-tip
-              data-for="visible"
-              onClick={toggleChartVisibilty}
-            >
-              <IconCarbonView fontSize={14} />
-            </StyledButton>
-            <StyledReactTooltip id="visible" place="top" effect="solid">
-              <span>Visible</span>
-            </StyledReactTooltip>
-          </>
-        )}
-        {isVisible && (
-          <>
-            <StyledButton
-              data-tip
-              data-for="hide"
-              onClick={toggleChartVisibilty}
-            >
-              <IconCarbonViewOff fontSize={14} />
-            </StyledButton>
-            <StyledReactTooltip id="hide" place="top" effect="solid">
-              <span>Hide chart</span>
-            </StyledReactTooltip>
-          </>
-        )}
-        {!YEAR && (
-          <>
-            <StyledButton
-              data-tip
-              data-for="delete"
-              onClick={handleClickDesactiveLake}
-            >
-              <IconCarbonCloseOutline fontSize={14} />
-            </StyledButton>
-            <StyledReactTooltip
-              id="delete"
-              place="top"
-              effect="solid"
-              type="warning"
-            >
-              <span>Delete</span>
-            </StyledReactTooltip>
-            <StyledButton data-tip data-for="info">
-              <IconCarbonInformation fontSize={14} />
-            </StyledButton>
-            <StyledReactTooltip id="info" place="top" effect="solid">
-              <span>Info</span>
-            </StyledReactTooltip>
-            <StyledButton
-              data-tip
-              data-for="download"
-              onClick={handleDownloadFile}
-            >
-              <IconCarbonDownload fontSize={14} />
-            </StyledButton>
-            <StyledReactTooltip id="download" place="top" effect="solid">
-              <span>Download CSV</span>
-            </StyledReactTooltip>
-          </>
-        )}
-      </StyledContainerButton>
-    </StyledDiv>
-  )
+		<StyledDiv css={isSelected && backgroundBorderColored}>
+			<StyledDivObservationTypes>
+				{OPTIC && (
+					<StyledDivContainerObsTypes>
+						<StyledSpanObsColor style={bgOptic} />
+						<StyledSpanLabel>optic</StyledSpanLabel>
+					</StyledDivContainerObsTypes>
+				)}
+				{RADAR && (
+					<StyledDivContainerObsTypes>
+						<StyledSpanObsColor style={bgRadar} />
+						<StyledSpanLabel>radar</StyledSpanLabel>
+					</StyledDivContainerObsTypes>
+				)}
+				{REFERENCE && (
+					<StyledDivContainerObsTypes>
+						<StyledSpanObsColor style={bgReference} />
+						<StyledSpanLabel>ref</StyledSpanLabel>
+					</StyledDivContainerObsTypes>
+				)}
+			</StyledDivObservationTypes>
+			<StyledContainerP
+				onClick={toggleSelectedLake}
+				css={YEAR && increaseWidth}
+			>
+				<StyledParagraph css={isSelected && fontBold}>
+					{YEAR && `${name} ${activeLakes.at(-1).name}`}
+					{!YEAR && name}
+				</StyledParagraph>
+			</StyledContainerP>
+			<StyledContainerButton css={YEAR && decreaseWidth}>
+				{!isVisible && (
+					<>
+						<StyledButton
+							data-tip
+							data-for="visible"
+							onClick={toggleChartVisibilty}
+						>
+							<IconCarbonView fontSize={14} />
+						</StyledButton>
+						<StyledReactTooltip id="visible" place="top" effect="solid">
+							<span>Visible</span>
+						</StyledReactTooltip>
+					</>
+				)}
+				{isVisible && (
+					<>
+						<StyledButton
+							data-tip
+							data-for="hide"
+							onClick={toggleChartVisibilty}
+						>
+							<IconCarbonViewOff fontSize={14} />
+						</StyledButton>
+						<StyledReactTooltip id="hide" place="top" effect="solid">
+							<span>Hide chart</span>
+						</StyledReactTooltip>
+					</>
+				)}
+				{!YEAR && (
+					<>
+						<StyledButton
+							data-tip
+							data-for="remove"
+							onClick={handleClickDesactiveLake}
+						>
+							<IconCarbonCloseOutline fontSize={14} />
+						</StyledButton>
+						<StyledReactTooltip
+							id="remove"
+							place="top"
+							effect="solid"
+							type="warning"
+						>
+							<span>Remove</span>
+						</StyledReactTooltip>
+						<StyledButton data-tip data-for="info">
+							<IconCarbonInformation fontSize={14} />
+						</StyledButton>
+						<StyledReactTooltip id="info" place="top" effect="solid">
+							<span>Info</span>
+						</StyledReactTooltip>
+						<StyledButton
+							data-tip
+							data-for="download"
+							onClick={handleDownloadFile}
+						>
+							<IconCarbonDownload fontSize={14} />
+						</StyledButton>
+						<StyledReactTooltip id="download" place="top" effect="solid">
+							<span>Download CSV</span>
+						</StyledReactTooltip>
+					</>
+				)}
+			</StyledContainerButton>
+		</StyledDiv>
+	)
 }
 
 LakeSelection.propTypes = {
