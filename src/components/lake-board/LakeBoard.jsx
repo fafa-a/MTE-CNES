@@ -9,10 +9,10 @@ const StyledContainer = styled("div", {
 	borderRight: "1px solid #ccc",
 	display: "flex",
 	flexDirection: "column",
-	height: "100%",
+	height: "50%",
 	padding: theme.space.sm,
-	minWidth: "13vw",
-	maxWidth: "13vw",
+	minWidth: "100%",
+	maxWidth: "100%",
 })
 const StyledH3 = styled("h3", {
 	fontFamily: "sans-serif",

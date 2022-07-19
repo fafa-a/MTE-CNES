@@ -19,14 +19,14 @@ import {
 } from "../../stores/formSlice"
 
 const StyledContainer = styled("div", {
-  backgroundColor: "#f1f1f1",
-  borderRight: "1px solid #ccc",
-  display: "flex",
-  flexDirection: "column",
-  height: "100%",
-  padding: theme.space.sm,
-  minWidth: "13vw",
-  maxWidth: "13vw",
+	backgroundColor: "#f1f1f1",
+	borderRight: "1px solid #ccc",
+	display: "flex",
+	flexDirection: "column",
+	height: "50%",
+	padding: theme.space.sm,
+	minWidth: "100%",
+	maxWidth: "100%",
 })
 
 const StyledDiv = styled("div", {

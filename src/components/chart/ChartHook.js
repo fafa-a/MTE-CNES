@@ -75,7 +75,7 @@ export default function useChartHook() {
 
 		for (const lake of activeLakes) {
 			const { id } = lake
-			if (!dataLakes[id]) continue
+			if (!dataLakes[id][dataType]) continue
 			const dataRaw = dataLakes[id][dataType].raw
 			const dataByYear = Object.values(dataLakes[id][dataType].byYear)
 			if (YEAR && !REFERENCE) {

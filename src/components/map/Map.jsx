@@ -9,8 +9,8 @@ const files = import.meta.globEager("/src/data/geojson/*.geojson")
 const dataGeojson = Object.entries(files).map(([, data]) => data)
 
 const StyledMapContainer = styled(MapContainer, {
-  width: "100vw",
-  height: "50vh",
+	width: "100%",
+	height: "50%",
 })
 
 export const Map = () => {

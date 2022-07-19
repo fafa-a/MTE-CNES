@@ -39,9 +39,9 @@ ChartJS.register(
 )
 
 const StyledDiv = styled("div", {
-  display: "flex",
-  height: "100%",
-  width: "100%",
+	display: "flex",
+	height: "50%",
+	width: "100%",
 })
 
 export const Chart = () => {

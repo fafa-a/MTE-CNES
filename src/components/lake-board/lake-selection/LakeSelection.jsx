@@ -108,23 +108,24 @@ const decreaseWidth = {
 
 export const LakeSelection = ({ id, name, coordinates, index }) => {
   const {
-    toggleChartVisibilty,
-    handleClickDesactiveLake,
-    handleDownloadFile,
-    bgOptic,
-    bgRadar,
-    bgReference,
-    isVisible,
-    toggleSelectedLake,
-    isSelected,
-    OPTIC,
-    RADAR,
-    REFERENCE,
-    YEAR,
-    activeLakes,
-  } = useLakeSelectionHook({ id, name, coordinates, index })
+		toggleChartVisibilty,
+		handleClickDesactiveLake,
+		handleDownloadFile,
+		bgOptic,
+		bgRadar,
+		bgReference,
+		isVisible,
+		toggleSelectedLake,
+		isSelected,
+		OPTIC,
+		RADAR,
+		REFERENCE,
+		YEAR,
+		activeLakes,
+		toggleInfo,
+	} = useLakeSelectionHook({ id, name, coordinates, index })
 
-  return (
+	return (
 		<StyledDiv css={isSelected && backgroundBorderColored}>
 			<StyledDivObservationTypes>
 				{OPTIC && (
@@ -201,7 +202,7 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 						>
 							<span>Remove</span>
 						</StyledReactTooltip>
-						<StyledButton data-tip data-for="info">
+						<StyledButton data-tip data-for="info" onClick={toggleInfo}>
 							<IconCarbonInformation fontSize={14} />
 						</StyledButton>
 						<StyledReactTooltip id="info" place="top" effect="solid">

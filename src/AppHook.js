@@ -25,18 +25,28 @@ export function useAppHook() {
 	const [surfaceReference, setSurfaceReference] = useState([])
 	const [volumeReference, setVolumeReference] = useState([])
 	const [lakeDataByYear, setLakeDataByYear] = useState([])
+  const [showLakeInfo, setShowLakeInfo] = useState(false)
 
 	const form = useSelector((state) => state.form)
 	const { activeLakes, lakeIdToDesactivate } = useSelector(
 		(state) => state.lakes
 	)
-
+	const { lakes } = useSelector((state) => state)
 	const { OPTIC, RADAR, DAY, PERIOD, REFERENCE, dataType, charType } = form
 	const { getSeriePath, getTimeseriesPath } = SeriePathUtils
 	const dispatch = useDispatch()
 
 	useEffect(() => {
-		console.log({ activeLakes })
+		console.log({ lakes })
+	}, [lakes])
+
+	useEffect(() => {
+		if (!Object.values(activeLakes)) return
+		const showInfo = Object.values(activeLakes)
+			.filter((lake) => lake.showInfo === true)
+			.map((lake) => lake.showInfo)[0]
+		if (showInfo) setShowLakeInfo(showInfo)
+		else setShowLakeInfo(false)
 	}, [activeLakes])
 
 	useEffect(() => {
@@ -343,4 +353,8 @@ export function useAppHook() {
 		seriePath,
 		activeLakes,
 	])
+
+	return {
+		showLakeInfo,
+	}
 }

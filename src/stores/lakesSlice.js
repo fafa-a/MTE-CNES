@@ -61,6 +61,21 @@ export const lakesSlice = createSlice({
 				state.loadedLakes.push(lakeId)
 			}
 		},
+		addLakeInfo: (state, action) => {
+			const { lakeId, info } = action.payload
+			if (state.dataLakes[lakeId]) {
+				state.dataLakes[lakeId] = {
+					...state.dataLakes[lakeId],
+					info,
+				}
+			}
+
+			if (!state.dataLakes[lakeId]) {
+				state.dataLakes[lakeId] = {
+					info,
+				}
+			}
+		},
 		updateActiveLakes: (state, action) => {
 			const { lakeId, lakeName, lakeCoord } = action.payload
 			if (!state.activeLakes.map((lake) => lake.id).includes(lakeId)) {
@@ -71,6 +86,7 @@ export const lakesSlice = createSlice({
 						name: lakeName,
 						coordinates: lakeCoord,
 						chartVisible: true,
+						showInfo: false,
 					},
 				]
 				const lastIndex = state.activeLakes.length - 1
@@ -137,9 +153,22 @@ export const lakesSlice = createSlice({
 		},
 		toggleYearSelection: (state, action) => {
 			const { yearId } = action.payload
-			console.log("toggleYearSelection", yearId)
 			if (state.activeYears[yearId]) {
 				state.activeYears[yearId].selected = !state.activeYears[yearId].selected
+			}
+		},
+		toggleLakeShowInfo: (state, action) => {
+			const { lakeId } = action.payload
+			if (state.activeLakes.map((lake) => lake.id).includes(lakeId)) {
+				state.activeLakes = state.activeLakes.map((lake) => {
+					if (lake.id === lakeId) {
+						return {
+							...lake,
+							showInfo: !lake.showInfo,
+						}
+					}
+					return lake
+				})
 			}
 		},
 	},
@@ -155,6 +184,8 @@ export const {
 	setSelectedLake,
 	toggleYearsChartVisibility,
 	toggleYearSelection,
+	addLakeInfo,
+	toggleLakeShowInfo,
 } = lakesSlice.actions
 
 export default lakesSlice.reducer
