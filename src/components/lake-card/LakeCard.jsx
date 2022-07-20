@@ -5,17 +5,23 @@ import { toggleLakeShowInfo } from "../../stores/lakesSlice"
 import { useSelector } from "react-redux"
 import ReactTooltip from "react-tooltip"
 import { useDispatch } from "react-redux"
-const Sdiv = styled("div", {
-	padding: "1rem",
-	backgroundColor: "rgba(255, 255, 255)",
-	position: "absolute",
-	top: "0",
-	left: "13vw",
-zIndex: "1111",
-	border: "1px solid black",
-	borderRadius: theme.borderRadius.sm,
-	display: "flex",
-	flexDirection: "column",
+const SDiv = styled("div", {
+	"padding": "1.5rem",
+	"backgroundColor": theme.colors.violet,
+	"position": "absolute",
+	"top": "4.5vh",
+	"left": "13vw",
+	"zIndex": "1111",
+	"border": "1px solid black",
+	"borderRadius": theme.borderRadius.sm,
+	"display": "flex",
+	"flexDirection": "column",
+	"fontFamily": "arial",
+
+	"color": theme.colors.white,
+	"& p > span": {
+		fontWeight: "bold",
+	},
 })
 const SButtonContainer = styled("div", {
 	position: "absolute",
@@ -31,9 +37,10 @@ const SButton = styled("button", {
 	"placeItems": "center",
 	"width": "20px",
 	"backgroundColor": "transparent",
+	"color": theme.colors.grey,
 
 	"&:hover": {
-		backgroundColor: "lightgray",
+		color: theme.colors.white,
 	},
 })
 
@@ -45,6 +52,20 @@ const SReactTooltip = styled(ReactTooltip, {
 	zIndex: "1111 !important",
 })
 
+const SH2 = styled("h2", {
+	fontFamily: "montserrat",
+	marginBottom: theme.space.base,
+})
+
+const SArticle = styled("article", {})
+const SDivId = styled("div", {
+	marginBottom: theme.space.sm,
+})
+const SDivCoord = styled("div", {
+	li: {
+		listStyle: "none",
+	},
+})
 export const LakeCard = () => {
 	const [lake, setLake] = useState({
 		id: "",
@@ -72,7 +93,7 @@ export const LakeCard = () => {
 	}, [dispatch, lake.id])
 
 	return (
-		<Sdiv>
+		<SDiv>
 			<SButtonContainer>
 				<SButton data-tip data-for="close" onClick={closeInfo}>
 					<IconCarbonClose fontSize={14} />
@@ -81,26 +102,38 @@ export const LakeCard = () => {
 					<span>Close</span>
 				</SReactTooltip>
 			</SButtonContainer>
-			<h2>
+			<SH2>
 				{lake.name} {lake.country}
-			</h2>
-			<p> Id SWOT: {lake.id}</p>
-			<p> Main use : {lake.mainUse}</p>
-			<p> Near city : {lake.nearCity}</p>
-			<p>
-				Dam coordinates :
-				<ul>
-					<li>lat: {lake.damCoord[0]}</li>
-					<li>long: {lake.damCoord[1]}</li>
-				</ul>
-			</p>
-			<p>
-				Lake coordinates :
-				<ul>
-					<li>lat: {lake.lakeCoord[0]}</li>
-					<li>long: {lake.lakeCoord[1]}</li>
-				</ul>
-			</p>
-		</Sdiv>
+			</SH2>
+			<SArticle>
+				<SDivId>
+					<p>
+						<span> Id SWOT :</span> {lake.id}
+					</p>
+					<p>
+						<span>Main use :</span> {lake.mainUse}
+					</p>
+					<p>
+						<span>Near city :</span> {lake.nearCity}
+					</p>
+				</SDivId>
+				<SDivCoord>
+					<p>
+						<span>Dam coordinates:</span>
+					</p>
+					<ul>
+						<li>lat: {lake.damCoord[0]}</li>
+						<li>long: {lake.damCoord[1]}</li>
+					</ul>
+					<p>
+						<span>Lake coordinates:</span>
+						<ul>
+							<li>lat: {lake.lakeCoord[0]}</li>
+							<li>long: {lake.lakeCoord[1]}</li>
+						</ul>
+					</p>
+				</SDivCoord>
+			</SArticle>
+		</SDiv>
 	)
 }
