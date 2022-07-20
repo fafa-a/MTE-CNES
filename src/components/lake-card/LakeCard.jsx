@@ -10,7 +10,7 @@ const SDiv = styled("div", {
 	"backgroundColor": theme.colors.darkViolet,
 	"position": "absolute",
 	"top": "83px",
-	"left": "13vw",
+	"left": "14vw",
 	"marginLeft": "10px",
 	"zIndex": "1111",
 	"borderRadius": theme.borderRadius.sm,

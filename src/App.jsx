@@ -21,13 +21,6 @@ const SMapChartContainer = styled("div", {
 	width: "87vw",
 })
 
-const SLakeCard = styled("div", {
-	// display: "none",
-	position: "absolute",
-	top: "0",
-	left: "13vw",
-	zIndex: "9999",
-})
 
 const App = () => {
 	const { showLakeInfo } = useAppHook()

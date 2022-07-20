@@ -8,7 +8,7 @@ const StyledContainer = styled("div", {
 	color: theme.colors.white,
 	display: "flex",
 	flexDirection: "column",
-	height: "50%",
+	height: "45%",
 	padding: theme.space.sm,
 	minWidth: "100%",
 	maxWidth: "100%",

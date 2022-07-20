@@ -55,6 +55,7 @@ export const {
 	},
 })
 
+
 export const globalStyles = globalCss({
 	"*, *::before, *::after": {
 		boxSizing: "border-box",
@@ -65,7 +66,6 @@ export const globalStyles = globalCss({
 	"html, body": {
 		height: "100%",
 	},
-
 	"body": {
 		lineHeight: "1.5",
 		webkitFontSmoothing: "antialiased",
