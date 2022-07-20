@@ -19,8 +19,7 @@ import {
 } from "../../stores/formSlice"
 
 const StyledContainer = styled("div", {
-	backgroundColor: "#f1f1f1",
-	borderRight: "1px solid #ccc",
+	color: theme.colors.white,
 	display: "flex",
 	flexDirection: "column",
 	height: "50%",
@@ -43,9 +42,10 @@ const StyledH3 = styled("h3", {
   marginBottom: theme.space.sm,
 })
 const StyledButton = styled("button", {
-  fontFamily: "sans-serif",
-  textTransform: "capitalize",
-  marginTop: theme.space.sm,
+	fontFamily: "sans-serif",
+	textTransform: "capitalize",
+	marginTop: theme.space.sm,
+	cursor: "pointer",
 })
 export const Form = () => {
   const {

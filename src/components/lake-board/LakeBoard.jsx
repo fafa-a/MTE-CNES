@@ -5,8 +5,7 @@ import { styled, theme } from "@/stitches.config"
 import { v4 as uuid } from "@lukeed/uuid"
 
 const StyledContainer = styled("div", {
-	backgroundColor: "#f1f1f1",
-	borderRight: "1px solid #ccc",
+	color: theme.colors.white,
 	display: "flex",
 	flexDirection: "column",
 	height: "50%",

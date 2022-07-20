@@ -5,69 +5,71 @@ import ReactTooltip from "react-tooltip"
 import { PropTypes } from "prop-types"
 
 const StyledDiv = styled("div", {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  width: "100%",
-  height: "35px",
-  border: "1px solid #ccc",
-  borderRadius: theme.borderRadius.sm,
-  marginBottom: theme.space.xs,
+	display: "flex",
+	justifyContent: "space-between",
+	alignItems: "center",
+	width: "100%",
+	height: "40px",
+	border: "1px solid #ccc",
+	borderRadius: theme.borderRadius.sm,
+	marginBottom: theme.space.xs,
+	padding: theme.space.xs,
 })
 
 const StyledContainerButton = styled("div", {
-  width: "30%",
-  height: "100%",
-  display: "flex",
-  justifyContent: "space-evenly",
-  alignItems: "center",
+	width: "30%",
+	height: "100%",
+	display: "flex",
+	justifyContent: "space-evenly",
+	alignItems: "center",
 })
 
 const StyledButton = styled("button", {
-  borderStyle: "none",
-  cursor: "pointer",
-  height: "60%",
-  padding: "0",
-  display: "grid",
-  placeItems: "center",
-  width: "20px",
-  backgroundColor: "transparent",
+	"borderStyle": "none",
+	"cursor": "pointer",
+	"height": "60%",
+	"padding": "0",
+	"display": "grid",
+	"placeItems": "center",
+	"width": "20px",
+	"backgroundColor": "transparent",
+	"color": theme.colors.grey,
 
-  "&:hover": {
-    backgroundColor: "lightgray",
-  },
+	"&:hover": {
+		color: theme.colors.white,
+	},
 })
 
 const StyledContainerP = styled("div", {
-  width: "50%",
-  maxWidth: "50%",
-  maxHeigth: "100%",
+	width: "50%",
+	maxWidth: "50%",
+	maxHeigth: "100%",
 })
 
 const StyledParagraph = styled("p", {
-  cursor: "pointer",
-  fontFamily: "sans-serif",
-  paddingLeft: theme.space.sm,
-  width: "100%",
-  height: "100%",
-  overflow: "hidden",
-  whiteSpace: "nowrap",
-  textOverflow: "ellipsis",
+	cursor: "pointer",
+	fontFamily: "sans-serif",
+	paddingLeft: theme.space.sm,
+	width: "100%",
+	height: "100%",
+	overflow: "hidden",
+	whiteSpace: "nowrap",
+	textOverflow: "ellipsis",
 })
 
 const StyledDivObservationTypes = styled("div", {
-  height: "100%",
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-evenly",
-  width: "20%",
-  marginLeft: theme.space.xs,
+	height: "100%",
+	display: "flex",
+	flexDirection: "column",
+	justifyContent: "space-evenly",
+	width: "20%",
+	// paddingLeft: theme.space.sm,
 })
 
 const StyledDivContainerObsTypes = styled("div", {
-  height: "33%",
-  display: "flex",
-  alignItems: "center",
+	height: "33%",
+	display: "flex",
+	alignItems: "center",
 })
 
 const StyledSpanObsColor = styled("span", {
