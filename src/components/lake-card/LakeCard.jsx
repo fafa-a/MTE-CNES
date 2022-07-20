@@ -7,9 +7,9 @@ import ReactTooltip from "react-tooltip"
 import { useDispatch } from "react-redux"
 const SDiv = styled("div", {
 	"padding": "1.5rem",
-	"backgroundColor": theme.colors.violet,
+	"backgroundColor": theme.colors.darkViolet,
 	"position": "absolute",
-	"top": "4.5vh",
+	"top": "8.5vh",
 	"left": "13vw",
 	"zIndex": "1111",
 	"border": "1px solid black",
