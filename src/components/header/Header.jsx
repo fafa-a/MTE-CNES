@@ -28,7 +28,7 @@ export const Header = ({ toggleTheme, theme }) => {
 	return (
 		<SDiv>
 			<SLogoSpan>
-				<Logo />
+				<Logo colorTheme={theme} />
 			</SLogoSpan>
 			<SContainer>
 				<SearchBar />
