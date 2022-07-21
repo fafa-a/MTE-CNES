@@ -53,6 +53,11 @@ export const {
 			xxl: "8rem",
 		},
 	},
+	utils: {
+		h: (value) => ({
+			height: value,
+		}),
+	},
 })
 
 

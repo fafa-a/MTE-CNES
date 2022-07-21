@@ -3,24 +3,39 @@ import { useMap } from "react-leaflet"
 import { useSelector, useDispatch } from "react-redux"
 import { updateActiveLakes } from "@/stores/lakesSlice"
 import { addLakeInfo } from "../../stores/lakesSlice"
+import { theme } from "@/stitches.config"
 
 export default function usePolygonLayerHook() {
 	const [id, setId] = useState(null)
 	const [color, setColor] = useState("blue")
 	const [coordinates, setCoordinates] = useState([])
-	const { coordinatesLakeToCenter } = useSelector((state) => state.lakes)
+	const { coordinatesLakeToCenter, activeLakes } = useSelector(
+		(state) => state.lakes
+	)
 	const map = useMap()
 	const dispatch = useDispatch()
 
+	const resizeMap = useCallback(() => {
+		const container = document.getElementsByClassName("leaflet-container")
+		if (container) {
+			map.invalidateSize()
+			container[0].style.height = "50%"
+		}
+	}, [map])
+
 	const centerPolygon = useCallback(() => {
+		map.flyTo(coordinates)
 		map.setView(coordinates, 12)
 	}, [coordinates, map])
 
 	useEffect(() => {
 		if (!id) return
 		setColor("#CDF0EA")
+		if (Object.values(activeLakes).length === 1) {
+			resizeMap()
+		}
 		centerPolygon()
-	}, [centerPolygon, id])
+	}, [activeLakes, centerPolygon, id, resizeMap])
 
 	const centerSelectedPolygon = useCallback(() => {
 		const { lakeId, coordinates } = coordinatesLakeToCenter

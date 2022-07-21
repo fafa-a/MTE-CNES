@@ -21,22 +21,22 @@ const SMapChartContainer = styled("div", {
 	width: "87vw",
 })
 
-
 const App = () => {
-	const { showLakeInfo } = useAppHook()
+	const { showLakeInfo, isOneLakeActive } = useAppHook()
 	// eslint-disable-next-line no-undef
 	useEffect(() => {
-		console.log(showLakeInfo)
-	}, [showLakeInfo])
+		console.log("isOneLakeActive", isOneLakeActive)
+	}, [isOneLakeActive])
 
+	// const height = { height: isOneLakeActive ? "50%" : "100%" }
 	return (
 		<>
 			{showLakeInfo && <LakeCard />}
 			<SAppContainer>
 				<Dashboard />
 				<SMapChartContainer>
-					<Map />
-					<Chart />
+					<Map isOneLakeActive={isOneLakeActive} />
+					{isOneLakeActive && <Chart />}
 				</SMapChartContainer>
 			</SAppContainer>
 		</>
