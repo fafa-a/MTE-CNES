@@ -5,7 +5,7 @@ import { styled, theme } from "@/stitches.config"
 import { v4 as uuid } from "@lukeed/uuid"
 
 const StyledContainer = styled("div", {
-	color: theme.colors.white,
+	color: "$text",
 	display: "flex",
 	flexDirection: "column",
 	height: "45%",
@@ -14,7 +14,7 @@ const StyledContainer = styled("div", {
 	maxWidth: "100%",
 })
 const StyledH3 = styled("h3", {
-	fontFamily: "sans-serif",
+	fontFamily: "arial",
 	marginBottom: theme.space.sm,
 })
 

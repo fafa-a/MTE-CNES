@@ -12,6 +12,8 @@ export const {
 } = createStitches({
 	theme: {
 		colors: {
+			text: "#000000",
+			background: "#ffffff",
 			darkViolet: "#0e1247",
 			violet: "#312783",
 			cyan: "#00AAFF",
@@ -25,7 +27,9 @@ export const {
 			costal: "#009679",
 			food: "#E0E622",
 			disaster: "#E9483F",
-			grey: "#A2B5BB",
+			iconColor: "#A2B5BB",
+			iconHoverColor: "#222222",
+			sun: "#FFCD00",
 		},
 		fontSizes: {
 			xxs: "0.5rem",
@@ -35,6 +39,7 @@ export const {
 			lg: "1.125rem",
 			xl: "1.25rem",
 			xxl: "1.5rem",
+			xxxl: "2rem",
 		},
 		space: {
 			xs: "0.25rem",
@@ -60,6 +65,15 @@ export const {
 	},
 })
 
+// define the dark theme using the de-constructed function
+export const darkTheme = createTheme({
+	colors: {
+		background: "#0e1247",
+		text: "#FFFFFF",
+		iconColor: "#A2B5BB",
+		iconHoverColor: "#FFFFFF",
+	},
+})
 
 export const globalStyles = globalCss({
 	"*, *::before, *::after": {
@@ -70,6 +84,8 @@ export const globalStyles = globalCss({
 	},
 	"html, body": {
 		height: "100%",
+		background: "$background",
+		color: "$text",
 	},
 	"body": {
 		lineHeight: "1.5",

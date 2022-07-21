@@ -22,7 +22,7 @@ export const Map = () => {
 				<LayersControl.BaseLayer name="OSM Strets">
 					<TileLayer
 						attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-						url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+						url="https://{sx}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 					/>
 				</LayersControl.BaseLayer>
 				<LayersControl.BaseLayer checked name="ESRI World Imagery">

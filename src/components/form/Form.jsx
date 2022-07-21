@@ -19,7 +19,8 @@ import {
 } from "../../stores/formSlice"
 
 const StyledContainer = styled("div", {
-	color: theme.colors.white,
+	fontFamily: "arial",
+	color: "$text",
 	display: "flex",
 	flexDirection: "column",
 	height: "50%",
@@ -29,17 +30,17 @@ const StyledContainer = styled("div", {
 })
 
 const StyledDiv = styled("div", {
-  marginBottom: theme.space.base,
+	marginBottom: theme.space.base,
 })
 
 const StyledFlexRowDiv = styled("div", {
-  display: "flex",
-  justifyContent: "space-around",
+	display: "flex",
+	justifyContent: "space-around",
 })
 
 const StyledH3 = styled("h3", {
-  fontFamily: "sans-serif",
-  marginBottom: theme.space.sm,
+	fontFamily: "arial",
+	marginBottom: theme.space.sm,
 })
 const StyledButton = styled("button", {
 	fontFamily: "sans-serif",

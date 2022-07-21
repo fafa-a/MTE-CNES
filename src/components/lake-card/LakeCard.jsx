@@ -7,7 +7,7 @@ import ReactTooltip from "react-tooltip"
 import { useDispatch } from "react-redux"
 const SDiv = styled("div", {
 	"padding": "1.5rem",
-	"backgroundColor": theme.colors.darkViolet,
+	"backgroundColor": "$background",
 	"position": "absolute",
 	"top": "83px",
 	"left": "14vw",
@@ -18,7 +18,7 @@ const SDiv = styled("div", {
 	"flexDirection": "column",
 	"fontFamily": "arial",
 
-	"color": theme.colors.white,
+	"color": "$text",
 	"& p > span": {
 		fontWeight: "bold",
 	},
@@ -37,15 +37,15 @@ const SButton = styled("button", {
 	"placeItems": "center",
 	"width": "20px",
 	"backgroundColor": "transparent",
-	"color": theme.colors.grey,
+	"color": "$iconColor",
 
 	"&:hover": {
-		color: theme.colors.white,
+		color: "$iconHoverColor",
 	},
 })
 
 const SReactTooltip = styled(ReactTooltip, {
-	fontFamily: "sans-serif",
+	fontFamily: "arial",
 	fontSize: `${theme.fontSizes.xs}!important`,
 	marginTop: "0 !important",
 	padding: "4px 8px !important",

@@ -16,32 +16,33 @@ import { styled } from "@stitches/react"
 import "chartjs-adapter-date-fns"
 
 ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  TimeScale,
-  Title,
-  Tooltip,
-  Legend,
-  zoomPlugin,
-  {
-    id: "customBackground",
-    beforeDraw: chart => {
-      const ctx = chart.canvas.getContext("2d")
-      ctx.save()
-      ctx.globalCompositeOperation = "destination-over"
-      ctx.fillStyle = "white"
-      ctx.fillRect(0, 0, chart.width, chart.height)
-      ctx.restore()
-    },
-  }
+	CategoryScale,
+	LinearScale,
+	PointElement,
+	LineElement,
+	TimeScale,
+	Title,
+	Tooltip,
+	Legend,
+	zoomPlugin,
+	{
+		id: "customBackground",
+		beforeDraw: (chart) => {
+			const ctx = chart.canvas.getContext("2d")
+			ctx.save()
+			ctx.globalCompositeOperation = "destination-over"
+			ctx.fillStyle = "#fff"
+			ctx.fillRect(0, 0, chart.width, chart.height)
+			ctx.restore()
+		},
+	}
 )
 
 const StyledDiv = styled("div", {
 	display: "flex",
-	height: "50%",
+	height: "55%",
 	width: "100%",
+	border: "1px solid #ccc",
 })
 
 export const Chart = () => {

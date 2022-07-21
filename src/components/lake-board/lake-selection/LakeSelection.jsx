@@ -33,10 +33,10 @@ const StyledButton = styled("button", {
 	"placeItems": "center",
 	"width": "20px",
 	"backgroundColor": "transparent",
-	"color": theme.colors.grey,
+	"color": "$iconColor",
 
 	"&:hover": {
-		color: theme.colors.white,
+		color: "$iconHoverColor",
 	},
 })
 

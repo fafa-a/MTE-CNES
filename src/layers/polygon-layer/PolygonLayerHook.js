@@ -19,13 +19,13 @@ export default function usePolygonLayerHook() {
 		const container = document.getElementsByClassName("leaflet-container")
 		if (container) {
 			map.invalidateSize()
-			container[0].style.height = "50%"
+			container[0].style.height = "45%"
 		}
 	}, [map])
 
 	const centerPolygon = useCallback(() => {
 		map.flyTo(coordinates)
-		map.setView(coordinates, 12)
+		map.setView(coordinates, 11)
 	}, [coordinates, map])
 
 	useEffect(() => {
