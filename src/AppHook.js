@@ -2,7 +2,6 @@
 import { useSelector } from "react-redux"
 import { useDispatch } from "react-redux"
 import { addLake } from "./stores/lakesSlice"
-import { darkTheme } from "@/stitches.config"
 import {
 	AppConfig,
 	SeriePathUtils,
@@ -36,7 +35,7 @@ export function useAppHook() {
 	const { OPTIC, RADAR, DAY, PERIOD, REFERENCE, dataType, charType } = form
 	const { getSeriePath, getTimeseriesPath } = SeriePathUtils
 	const dispatch = useDispatch()
-
+	const { unit } = AppConfig.attributes[dataType]
 	useEffect(() => {
 		console.log({ lakes })
 	}, [lakes])
@@ -184,7 +183,11 @@ export function useAppHook() {
 	}, [lakeDataWithReference])
 
 	useEffect(() => {
-		if (!lakeData?.length) return
+		console.log({ lakeData })
+	}, [lakeData])
+
+	useEffect(() => {
+		if (lakeData[0]?.length === 0) return
 		const dataRefDateFiltered = []
 		lakeData.forEach((lake) => {
 			dataRefDateFiltered.push(
@@ -230,7 +233,6 @@ export function useAppHook() {
 
 	useEffect(() => {
 		if (!dataReference.length) return
-
 		const surfaceRef = dataReference.map((lake) => {
 			return lake.map((data) => {
 				return {
@@ -327,9 +329,46 @@ export function useAppHook() {
 	])
 
 	const handleFetchData = useCallback(async () => {
-		const data = await fetchData()
-		setLakeData(data)
+		const dataRaw = await fetchData()
+		const data = getCleanData(dataRaw)
+		setLakeData([data])
 	}, [fetchData])
+
+	const handleValue = useCallback((value, unit) => {
+		if (unit === "hm³") {
+			return (1 * value) / 1_000_000
+		}
+		if (unit === "ha") {
+			return (1 * value) / 10_000
+		}
+	}, [])
+
+	const getCleanData = useCallback(
+		(data) => {
+			return data.map((obs) => {
+				return obs[0].map((data, index) => {
+					if (index === 2) return data
+					return data
+						.filter((el) => {
+							return (
+								!isNaN(el.value) &&
+								el.value !== "nan" &&
+								el.date !== "" &&
+								el.value !== "0"
+							)
+						})
+						.map((el) => {
+							return {
+								// date: new Date(el.date).toISOString(),
+								date: el.date,
+								value: unit === "%" ? el.value : handleValue(el.value, unit),
+							}
+						})
+				})
+			})
+		},
+		[handleValue, unit]
+	)
 
 	useEffect(() => {
 		handleFetchData()
@@ -346,7 +385,7 @@ export function useAppHook() {
 					lakeId: activeLakes[index].id,
 					dataType,
 					lakeData: data,
-					byYear: lakeDataByYear,
+					byYear: lakeDataByYear[0],
 					seriePath: seriePath[index],
 				})
 			)

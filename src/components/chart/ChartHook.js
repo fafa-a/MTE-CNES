@@ -337,15 +337,7 @@ export default function useChartHook() {
 		arr.length = 0
 	}, [YEAR, chartData])
 
-	const handleValue = (value, unit) => {
-		if (unit === "hm³") {
-			return (1 * value) / 1_000_000
-		} else if (unit === "ha") {
-			return (1 * value) / 10_000
-		} else if (unit === "%") {
-			return value
-		}
-	}
+
 	useEffect(() => {
 		if (!YEAR) {
 			setScales({
