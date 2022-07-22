@@ -55,7 +55,7 @@ export default function useChartHook() {
 		if (!DAY && !PERIOD) {
 			setChartData([])
 		}
-		if (YEAR && chartData.length > 0) {
+		if (YEAR && chartData.length > 1) {
 			setChartData([])
 		}
 	}, [DAY, OPTIC, PERIOD, RADAR, REFERENCE, YEAR, activeLakes, form])
@@ -73,23 +73,31 @@ export default function useChartHook() {
 		if (!Object.values(dataLakes).length) return
 		const dataTmp = []
 
-		for (const lake of activeLakes) {
-			const { id } = lake
-			if (!dataLakes[id][dataType]) continue
-			const dataRaw = dataLakes[id][dataType].raw
+		if (!YEAR) {
+			for (const lake of activeLakes) {
+				const { id } = lake
+				if (!dataLakes[id][dataType]?.byYear) continue
+				const dataRaw = dataLakes[id][dataType].raw
+				if (!REFERENCE) {
+					dataTmp.push([dataRaw.slice(0, 2)])
+				}
+				if (REFERENCE) {
+					dataTmp.push([dataRaw])
+				}
+			}
+		}
+
+		if (YEAR) {
+			const { id } = Object.values(activeLakes).at(-1)
+
+			if (!dataLakes[id][dataType]?.byYear) return
 			const dataByYear = Object.values(dataLakes[id][dataType].byYear)
-			if (YEAR && !REFERENCE) {
+			if (!REFERENCE) {
 				const dataByYearWithoutRef = dataByYear.map((obs) => obs.slice(0, 2))
 				dataTmp.push([dataByYearWithoutRef])
 			}
-			if (YEAR && REFERENCE) {
+			if (REFERENCE) {
 				dataTmp.push(dataByYear)
-			}
-			if (!YEAR && !REFERENCE) {
-				dataTmp.push([dataRaw.slice(0, 2)])
-			}
-			if (!YEAR && REFERENCE) {
-				dataTmp.push([dataRaw])
 			}
 		}
 
@@ -101,34 +109,6 @@ export default function useChartHook() {
 	const setDataLines = useCallback(
 		(item, obsType, index, lakeName, indexColor) => {
 			if (!item) return
-			let value
-			if (!YEAR) {
-				value = item
-					?.filter((el) => {
-						return !isNaN(el.value) && el.date !== "" && el.value !== "0"
-					})
-					.map((el) => {
-						return {
-							date: new Date(el.date).toISOString(),
-							value: handleValue(el.value, unit),
-						}
-					})
-			}
-
-			if (YEAR) {
-				value = item.map((year) => {
-					return year
-						.filter((el) => {
-							return !isNaN(el.value) && el.date !== "" && el.value !== "0"
-						})
-						.map((el) => {
-							return {
-								date: new Date(el.date).toISOString(),
-								value: handleValue(1 * el.value, unit),
-							}
-						})
-				})
-			}
 			const { borderWidth } = chart.style.default
 
 			let { tension, pointRadius } = AppConfig.attributes[dataType]
@@ -180,7 +160,7 @@ export default function useChartHook() {
 				borderColor,
 				pointBackgroundColor,
 				borderWidth,
-				data: YEAR ? value[0] : value,
+				data: YEAR ? item : item,
 				label: `${obsType}`,
 				lakeName: `${lakeName}`,
 				pointRadius,
@@ -270,7 +250,7 @@ export default function useChartHook() {
 		const arr = []
 		const allDates = []
 		let allDatesSorted = []
-		if (!Object.values(dataLakes).length) return
+		if (!Object.values(dataLakes).length && chartData[0].length === 0) return
 		if (!YEAR) {
 			chartData.forEach((key, index) => {
 				key.forEach((item) => {
@@ -301,33 +281,27 @@ export default function useChartHook() {
 		}
 
 		if (YEAR) {
-			chartData.forEach((obs) => {
-				obs.forEach((year) => {
-					Object.values(year).forEach((itm, idx) => {
-						itm.forEach((item, index) => {
-							const data
-               = setDataLines(
-								item,
-								obsTypes[index],
-								idx,
-								activeLakes.at(-1).name,
-								idx
-							)
-
-							// const itemDates = item.map(el =>
-							//   el
-							//     .filter(el => !isNaN(el.value) && el.date !== "")
-							//     .map(el => new Date(el.date))
-							// )
-
-							// const datesSorted = itemDates[0].sort((a, b) => a - b)
-							// const firstDateGraph = getChartStartDate(datesSorted)
-							// setDateMin(firstDateGraph)
-							// const lastDateGraph = getChartFirstDateNextMonth(datesSorted)
-							// setDateMax(lastDateGraph)
-
-							arr.push(data)
-						})
+			chartData.forEach((year) => {
+				Object.values(year).forEach((obs, index) => {
+					obs.forEach((itm, idx) => {
+						const data = setDataLines(
+							itm[0],
+							obsTypes[idx],
+							index,
+							activeLakes.at(-1).name,
+							index
+						)
+						// const itemDates = item.map(el =>
+						//   el
+						//     .filter(el => !isNaN(el.value) && el.date !== "")
+						//     .map(el => new Date(el.date))
+						// )
+						// const datesSorted = itemDates[0].sort((a, b) => a - b)
+						// const firstDateGraph = getChartStartDate(datesSorted)
+						// setDateMin(firstDateGraph)
+						// const lastDateGraph = getChartFirstDateNextMonth(datesSorted)
+						// setDateMax(lastDateGraph)
+						arr.push(data)
 					})
 				})
 			})
@@ -336,7 +310,6 @@ export default function useChartHook() {
 
 		arr.length = 0
 	}, [YEAR, chartData])
-
 
 	useEffect(() => {
 		if (!YEAR) {

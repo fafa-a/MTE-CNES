@@ -13,6 +13,7 @@ import { csv } from "d3"
 import { extractDataByYear, groupDataByYear } from "./utils"
 import { useEffect } from "react"
 import { desactiveLake } from "@stores/lakesSlice"
+import { ConsoleSqlOutlined } from "@ant-design/icons"
 
 export function useAppHook() {
 	const [seriePath, setSeriePath] = useState([])
@@ -41,7 +42,6 @@ export function useAppHook() {
 	}, [lakes])
 
 	const toggleTheme = useCallback(() => {
-		console.log("toggleTheme")
 		setTheme(theme === "dark" ? "light" : "dark")
 	})
 
@@ -179,19 +179,11 @@ export function useAppHook() {
 	])
 
 	useEffect(() => {
-		console.log({ lakeDataWithReference })
-	}, [lakeDataWithReference])
-
-	useEffect(() => {
-		console.log({ lakeData })
-	}, [lakeData])
-
-	useEffect(() => {
 		if (lakeData[0]?.length === 0) return
 		const dataRefDateFiltered = []
 		lakeData.forEach((lake) => {
 			dataRefDateFiltered.push(
-				lake[0]
+				lake
 					.at(-1)
 					.filter(
 						(data) =>
@@ -295,11 +287,11 @@ export function useAppHook() {
 			let data = []
 
 			if (!OPTIC || !RADAR) {
-				data = [lake[0][0]]
+				data = [lake[0]]
 			}
 
 			if (OPTIC && RADAR) {
-				data = [lake[0][0], lake[0][1]]
+				data = [lake[0], lake[1]]
 			}
 			if (!OPTIC && !RADAR && REFERENCE) {
 				data = []
@@ -331,7 +323,7 @@ export function useAppHook() {
 	const handleFetchData = useCallback(async () => {
 		const dataRaw = await fetchData()
 		const data = getCleanData(dataRaw)
-		setLakeData([data])
+		setLakeData(data)
 	}, [fetchData])
 
 	const handleValue = useCallback((value, unit) => {

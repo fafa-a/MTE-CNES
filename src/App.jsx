@@ -44,7 +44,7 @@ const App = () => {
 				<Dashboard />
 				<SMapChartContainer>
 					<Map isOneLakeActive={isOneLakeActive} />
-					{/* {isOneLakeActive && <Chart />} */}
+					{isOneLakeActive && <Chart />}
 				</SMapChartContainer>
 			</SAppContainer>
 		</Container>
