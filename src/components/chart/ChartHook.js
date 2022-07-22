@@ -186,10 +186,12 @@ export default function useChartHook() {
 				pointRadius,
 				tension,
 				xAxisID,
-				hidden: !Object.values(activeLakes)[indexColor].chartVisible,
+				hidden: !YEAR
+					? !Object.values(activeLakes)[indexColor].chartVisible
+					: !Object.values(activeYears)[indexColor].chartVisible,
 			}
 		},
-		[chart, charType, dataType, obsTypes, unit]
+		[chart, charType, dataType, obsTypes, unit, YEAR]
 	)
 
 	useEffect(() => {
