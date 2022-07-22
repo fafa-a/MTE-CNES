@@ -3,7 +3,6 @@ import { useMap } from "react-leaflet"
 import { useSelector, useDispatch } from "react-redux"
 import { updateActiveLakes } from "@/stores/lakesSlice"
 import { addLakeInfo } from "../../stores/lakesSlice"
-import { theme } from "@/stitches.config"
 
 export default function usePolygonLayerHook() {
 	const [id, setId] = useState(null)
@@ -18,7 +17,7 @@ export default function usePolygonLayerHook() {
 	const resizeMap = useCallback(() => {
 		const container = document.getElementsByClassName("leaflet-container")
 		if (container) {
-			map.invalidateSize()
+			map.invalidateSize(true)
 			container[0].style.height = "45%"
 		}
 	}, [map])
