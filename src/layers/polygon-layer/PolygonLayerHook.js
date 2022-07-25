@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
-import { useMap } from "react-leaflet"
+import { useMap, useMapEvents } from "react-leaflet"
+
 import { useSelector, useDispatch } from "react-redux"
 import { updateActiveLakes } from "@/stores/lakesSlice"
 import { addLakeInfo } from "../../stores/lakesSlice"
@@ -8,12 +9,17 @@ export default function usePolygonLayerHook() {
 	const [id, setId] = useState(null)
 	const [color, setColor] = useState("blue")
 	const [coordinates, setCoordinates] = useState([])
+	const [zoomLevel, setZoomLevel] = useState(null)
 	const { coordinatesLakeToCenter, activeLakes } = useSelector(
 		(state) => state.lakes
 	)
 	const map = useMap()
 	const dispatch = useDispatch()
-
+	const mapEvents = useMapEvents({
+		zoomend: () => {
+			setZoomLevel(mapEvents.getZoom())
+		},
+	})
 	const resizeMap = useCallback(() => {
 		const container = document.getElementsByClassName("leaflet-container")
 		if (container) {
@@ -73,5 +79,6 @@ export default function usePolygonLayerHook() {
 		centerPolygon,
 		id,
 		color,
+		zoomLevel,
 	}
 }

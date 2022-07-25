@@ -6,14 +6,14 @@ import { PropTypes } from "prop-types"
 
 export const PolygonLayer = ({ data }) => {
   const [layer, setLayer] = useState(null)
-  const { id, activeLake, color } = usePolygonLayerHook({
-    data,
-  })
+  const { id, activeLake, color, zoomLevel } = usePolygonLayerHook({
+		data,
+	})
 
-  useEffect(() => {
-    setLayer(
-      data.features.map(feature => {
-        const {
+	useEffect(() => {
+		setLayer(
+			data.features.map((feature) => {
+				const {
 					ID_SWOT,
 					DAM_NAME,
 					LONG_WW,
@@ -54,11 +54,11 @@ export const PolygonLayer = ({ data }) => {
 						</Tooltip>
 					</Polygon>
 				)
-      })
-    )
-  }, [id, color, data.features, activeLake])
+			})
+		)
+	}, [id, color, data.features, activeLake])
 
-  return <LayerGroup>{layer}</LayerGroup>
+	return <LayerGroup>{zoomLevel > 8 ? layer : null}</LayerGroup>
 }
 PolygonLayer.propTypes = {
   data: PropTypes.object.isRequired,

@@ -13,17 +13,16 @@ import PropTypes from "prop-types"
  */
 
 export const MarkerLayerCluster = ({ data }) => {
-  const { coordinates } = useMarkerLayerClusterHook(data)
+  const { coordinates, zoomLevel } = useMarkerLayerClusterHook(data)
 
-  const layer = data.features.map((feature, index) => {
-    // const { LONG_WW, LAT_WW } = feature.properties
-    return (
-      <Marker icon={noSizeIcon} key={uuid()} position={coordinates[index]} />
-    )
-  })
-  return (
-    <MarkerClusterGroup zoomToBoundsOnClick={false}>{layer}</MarkerClusterGroup>
-  )
+	const layer = data.features.map((_, index) => {
+		return (
+			<Marker icon={noSizeIcon} key={uuid()} position={coordinates[index]} />
+		)
+	})
+	return zoomLevel <= 8 ? (
+		<MarkerClusterGroup zoomToBoundsOnClick={false}>{layer}</MarkerClusterGroup>
+	) : null
 }
 
 MarkerLayerCluster.propTypes = {
