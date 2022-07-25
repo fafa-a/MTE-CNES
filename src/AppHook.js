@@ -234,7 +234,7 @@ export function useAppHook() {
 			return lake.map((data) => {
 				return {
 					date: data.date,
-					value: data.value,
+					value: data.area,
 				}
 			})
 		})
@@ -243,13 +243,15 @@ export function useAppHook() {
 			return lake.map((data) => {
 				return {
 					date: data.date,
-					value: data.value,
+					value: data.volume,
 				}
 			})
 		})
 
 		setSurfaceReference(surfaceRef)
 		setVolumeReference(volumeRef)
+		console.log("surfaceRef", surfaceRef)
+		console.log("volumeRef", volumeRef)
 		setTmpFillingRateReference(volumeRef)
 	}, [dataReference])
 
@@ -282,6 +284,7 @@ export function useAppHook() {
 
 	useEffect(() => {
 		if (!lakeData.length) return
+		if (!surfaceReference.length || !volumeReference.length) return
 		if (
 			dataType === DataTypes.FILLING_RATE &&
 			fillingRateReference.length !== lakeData.length
@@ -310,7 +313,8 @@ export function useAppHook() {
 			if (dataType === DataTypes.VOLUME && REFERENCE) {
 				data = [...data, volumeReference[index]]
 			}
-
+			console.log({ surface: surfaceReference[index] })
+			console.log("data", data)
 			arrTmp.push(data)
 		})
 		setLakeDataWithReference(arrTmp)
@@ -349,11 +353,8 @@ export function useAppHook() {
 							return {
 								date: el.date,
 								hour: el.hour,
-								value:
-									dataType === DataTypes.FILLING_RATE &&
-									dataType === DataTypes.VOLUME
-										? handleValue(el.volume, "hm³")
-										: handleValue(el.area, "ha"),
+								volume: handleValue(el.volume, unit),
+								area: handleValue(el.area, unit),
 							}
 						})
 					} else {
