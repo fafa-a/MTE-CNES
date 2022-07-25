@@ -13,7 +13,6 @@ import { csv } from "d3"
 import { extractDataByYear, groupDataByYear } from "./utils"
 import { useEffect } from "react"
 import { desactiveLake } from "@stores/lakesSlice"
-import { ConsoleSqlOutlined } from "@ant-design/icons"
 
 export function useAppHook() {
 	const [seriePath, setSeriePath] = useState([])
@@ -40,6 +39,10 @@ export function useAppHook() {
 	useEffect(() => {
 		console.log({ lakes })
 	}, [lakes])
+
+  useEffect(() => {
+		console.log({ form })
+	}, [form])
 
 	const toggleTheme = useCallback(() => {
 		setTheme(theme === "dark" ? "light" : "dark")

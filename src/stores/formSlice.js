@@ -33,10 +33,12 @@ export const formSlice = createSlice({
 			state.isCleared = false
 		},
 		toggleDay: (state) => {
+      state.PERIOD = !state.PERIOD
 			state.DAY = !state.DAY
 			state.isCleared = false
 		},
 		togglePeriod: (state) => {
+      state.DAY = !state.DAY
 			state.PERIOD = !state.PERIOD
 			state.isCleared = false
 		},

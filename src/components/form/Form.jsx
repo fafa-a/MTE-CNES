@@ -18,6 +18,7 @@ import {
 	toggleYear,
 	toggleVolume,
 } from "../../stores/formSlice"
+import { Radiobox } from "../radiobox/RadioBox"
 
 const StyledContainer = styled("div", {
 	fontFamily: "arial",
@@ -91,16 +92,18 @@ export const Form = () => {
 				<StyledDiv>
 					<StyledH3>Observation periods</StyledH3>
 					<StyledFlexRowDiv>
-						<Checkbox
+						<Radiobox
 							storeAction={toggleDay}
 							id={durationValues.DAY.abbr}
+							name="duration"
 							label={durationValues.DAY.label}
 							abbr={durationValues.DAY.abbr}
 							value={form.DAY}
 						/>
-						<Checkbox
+						<Radiobox
 							storeAction={togglePeriod}
 							id={durationValues.PERIOD.abbr}
+							name="duration"
 							label={durationValues.PERIOD.label}
 							abbr={durationValues.PERIOD.abbr}
 							value={form.PERIOD}
