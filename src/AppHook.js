@@ -193,10 +193,12 @@ export function useAppHook() {
 					)
 			)
 		})
+    console.log("dataRefDateFiltered",dataRefDateFiltered)
 		setDataReference(dataRefDateFiltered)
 	}, [lakeData])
 
 	useEffect(() => {
+    console.log({lakeDataWithReference})
 		let lakeDataTmp = []
 		lakeDataWithReference.forEach((lake) => {
 			lake.forEach((data) => {
@@ -229,7 +231,7 @@ export function useAppHook() {
 			return lake.map((data) => {
 				return {
 					date: data.date,
-					value: data.area,
+					value: data.value,
 				}
 			})
 		})
@@ -238,7 +240,7 @@ export function useAppHook() {
 			return lake.map((data) => {
 				return {
 					date: data.date,
-					value: data.volume,
+					value: data.value,
 				}
 			})
 		})
@@ -339,22 +341,36 @@ export function useAppHook() {
 		(data) => {
 			return data.map((obs) => {
 				return obs[0].map((data, index) => {
-					return data
-						.filter((el) => {
-							return (
-								!isNaN(el.value) &&
-								el.value !== "nan" &&
-								el.date !== "" &&
-								el.value !== "0"
-							)
-						})
-						.map((el) => {
+					if (index === 2) {
+						return data.map((el) => {
 							return {
-								// date: new Date(el.date).toISOString(),
 								date: el.date,
-								value: unit === "%" ? el.value : handleValue(el.value, unit),
+								hour: el.hour,
+								value:
+									dataType === DataTypes.FILLING_RATE &&
+									dataType === DataTypes.VOLUME
+										? handleValue(el.volume, "hm³")
+										: handleValue(el.area, "ha"),
 							}
 						})
+					} else {
+						return data
+							.filter((el) => {
+								return (
+									!isNaN(el.value) &&
+									el.value !== "nan" &&
+									el.date !== "" &&
+									el.value !== "0"
+								)
+							})
+							.map((el) => {
+								return {
+									// date: new Date(el.date).toISOString(),
+									date: el.date,
+									value: unit === "%" ? el.value : handleValue(el.value, unit),
+								}
+							})
+					}
 				})
 			})
 		},

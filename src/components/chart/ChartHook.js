@@ -92,7 +92,7 @@ export default function useChartHook() {
 		}
 
 		if (YEAR) {
-			const { id } = Object.values(activeLakes).at(-1)
+      const { id } = Object.values(activeLakes).at(-1)
 
 			if (!dataLakes[id][dataType]?.byYear) return
 			const dataByYear = Object.values(dataLakes[id][dataType].byYear)
