@@ -339,7 +339,6 @@ export function useAppHook() {
 		(data) => {
 			return data.map((obs) => {
 				return obs[0].map((data, index) => {
-					if (index === 2) return data
 					return data
 						.filter((el) => {
 							return (
