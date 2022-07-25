@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import { AppConfig } from "@/config"
 import { useSelector } from "react-redux"
-import { CompareTypes, ObservationTypes } from "../../config"
+import { ObservationTypes } from "../../config"
 
 export default function useChartHook() {
 	const [chartData, setChartData] = useState([])
@@ -21,7 +21,7 @@ export default function useChartHook() {
 	const { dataType, OPTIC, RADAR, DAY, PERIOD, REFERENCE, YEAR } = form
 	const { label, unit } = AppConfig.attributes[dataType]
 
-  useEffect(() => {
+	useEffect(() => {
 		console.log({ dataSets })
 	}, [dataSets])
 
@@ -34,22 +34,22 @@ export default function useChartHook() {
 			setObsTypes([ObservationTypes.RADAR])
 		}
 		if (REFERENCE) {
-			setObsTypes([CompareTypes.REFERENCE])
+			setObsTypes([ObservationTypes.REFERENCE])
 		}
 		if (OPTIC && RADAR) {
 			setObsTypes([ObservationTypes.OPTIC, ObservationTypes.RADAR])
 		}
 		if (OPTIC && REFERENCE) {
-			setObsTypes([ObservationTypes.OPTIC, CompareTypes.REFERENCE])
+			setObsTypes([ObservationTypes.OPTIC, ObservationTypes.REFERENCE])
 		}
 		if (RADAR && REFERENCE) {
-			setObsTypes([ObservationTypes.RADAR, CompareTypes.REFERENCE])
+			setObsTypes([ObservationTypes.RADAR, ObservationTypes.REFERENCE])
 		}
 		if (OPTIC && RADAR && REFERENCE) {
 			setObsTypes([
 				ObservationTypes.OPTIC,
 				ObservationTypes.RADAR,
-				CompareTypes.REFERENCE,
+				ObservationTypes.REFERENCE,
 			])
 		}
 		if (!OPTIC && !RADAR && !REFERENCE) {
@@ -92,7 +92,7 @@ export default function useChartHook() {
 		}
 
 		if (YEAR) {
-      const { id } = Object.values(activeLakes).at(-1)
+			const { id } = Object.values(activeLakes).at(-1)
 
 			if (!dataLakes[id][dataType]?.byYear) return
 			const dataByYear = Object.values(dataLakes[id][dataType].byYear)

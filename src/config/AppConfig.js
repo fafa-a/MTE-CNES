@@ -2,7 +2,8 @@ import DATA_TYPES from "./DataTypes"
 import OBSERVATION_TYPES from "./ObservationTypes"
 import DURATION_TYPES from "./DurationTypes"
 import CHART_TYPES from "./ChartTypes"
-import COMPARE_TYPES from "./CompareTypes"
+import COMPARE_TYPES from "./ModeTypes"
+import MODE_TYPES from "./ModeTypes"
 
 const config = {
 	attributes: {
@@ -78,6 +79,9 @@ const config = {
 			abbr: "MR",
 			label: "Radar",
 		},
+		[OBSERVATION_TYPES.REFERENCE]: {
+			label: "Reference",
+		},
 	},
 	duration: {
 		[DURATION_TYPES.DAY]: {
@@ -97,13 +101,14 @@ const config = {
 			label: "Scatter",
 		},
 	},
-	compareTypes: {
-		[COMPARE_TYPES.REFERENCE]: {
-			label: "Reference",
-		},
-		[COMPARE_TYPES.YEAR]: {
+	modeTypes: {
+    [MODE_TYPES.VOLUME]: {
+      label: "Volume",
+    },
+		[MODE_TYPES.YEAR]: {
 			label: "Year",
 		},
+
 	},
 }
 export default config

@@ -14,7 +14,7 @@ export default function useFormHook() {
 	const observationTypesValues = AppConfig.observationTypes
 	const durationValues = AppConfig.duration
 	const chartTypesValues = AppConfig.chartTypes
-	const compareTypesValues = AppConfig.compareTypes
+	const modeTypesValues = AppConfig.modeTypes
 
 	const downloadChartImage = useCallback(
 		(e) => {
@@ -30,7 +30,7 @@ export default function useFormHook() {
 
 	return {
 		dataTypesValues,
-		compareTypesValues,
+		modeTypesValues,
 		observationTypesValues,
 		durationValues,
 		form,
