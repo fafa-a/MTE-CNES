@@ -1,4 +1,5 @@
 export const extractDataByYear = data => {
+  console.log("extractDataByYear", data)
   const dataByYear = {}
   data
     .map(item => {

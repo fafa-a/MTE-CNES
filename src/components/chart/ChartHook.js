@@ -21,9 +21,6 @@ export default function useChartHook() {
 	const { dataType, OPTIC, RADAR, DAY, PERIOD, REFERENCE, YEAR } = form
 	const { label, unit } = AppConfig.attributes[dataType]
 
-	useEffect(() => {
-		console.log({ dataSets })
-	}, [dataSets])
 
 	useEffect(() => {
 		if (!activeLakes) return

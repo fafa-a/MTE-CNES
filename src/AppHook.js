@@ -36,13 +36,6 @@ export function useAppHook() {
 	const { getSeriePath, getTimeseriesPath } = SeriePathUtils
 	const dispatch = useDispatch()
 	const { unit } = AppConfig.attributes[dataType]
-	useEffect(() => {
-		console.log({ lakes })
-	}, [lakes])
-
-  useEffect(() => {
-		console.log({ form })
-	}, [form])
 
 	const toggleTheme = useCallback(() => {
 		setTheme(theme === "dark" ? "light" : "dark")
@@ -196,12 +189,10 @@ export function useAppHook() {
 					)
 			)
 		})
-    console.log("dataRefDateFiltered",dataRefDateFiltered)
 		setDataReference(dataRefDateFiltered)
 	}, [lakeData])
 
 	useEffect(() => {
-    console.log({lakeDataWithReference})
 		let lakeDataTmp = []
 		lakeDataWithReference.forEach((lake) => {
 			lake.forEach((data) => {
@@ -250,8 +241,6 @@ export function useAppHook() {
 
 		setSurfaceReference(surfaceRef)
 		setVolumeReference(volumeRef)
-		console.log("surfaceRef", surfaceRef)
-		console.log("volumeRef", volumeRef)
 		setTmpFillingRateReference(volumeRef)
 	}, [dataReference])
 
@@ -313,8 +302,6 @@ export function useAppHook() {
 			if (dataType === DataTypes.VOLUME && REFERENCE) {
 				data = [...data, volumeReference[index]]
 			}
-			console.log({ surface: surfaceReference[index] })
-			console.log("data", data)
 			arrTmp.push(data)
 		})
 		setLakeDataWithReference(arrTmp)
@@ -369,7 +356,6 @@ export function useAppHook() {
 							})
 							.map((el) => {
 								return {
-									// date: new Date(el.date).toISOString(),
 									date: el.date,
 									value: unit === "%" ? el.value : handleValue(el.value, unit),
 								}
