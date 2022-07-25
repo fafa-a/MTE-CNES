@@ -93,15 +93,23 @@ export default function useChartHook() {
 
 			if (!dataLakes[id][dataType]?.byYear) return
 			const dataByYear = Object.values(dataLakes[id][dataType].byYear)
-			if (!REFERENCE) {
-				const dataByYearWithoutRef = dataByYear.map((obs) => obs.slice(0, 2))
-				dataTmp.push([dataByYearWithoutRef])
+
+			if (REFERENCE && !OPTIC) {
+				const dataWithoutOptic = dataByYear.map((obs) => obs.slice(1, 3))
+				dataTmp.push(dataWithoutOptic)
 			}
-			if (REFERENCE) {
+			if (REFERENCE && !RADAR) {
+				const dataWithoutRadar = dataByYear.map((obs) => obs.slice(0, -1))
+				dataTmp.push(dataWithoutRadar)
+			}
+			if (REFERENCE && OPTIC && RADAR) {
 				dataTmp.push(dataByYear)
 			}
+			if (!REFERENCE && OPTIC && RADAR) {
+				const dataByYearWithoutRef = dataByYear.map((obs) => obs.slice(0, 2))
+				dataTmp.push(dataByYearWithoutRef)
+			}
 		}
-
 		setChartData(dataTmp)
 		setLastDataTypes(dataType)
 		setLastObstypes(obsTypes)

@@ -28,11 +28,12 @@ export function useAppHook() {
 	const [isOneLakeActive, setIsOneLakeActive] = useState(false)
 	const [theme, setTheme] = useState("dark")
 	const form = useSelector((state) => state.form)
-	const { activeLakes, lakeIdToDesactivate } = useSelector(
+	const { activeLakes, lakeIdToDesactivate, dataLakes } = useSelector(
 		(state) => state.lakes
 	)
 	const { lakes } = useSelector((state) => state)
-	const { OPTIC, RADAR, DAY, PERIOD, REFERENCE, dataType, charType } = form
+	const { OPTIC, RADAR, DAY, PERIOD, REFERENCE, YEAR, dataType, charType } =
+		form
 	const { getSeriePath, getTimeseriesPath } = SeriePathUtils
 	const dispatch = useDispatch()
 	const { unit } = AppConfig.attributes[dataType]
@@ -194,8 +195,9 @@ export function useAppHook() {
 
 	useEffect(() => {
 		let lakeDataTmp = []
-		lakeDataWithReference.forEach((lake) => {
-			lake.forEach((data) => {
+		if (YEAR && dataLakes[activeLakes.at(-1).id][dataType]?.byYear) return
+		lakeDataWithReference.forEach((obs) => {
+			obs.forEach((data) => {
 				const dataYear = extractDataByYear(data)
 				lakeDataTmp.push(dataYear)
 			})
@@ -221,28 +223,30 @@ export function useAppHook() {
 
 	useEffect(() => {
 		if (!dataReference.length) return
-		const surfaceRef = dataReference.map((lake) => {
-			return lake.map((data) => {
-				return {
-					date: data.date,
-					value: data.area,
-				}
+		if (dataType === DataTypes.SURFACE) {
+			const surfaceRef = dataReference.map((lake) => {
+				return lake.map((data) => {
+					return {
+						date: data.date,
+						value: data.area,
+					}
+				})
 			})
-		})
-
-		const volumeRef = dataReference.map((lake) => {
-			return lake.map((data) => {
-				return {
-					date: data.date,
-					value: data.volume,
-				}
+			setSurfaceReference(surfaceRef)
+		}
+		if (dataType === DataTypes.VOLUME || dataType === DataTypes.FILLING_RATE) {
+			const volumeRef = dataReference.map((lake) => {
+				return lake.map((data) => {
+					return {
+						date: data.date,
+						value: data.volume,
+					}
+				})
 			})
-		})
-
-		setSurfaceReference(surfaceRef)
-		setVolumeReference(volumeRef)
-		setTmpFillingRateReference(volumeRef)
-	}, [dataReference])
+			setVolumeReference(volumeRef)
+			setTmpFillingRateReference(volumeRef)
+		}
+	}, [dataReference, dataType])
 
 	const calculateFillingRate = useCallback(() => {
 		const rateRef = tmpFillingRateReference.map((days) => {
@@ -273,7 +277,16 @@ export function useAppHook() {
 
 	useEffect(() => {
 		if (!lakeData.length) return
-		if (!surfaceReference.length || !volumeReference.length) return
+		if (
+			dataType === DataTypes.SURFACE &&
+			surfaceReference.length !== lakeData.length
+		)
+			return
+		if (
+			dataType === DataTypes.VOLUME &&
+			volumeReference.length !== lakeData.length
+		)
+			return
 		if (
 			dataType === DataTypes.FILLING_RATE &&
 			fillingRateReference.length !== lakeData.length
@@ -318,30 +331,34 @@ export function useAppHook() {
 
 	const handleFetchData = useCallback(async () => {
 		const dataRaw = await fetchData()
-		const data = getCleanData(dataRaw)
+		const data = await getCleanData(dataRaw)
 		setLakeData(data)
 	}, [fetchData])
 
-	const handleValue = useCallback((value, unit) => {
-		if (unit === "hm³") {
-			return (1 * value) / 1_000_000
-		}
-		if (unit === "ha") {
-			return (1 * value) / 10_000
-		}
-	}, [])
+	const handleValue = useCallback(
+		(value, unit) => {
+			if (unit === "hm³") {
+				return (1 * value) / 1_000_000
+			}
+			if (unit === "ha") {
+				return (1 * value) / 10_000
+			}
+		},
+		[unit]
+	)
 
 	const getCleanData = useCallback(
 		(data) => {
 			return data.map((obs) => {
 				return obs[0].map((data, index) => {
-					if (index === 2) {
+					// TODO : fix swtitch between ZSV and other csv
+					if (data.length > 2000) {
 						return data.map((el) => {
 							return {
 								date: el.date,
 								hour: el.hour,
-								volume: handleValue(el.volume, unit),
-								area: handleValue(el.area, unit),
+								volume: (1 * el.volume) / 1_000_000,
+								area: (1 * el.area) / 10_000,
 							}
 						})
 					} else {
