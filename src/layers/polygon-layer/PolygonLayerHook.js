@@ -1,6 +1,5 @@
-/* eslint-disable no-undef */
 import { useMap, useMapEvents } from "react-leaflet"
-
+import { useEffect, useState, useCallback } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { updateActiveLakes } from "@/stores/lakesSlice"
 import { addLakeInfo } from "../../stores/lakesSlice"

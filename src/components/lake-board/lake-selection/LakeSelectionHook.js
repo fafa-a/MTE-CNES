@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+import { useEffect, useCallback, useState } from "react"
 import {
 	updateLakeIdToDesactivate,
 	setCoordinatesLakeToCenter,

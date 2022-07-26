@@ -1,7 +1,7 @@
-/* eslint-disable no-undef */
 import { useSelector } from "react-redux"
 import { clearActiveLakes } from "../../stores/lakesSlice"
 import { useDispatch } from "react-redux"
+import { useCallback, useEffect, useState } from "react"
 export default function useLakeBoardHook() {
 	const [dataSelection, setDataSelection] = useState([])
 	const { activeLakes, data, activeYears } = useSelector((state) => state.lakes)

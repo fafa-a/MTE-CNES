@@ -2,9 +2,7 @@
 import { AppConfig } from "@/config"
 import { useSelector } from "react-redux"
 import { ObservationTypes } from "../../config"
-import { addColor } from "../../stores/chartSlice"
-import { useDispatch } from "react-redux"
-
+import { useEffect, useState, useCallback } from "react"
 export default function useChartHook() {
 	const [chartData, setChartData] = useState([])
 	const [dataSets, setDataSets] = useState([])

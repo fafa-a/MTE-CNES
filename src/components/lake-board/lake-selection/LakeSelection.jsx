@@ -3,7 +3,13 @@ import { useLakeSelectionHook } from "./LakeSelectionHook"
 import { styled, theme } from "@/stitches.config"
 import ReactTooltip from "react-tooltip"
 import { PropTypes } from "prop-types"
-
+import {
+	CarbonCloseOutline,
+	CarbonView,
+	CarbonViewOff,
+	CarbonDownload,
+	CarbonInformation,
+} from "../../carbon-icons"
 const StyledDiv = styled("div", {
 	display: "flex",
 	justifyContent: "space-between",
@@ -73,9 +79,9 @@ const StyledDivContainerObsTypes = styled("div", {
 })
 
 const StyledSpanObsColor = styled("span", {
-  width: "8px",
-  height: "8px",
-  display: "inline-block",
+	width: "8px",
+	height: "8px",
+	display: "inline-block",
 })
 
 const StyledSpanLabel = styled("span", {
@@ -98,18 +104,18 @@ const backgroundBorderColored = {
 }
 
 const increaseWidth = {
-  width: "70%",
-  maxWidth: "70%",
+	width: "70%",
+	maxWidth: "70%",
 }
 
 const fontBold = { fontWeight: "bold" }
 
 const decreaseWidth = {
-  width: "10%",
+	width: "10%",
 }
 
 export const LakeSelection = ({ id, name, coordinates, index }) => {
-  const {
+	const {
 		toggleChartVisibilty,
 		handleClickDesactiveLake,
 		handleDownloadFile,
@@ -166,7 +172,7 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 							data-for="visible"
 							onClick={toggleChartVisibilty}
 						>
-							<IconCarbonView fontSize={14} />
+							<CarbonView fontSize={14} />
 						</StyledButton>
 						<StyledReactTooltip id="visible" place="top" effect="solid">
 							<span>Visible</span>
@@ -180,7 +186,7 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 							data-for="hide"
 							onClick={toggleChartVisibilty}
 						>
-							<IconCarbonViewOff fontSize={14} />
+							<CarbonViewOff fontSize={14} />
 						</StyledButton>
 						<StyledReactTooltip id="hide" place="top" effect="solid">
 							<span>Hide chart</span>
@@ -194,7 +200,7 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 							data-for="remove"
 							onClick={handleClickDesactiveLake}
 						>
-							<IconCarbonCloseOutline fontSize={14} />
+							<CarbonCloseOutline fontSize={14} />
 						</StyledButton>
 						<StyledReactTooltip
 							id="remove"
@@ -205,7 +211,7 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 							<span>Remove</span>
 						</StyledReactTooltip>
 						<StyledButton data-tip data-for="info" onClick={toggleInfo}>
-							<IconCarbonInformation fontSize={14} />
+							<CarbonInformation fontSize={14} />
 						</StyledButton>
 						<StyledReactTooltip id="info" place="top" effect="solid">
 							<span>Info</span>
@@ -215,7 +221,7 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 							data-for="download"
 							onClick={handleDownloadFile}
 						>
-							<IconCarbonDownload fontSize={14} />
+							<CarbonDownload fontSize={14} />
 						</StyledButton>
 						<StyledReactTooltip id="download" place="top" effect="solid">
 							<span>Download CSV</span>

@@ -1,6 +1,6 @@
 import { useIconThemeHook } from "./IconThemeHook"
 import { styled, theme } from "@/stitches.config"
-
+import { CarbonMoon, CarbonSun } from "../../carbon-icons"
 const Button = styled("button", {
 	"backgroundColor": "$background",
 	"color": "$text",
@@ -19,9 +19,9 @@ export const IconTheme = ({ toggleTheme, colorTheme }) => {
 		<div>
 			<Button onClick={handleTheme}>
 				{colorTheme === "light" ? (
-					<IconCarbonMoon fontSize={24} />
+					<CarbonMoon fontSize={24} />
 				) : (
-					<IconCarbonSun fontSize={24} color={theme.colors.sun} />
+					<CarbonSun fontSize={24} color={theme.colors.sun} />
 				)}
 			</Button>
 		</div>

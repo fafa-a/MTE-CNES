@@ -1,6 +1,5 @@
-/* eslint-disable react/jsx-no-undef */
 import { styled } from "@/stitches.config"
-
+import { CarbonSearch } from "../../carbon-icons"
 const SDiv = styled("div", {
 	height: "100%",
 	width: "14vw",
@@ -11,7 +10,7 @@ const SDiv = styled("div", {
 export const SearchBar = () => {
 	return (
 		<SDiv>
-			<IconCarbonSearch fontSize={24} color={"$text"} />
+			<CarbonSearch fontSize={24} color={"$text"} />
 			<input type="text" placeholder="Search" />
 		</SDiv>
 	)

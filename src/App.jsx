@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 /* eslint-disable react-perf/jsx-no-new-object-as-prop */
 import { useAppHook } from "./AppHook"
 import { Map } from "@components/map/Map"
