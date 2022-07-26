@@ -14,4 +14,7 @@ export default defineConfig({
 			"@layers": path.resolve(__dirname, "./src/layers"),
 		},
 	},
+	build: {
+		chunkSizeWarningLimit: 1600,
+	},
 })
