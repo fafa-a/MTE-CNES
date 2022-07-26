@@ -1,10 +1,11 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import geojson from "rollup-plugin-geojson"
+import dsv from "@rollup/plugin-dsv"
 const path = require("path")
 // https://vitejs.dev/config/
 export default defineConfig({
-	plugins: [react(), geojson()],
+	plugins: [react(), dsv(), geojson()],
 	resolve: {
 		alias: {
 			"@": path.resolve(__dirname, "./src"),
