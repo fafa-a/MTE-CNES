@@ -2,6 +2,8 @@
 import { AppConfig } from "@/config"
 import { useSelector } from "react-redux"
 import { ObservationTypes } from "../../config"
+import { addColor } from "../../stores/chartSlice"
+import { useDispatch } from "react-redux"
 
 export default function useChartHook() {
 	const [chartData, setChartData] = useState([])
@@ -18,10 +20,12 @@ export default function useChartHook() {
 		(state) => state.lakes
 	)
 	const chart = useSelector((state) => state.chart)
+	const dispatch = useDispatch()
 	const { dataType, OPTIC, RADAR, DAY, PERIOD, REFERENCE, YEAR } = form
 	const { label, unit } = AppConfig.attributes[dataType]
-
-
+	useEffect(() => {
+		console.log({ chart })
+	}, [chart])
 	useEffect(() => {
 		if (!activeLakes) return
 		if (OPTIC) {
@@ -119,21 +123,20 @@ export default function useChartHook() {
 		(item, obsType, index, lakeName, indexColor) => {
 			if (!item) return
 			const { borderWidth } = chart.style.default
-
 			let { tension, pointRadius } = AppConfig.attributes[dataType]
-
 			let backgroundColor
 			let borderColor
 			let pointBackgroundColor
 
-			if (["OPTIC", "RADAR", "REFERENCE"].includes(obsType)) {
-				backgroundColor =
-					chart[dataType].style[obsType][indexColor].pointBackgroundColor
-				borderColor = chart[dataType].style[obsType][indexColor].borderColor
-				pointBackgroundColor =
-					chart[dataType].style[obsType][indexColor].pointBackgroundColor
-			}
 
+
+			if (["OPTIC", "RADAR", "REFERENCE"].includes(obsType)) {
+					backgroundColor =
+						chart[dataType].style[obsType][indexColor].pointBackgroundColor
+					borderColor = chart[dataType].style[obsType][indexColor].borderColor
+					pointBackgroundColor =
+						chart[dataType].style[obsType][indexColor].pointBackgroundColor
+      }
 			if (charType === "LINE") {
 				pointRadius = 0
 			}

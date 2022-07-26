@@ -79,22 +79,22 @@ const StyledSpanObsColor = styled("span", {
 })
 
 const StyledSpanLabel = styled("span", {
-  fontFamily: "sans-serif",
-  marginLeft: theme.space.xs,
-  fontSize: theme.fontSizes.xs,
+	fontFamily: "sans-serif",
+	marginLeft: theme.space.xs,
+	fontSize: theme.fontSizes.xs,
 })
 
 const StyledReactTooltip = styled(ReactTooltip, {
-  fontFamily: "sans-serif",
-  fontSize: `${theme.fontSizes.xs}!important`,
-  marginTop: "0 !important",
-  padding: "4px 8px !important",
-  zIndex: "1111 !important",
+	fontFamily: "sans-serif",
+	fontSize: `${theme.fontSizes.xs}!important`,
+	marginTop: "0 !important",
+	padding: "4px 8px !important",
+	zIndex: "1111 !important",
 })
 
 const backgroundBorderColored = {
-  borderColor: "#222",
-  backgroundColor: "#E5E5E5",
+	borderColor: "$borderSelectedColor",
+	backgroundColor: "$backgroundSelectedColor",
 }
 
 const increaseWidth = {

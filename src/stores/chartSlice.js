@@ -555,10 +555,21 @@ const initialState = {
 }
 
 export const chartSlice = createSlice({
-  name: "chart",
-  initialState,
+	name: "chart",
+	initialState,
+	reducers: {
+		addColor: (state, action) => {
+			const { dataType, obsType, color } = action.payload
+			console.log({ color })
+			state[dataType].style[obsType].push({
+				borderColor: color,
+				backgroundColor: color,
+				pointBackgroundColor: color,
+			})
+		},
+	},
 })
 
-export const { addChartData } = chartSlice.actions
+export const { addColor } = chartSlice.actions
 
 export default chartSlice.reducer

@@ -30,6 +30,8 @@ export const {
 			iconColor: "#A2B5BB",
 			iconHoverColor: "#222222",
 			sun: "#FFCD00",
+			borderSelectedColor: "#222222",
+			backgroundSelectedColor: "#E5E5E5",
 		},
 		fontSizes: {
 			xxs: "0.5rem",
@@ -72,6 +74,8 @@ export const darkTheme = createTheme({
 		text: "#FFFFFF",
 		iconColor: "#A2B5BB",
 		iconHoverColor: "#FFFFFF",
+		borderSelectedColor: "#FFFFFF",
+		backgroundSelectedColor: "#1D2476",
 	},
 })
 

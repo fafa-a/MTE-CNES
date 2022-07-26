@@ -2,6 +2,7 @@
 import { useSelector } from "react-redux"
 import { useDispatch } from "react-redux"
 import { addLake } from "./stores/lakesSlice"
+import { addColor } from "./stores/chartSlice"
 import {
 	AppConfig,
 	SeriePathUtils,
@@ -383,6 +384,41 @@ export function useAppHook() {
 		},
 		[handleValue, unit]
 	)
+	const addChartColor = useCallback(() => {
+		const randomColor = `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(
+			Math.random() * 255
+		)}, ${Math.floor(Math.random() * 255)}, 1)`
+		dispatch(
+			addColor({
+				dataType,
+				obsType: ObservationTypes.OPTIC,
+				color: randomColor,
+			})
+		)
+		let newColor = randomColor.replace(/,[^,]+$/, ",0.66)")
+		dispatch(
+			addColor({
+				dataType,
+				obsType: ObservationTypes.RADAR,
+				color: newColor,
+			})
+		)
+		newColor = randomColor.replace(/,[^,]+$/, ",0.33)")
+		dispatch(
+			addColor({
+				dataType,
+				obsType: ObservationTypes.REFERENCE,
+				color: newColor,
+			})
+		)
+	}, [dataType])
+
+	useEffect(() => {
+		console.log(activeLakes.length)
+		if (activeLakes.length > 10) {
+			addChartColor()
+		}
+	}, [activeLakes, addChartColor])
 
 	useEffect(() => {
 		handleFetchData()

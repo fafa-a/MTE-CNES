@@ -4,7 +4,7 @@ import { LakeSelection } from "./lake-selection/LakeSelection"
 import { styled, theme } from "@/stitches.config"
 import { v4 as uuid } from "@lukeed/uuid"
 
-const StyledContainer = styled("div", {
+const Container = styled("div", {
 	color: "$text",
 	display: "flex",
 	flexDirection: "column",
@@ -12,8 +12,9 @@ const StyledContainer = styled("div", {
 	padding: theme.space.sm,
 	minWidth: "100%",
 	maxWidth: "100%",
+	overflow: "auto",
 })
-const StyledH3 = styled("h3", {
+const H3 = styled("h3", {
 	fontFamily: "arial",
 	marginBottom: theme.space.sm,
 })
@@ -21,8 +22,9 @@ const StyledH3 = styled("h3", {
 export const LakeBoard = () => {
 	const { dataSelection } = useLakeBoardHook()
 	return (
-		<StyledContainer>
-			<StyledH3>Selected lakes</StyledH3>
+		<Container>
+			<H3>Selected lakes</H3>
+
 			{dataSelection.map((item, index) => (
 				<LakeSelection
 					key={uuid()}
@@ -32,6 +34,6 @@ export const LakeBoard = () => {
 					index={index}
 				/>
 			))}
-		</StyledContainer>
+		</Container>
 	)
 }
