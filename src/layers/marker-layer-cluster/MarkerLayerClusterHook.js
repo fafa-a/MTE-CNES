@@ -5,7 +5,7 @@ export default function useMarkerLayerClusterHook(data) {
 		const { LONG_WW, LAT_WW } = feature.properties
 		return [LAT_WW, LONG_WW]
 	})
-	const [zoomLevel, setZoomLevel] = useState(null)
+	const [zoomLevel, setZoomLevel] = useState(2.5)
 	const mapEvents = useMapEvents({
 		zoomend: () => {
 			setZoomLevel(mapEvents.getZoom())
