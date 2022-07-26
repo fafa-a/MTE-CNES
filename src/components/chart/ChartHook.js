@@ -38,6 +38,7 @@ export default function useChartHook() {
 		}
 		if (OPTIC && REFERENCE) {
 			setObsTypes([ObservationTypes.OPTIC, ObservationTypes.REFERENCE])
+
 		}
 		if (RADAR && REFERENCE) {
 			setObsTypes([ObservationTypes.RADAR, ObservationTypes.REFERENCE])
