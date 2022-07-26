@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 import { PropTypes } from "prop-types"
 
 export const PolygonLayer = ({ data }) => {
-  const [layer, setLayer] = useState(8)
+  const [layer, setLayer] = useState(null)
   const { id, activeLake, color, zoomLevel } = usePolygonLayerHook({
 		data,
 	})
