@@ -18,7 +18,6 @@ export default defineConfig({
 					extension: "jsx",
 				}),
 			],
-			dts: "./auto-imports.d.ts",
 			eslintrc: {
 				enabled: false, // Default `false`
 			},
