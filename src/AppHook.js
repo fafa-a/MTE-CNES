@@ -414,7 +414,6 @@ export function useAppHook() {
 	}, [dataType])
 
 	useEffect(() => {
-		console.log(activeLakes.length)
 		if (activeLakes.length > 10) {
 			addChartColor()
 		}
@@ -425,7 +424,7 @@ export function useAppHook() {
 	}, [fetchData, handleFetchData])
 
 	useEffect(() => {
-		if (!lakeData) return
+		if (!lakeData || activeLakes.length === 0) return
 		if (dataType === DataTypes.FILLING_RATE && !fillingRateReference.length)
 			return
 

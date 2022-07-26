@@ -171,6 +171,10 @@ export const lakesSlice = createSlice({
 				})
 			}
 		},
+		clearActiveLakes: (state) => {
+			state.activeLakes = []
+		},
+		clearActiveYears: (state, action) => {},
 	},
 })
 
@@ -186,6 +190,7 @@ export const {
 	toggleYearSelection,
 	addLakeInfo,
 	toggleLakeShowInfo,
+	clearActiveLakes,
 } = lakesSlice.actions
 
 export default lakesSlice.reducer

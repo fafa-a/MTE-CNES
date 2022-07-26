@@ -20,12 +20,8 @@ export default function useChartHook() {
 		(state) => state.lakes
 	)
 	const chart = useSelector((state) => state.chart)
-	const dispatch = useDispatch()
 	const { dataType, OPTIC, RADAR, DAY, PERIOD, REFERENCE, YEAR } = form
 	const { label, unit } = AppConfig.attributes[dataType]
-	useEffect(() => {
-		console.log({ chart })
-	}, [chart])
 	useEffect(() => {
 		if (!activeLakes) return
 		if (OPTIC) {

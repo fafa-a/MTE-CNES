@@ -560,7 +560,6 @@ export const chartSlice = createSlice({
 	reducers: {
 		addColor: (state, action) => {
 			const { dataType, obsType, color } = action.payload
-			console.log({ color })
 			state[dataType].style[obsType].push({
 				borderColor: color,
 				backgroundColor: color,
