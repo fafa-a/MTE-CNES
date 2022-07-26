@@ -37,7 +37,8 @@ export function useAppHook() {
 	const { getSeriePath, getTimeseriesPath } = SeriePathUtils
 	const dispatch = useDispatch()
 	const { unit } = AppConfig.attributes[dataType]
-  import.meta.globEager("/src/data/series/*/*.csv")
+ const allSeries = import.meta.globEager("/src/data/series/*")
+ console.log({ allSeries })
 	const toggleTheme = useCallback(() => {
 		setTheme(theme === "dark" ? "light" : "dark")
 	})
