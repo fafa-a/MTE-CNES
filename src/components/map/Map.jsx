@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import useMapHook from "./MapHook"
 import { LayersControl, MapContainer, TileLayer } from "react-leaflet"
 import { styled } from "@stitches/react"

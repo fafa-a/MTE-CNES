@@ -11,7 +11,6 @@ import PropTypes from "prop-types"
  * @param {Object} data
  * @returns {LayersControl.Overlay}
  */
-
 export const MarkerLayerCluster = ({ data }) => {
   const { coordinates, zoomLevel } = useMarkerLayerClusterHook(data)
 
