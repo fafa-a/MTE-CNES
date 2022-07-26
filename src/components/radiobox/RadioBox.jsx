@@ -8,7 +8,7 @@ const StyledLabel = styled("label", {
 	marginLeft: theme.space.sm,
 })
 
-export const Radiobox = ({ id, label, abbr, storeAction, value }) => {
+export const Radiobox = ({ id, label, abbr, storeAction, value, disabled }) => {
 	const { isChecked, onChange } = useRadioboxHook({
 		storeAction,
 		value,
@@ -21,6 +21,7 @@ export const Radiobox = ({ id, label, abbr, storeAction, value }) => {
 				onChange={onChange}
 				value={abbr}
 				checked={isChecked}
+				disabled={disabled}
 			/>
 			<StyledLabel htmlFor={id}>{label}</StyledLabel>
 		</div>
