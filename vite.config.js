@@ -15,11 +15,9 @@ export default defineConfig({
 		},
 	},
 	build: {
-		chunkSizeWarningLimit: 1600,
-	},
-	root: "./",
-	build: {
+		chunkSizeWarningLimit: 4600,
 		outDir: "dist",
 	},
+	root: "./",
 	publicDir: "assets",
 })
