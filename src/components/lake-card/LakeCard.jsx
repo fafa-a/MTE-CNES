@@ -1,5 +1,4 @@
-/* eslint-disable react/jsx-no-undef */
-/* eslint-disable no-undef */
+import { useState, useEffect, useCallback } from "react"
 import { styled, theme } from "@/stitches.config.js"
 import { toggleLakeShowInfo } from "../../stores/lakesSlice"
 import { useSelector } from "react-redux"
