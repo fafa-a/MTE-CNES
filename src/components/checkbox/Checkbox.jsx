@@ -28,9 +28,10 @@ export const Checkbox = ({ id, label, abbr, storeAction, value, disabled }) => {
 	)
 }
 Checkbox.propTypes = {
-  id: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  abbr: PropTypes.string.isRequired,
-  storeAction: PropTypes.func.isRequired,
-  value: PropTypes.bool.isRequired,
+	id: PropTypes.string.isRequired,
+	label: PropTypes.string.isRequired,
+	abbr: PropTypes.string.isRequired,
+	storeAction: PropTypes.func.isRequired,
+	value: PropTypes.bool.isRequired,
+	disabled: PropTypes.bool,
 }
