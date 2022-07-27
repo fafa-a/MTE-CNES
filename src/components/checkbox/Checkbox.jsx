@@ -8,23 +8,24 @@ const StyledLabel = styled("label", {
   marginLeft: theme.space.sm,
 })
 
-export const Checkbox = ({ id, label, abbr, storeAction, value }) => {
-  const { isChecked, onChange } = useCheckboxHook({
-    storeAction,
-    value,
-  })
-  return (
-    <div>
-      <input
-        type="checkbox"
-        id={id}
-        onChange={onChange}
-        value={abbr}
-        checked={isChecked}
-      />
-      <StyledLabel htmlFor={id}>{label}</StyledLabel>
-    </div>
-  )
+export const Checkbox = ({ id, label, abbr, storeAction, value, disabled }) => {
+	const { isChecked, onChange } = useCheckboxHook({
+		storeAction,
+		value,
+	})
+	return (
+		<div>
+			<input
+				type="checkbox"
+				id={id}
+				onChange={onChange}
+				value={abbr}
+				checked={isChecked}
+				disabled={disabled ? true : false}
+			/>
+			<StyledLabel htmlFor={id}>{label}</StyledLabel>
+		</div>
+	)
 }
 Checkbox.propTypes = {
   id: PropTypes.string.isRequired,
