@@ -31,7 +31,6 @@ export function useAppHook() {
 	const { activeLakes, lakeIdToDesactivate, dataLakes } = useSelector(
 		(state) => state.lakes
 	)
-	const { lakes } = useSelector((state) => state)
 	const { OPTIC, RADAR, DAY, PERIOD, REFERENCE, YEAR, dataType, charType } =
 		form
 	const { getSeriePath, getTimeseriesPath } = SeriePathUtils
