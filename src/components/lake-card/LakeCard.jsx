@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
+import { CarbonClose } from "../carbon-icons"
 import { styled, theme } from "@/stitches.config.js"
 import { toggleLakeShowInfo } from "../../stores/lakesSlice"
 import { useSelector } from "react-redux"
@@ -95,7 +96,7 @@ export const LakeCard = () => {
 		<SDiv>
 			<SButtonContainer>
 				<SButton data-tip data-for="close" onClick={closeInfo}>
-					<IconCarbonClose fontSize={14} />
+					<CarbonClose fontSize={14} />
 				</SButton>
 				<SReactTooltip id="close" place="right" effect="solid">
 					<span>Close</span>
