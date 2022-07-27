@@ -113,7 +113,7 @@ export const Form = () => {
 				<StyledDiv>
 					<StyledH3>Mode</StyledH3>
 					<StyledFlexRowDiv>
-						<Radiobox
+						<Checkbox
 							storeAction={toggleVolume}
 							id={modeTypesValues.VOLUME.label}
 							name="mode"
@@ -122,7 +122,7 @@ export const Form = () => {
 							value={form.VOLUME}
 							disabled="true"
 						/>
-						<Radiobox
+						<Checkbox
 							storeAction={toggleYear}
 							id={modeTypesValues.YEAR.label}
 							name="mode"
