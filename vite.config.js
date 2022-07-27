@@ -18,6 +18,6 @@ export default defineConfig({
 		chunkSizeWarningLimit: 4600,
 		// outDir: "dist",
 	},
-	// root: "./",
+	root: "./",
 	// publicDir: "assets",
 })
