@@ -53,7 +53,7 @@ export const LakeBoard = () => {
 			<HeadContainer>
 				<H3>Selected lakes</H3>
 				<Button data-tip data-for="removeSelection" onClick={clearSelection}>
-					<CarbonCloseOutline fontSize={14} />
+					<CarbonCloseOutline fontSize={18} />
 				</Button>
 				<Tooltip id="removeSelection" place="top" effect="solid">
 					<span>Remove selection</span>

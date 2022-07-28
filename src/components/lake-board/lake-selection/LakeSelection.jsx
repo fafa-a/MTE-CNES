@@ -172,7 +172,7 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 							data-for="visible"
 							onClick={toggleChartVisibilty}
 						>
-							<CarbonView fontSize={14} />
+							<CarbonView fontSize={16} />
 						</StyledButton>
 						<StyledReactTooltip id="visible" place="top" effect="solid">
 							<span>Visible</span>
@@ -186,7 +186,7 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 							data-for="hide"
 							onClick={toggleChartVisibilty}
 						>
-							<CarbonViewOff fontSize={14} />
+							<CarbonViewOff fontSize={16} />
 						</StyledButton>
 						<StyledReactTooltip id="hide" place="top" effect="solid">
 							<span>Hide chart</span>
@@ -195,23 +195,8 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 				)}
 				{!YEAR && (
 					<>
-						<StyledButton
-							data-tip
-							data-for="remove"
-							onClick={handleClickDesactiveLake}
-						>
-							<CarbonCloseOutline fontSize={14} />
-						</StyledButton>
-						<StyledReactTooltip
-							id="remove"
-							place="top"
-							effect="solid"
-							type="warning"
-						>
-							<span>Remove</span>
-						</StyledReactTooltip>
 						<StyledButton data-tip data-for="info" onClick={toggleInfo}>
-							<CarbonInformation fontSize={14} />
+							<CarbonInformation fontSize={16} />
 						</StyledButton>
 						<StyledReactTooltip id="info" place="top" effect="solid">
 							<span>Info</span>
@@ -221,10 +206,25 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 							data-for="download"
 							onClick={handleDownloadFile}
 						>
-							<CarbonDownload fontSize={14} />
+							<CarbonDownload fontSize={16} />
 						</StyledButton>
 						<StyledReactTooltip id="download" place="top" effect="solid">
 							<span>Download CSV</span>
+						</StyledReactTooltip>
+						<StyledButton
+							data-tip
+							data-for="remove"
+							onClick={handleClickDesactiveLake}
+						>
+							<CarbonCloseOutline fontSize={16} />
+						</StyledButton>
+						<StyledReactTooltip
+							id="remove"
+							place="top"
+							effect="solid"
+							type="warning"
+						>
+							<span>Remove</span>
 						</StyledReactTooltip>
 					</>
 				)}

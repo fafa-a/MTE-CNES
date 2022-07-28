@@ -6,6 +6,7 @@ export function CarbonSearch(props) {
 			width="1em"
 			height="1em"
 			viewBox="0 0 32 32"
+			fontSize={props.fontSize}
 			{...props}
 		>
 			<path
@@ -24,6 +25,7 @@ export function CarbonSun(props) {
 			width="1em"
 			height="1em"
 			viewBox="0 0 32 32"
+			fontSize={props.fontSize}
 			{...props}
 		>
 			<path
@@ -42,6 +44,7 @@ export function CarbonMoon(props) {
 			width="1em"
 			height="1em"
 			viewBox="0 0 32 32"
+			fontSize={props.fontSize}
 			{...props}
 		>
 			<path
@@ -60,6 +63,7 @@ export function CarbonCloseOutline(props) {
 			width="1em"
 			height="1em"
 			viewBox="0 0 32 32"
+			fontSize={props.fontSize}
 			{...props}
 		>
 			<path
@@ -82,6 +86,7 @@ export function CarbonView(props) {
 			width="1em"
 			height="1em"
 			viewBox="0 0 32 32"
+			fontSize={props.fontSize}
 			{...props}
 		>
 			<path
@@ -104,6 +109,7 @@ export function CarbonViewOff(props) {
 			width="1em"
 			height="1em"
 			viewBox="0 0 32 32"
+			fontSize={props.fontSize}
 			{...props}
 		>
 			<path
@@ -126,6 +132,7 @@ export function CarbonDownload(props) {
 			width="1em"
 			height="1em"
 			viewBox="0 0 32 32"
+			fontSize={props.fontSize}
 			{...props}
 		>
 			<path
@@ -144,6 +151,7 @@ export function CarbonInformation(props) {
 			width="1em"
 			height="1em"
 			viewBox="0 0 32 32"
+			fontSize={props.fontSize}
 			{...props}
 		>
 			<path
@@ -166,6 +174,7 @@ export function CarbonClose(props) {
 			width="1em"
 			height="1em"
 			viewBox="0 0 32 32"
+			fontSize={props.fontSize}
 			{...props}
 		>
 			<path
