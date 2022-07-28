@@ -2,12 +2,14 @@ import useRadioboxHook from "./RadioboxHook"
 import { styled, theme } from "@/stitches.config"
 import { PropTypes } from "prop-types"
 
-const StyledLabel = styled("label", {
+const Label = styled("label", {
 	fontFamily: "sans-serif",
 	fontSize: theme.fontSizes.base,
 	marginLeft: theme.space.sm,
 })
-
+const Input = styled("input", {
+	accentColor: "blue",
+})
 export const Radiobox = ({ id, label, abbr, storeAction, value, disabled }) => {
 	const { isChecked, onChange } = useRadioboxHook({
 		storeAction,
@@ -15,7 +17,7 @@ export const Radiobox = ({ id, label, abbr, storeAction, value, disabled }) => {
 	})
 	return (
 		<div>
-			<input
+			<Input
 				type="radio"
 				id={id}
 				onChange={onChange}
@@ -23,7 +25,7 @@ export const Radiobox = ({ id, label, abbr, storeAction, value, disabled }) => {
 				checked={isChecked}
 				disabled={disabled}
 			/>
-			<StyledLabel htmlFor={id}>{label}</StyledLabel>
+			<Label htmlFor={id}>{label}</Label>
 		</div>
 	)
 }

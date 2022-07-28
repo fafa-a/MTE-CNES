@@ -37,7 +37,7 @@ const StyledDiv = styled("div", {
 
 const StyledFlexRowDiv = styled("div", {
 	display: "flex",
-	justifyContent: "space-around",
+	justifyContent: "space-evenly",
 })
 
 const StyledH3 = styled("h3", {

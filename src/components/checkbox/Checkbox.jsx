@@ -2,10 +2,19 @@ import useCheckboxHook from "./CheckboxHook"
 import { styled, theme } from "@/stitches.config"
 import { PropTypes } from "prop-types"
 
-const StyledLabel = styled("label", {
-  fontFamily: "sans-serif",
-  fontSize: theme.fontSizes.base,
-  marginLeft: theme.space.sm,
+const Container = styled("div", {
+	display: "flex",
+	alignItems: "center",
+})
+
+const Input = styled("input", {
+	accentColor: "blue",
+})
+
+const Label = styled("label", {
+	fontFamily: "sans-serif",
+	fontSize: theme.fontSizes.base,
+	marginLeft: theme.space.xs,
 })
 
 export const Checkbox = ({ id, label, abbr, storeAction, value, disabled }) => {
@@ -14,8 +23,8 @@ export const Checkbox = ({ id, label, abbr, storeAction, value, disabled }) => {
 		value,
 	})
 	return (
-		<div>
-			<input
+		<Container>
+			<Input
 				type="checkbox"
 				id={id}
 				onChange={onChange}
@@ -23,8 +32,8 @@ export const Checkbox = ({ id, label, abbr, storeAction, value, disabled }) => {
 				checked={isChecked}
 				disabled={disabled}
 			/>
-			<StyledLabel htmlFor={id}>{label}</StyledLabel>
-		</div>
+			<Label htmlFor={id}>{label}</Label>
+		</Container>
 	)
 }
 Checkbox.propTypes = {
