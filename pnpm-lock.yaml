@@ -4,7 +4,7 @@ specifiers:
   '@ant-design/icons': ^4.7.0
   '@iconify-json/carbon': ^1.1.6
   '@lukeed/uuid': ^2.0.0
-  '@react-leaflet/core': ^2.0.0
+  '@react-leaflet/core': 1.1.0
   '@reduxjs/toolkit': ^1.8.2
   '@stitches/react': ^1.2.8
   '@svgr/core': ^6.2.1
@@ -43,7 +43,7 @@ specifiers:
 dependencies:
   '@ant-design/icons': 4.7.0_sfoxds7t5ydpegc3knd667wn6m
   '@lukeed/uuid': 2.0.0
-  '@react-leaflet/core': 2.0.0_6k6ga34dyylvilikktgvdmyx6a
+  '@react-leaflet/core': 1.1.0_6k6ga34dyylvilikktgvdmyx6a
   '@reduxjs/toolkit': 1.8.2_thunyjspsylz6iliyoygaytnnq
   '@stitches/react': 1.2.8_react@17.0.2
   '@svgr/core': 6.2.1
@@ -1765,8 +1765,8 @@ packages:
       fastq: 1.13.0
     dev: true
 
-  /@react-leaflet/core/1.1.1_6k6ga34dyylvilikktgvdmyx6a:
-    resolution: {integrity: sha512-7PGLWa9MZ5x/cWy8EH2VzI4T8q5WpuHbixzCDXqixP/WyqwIrg5NDUPgYuFnB4IEIZF+6nA265mYzswFo/h1Pw==}
+  /@react-leaflet/core/1.1.0_6k6ga34dyylvilikktgvdmyx6a:
+    resolution: {integrity: sha512-zFxMHgfjCi7khRVB7o7H8NoJl36NaezvfcaeEurVXx22lAGHFlTHiSuLOGA4tOiHj+Ep+Lo3uwUGJ3YM9BGkHg==}
     peerDependencies:
       leaflet: ^1.7.1
       react: ^17.0.1
@@ -1777,12 +1777,12 @@ packages:
       react-dom: 17.0.2_react@17.0.2
     dev: false
 
-  /@react-leaflet/core/2.0.0_6k6ga34dyylvilikktgvdmyx6a:
-    resolution: {integrity: sha512-SQQ5DCQIaLzvslN6wCXs5OWqtlvk1Ubv2n5d7zTM8SDl9hM5Rr2wVy7/nOCIY958D75/ovhq6ZoSvT7GLCX6sg==}
+  /@react-leaflet/core/1.1.1_6k6ga34dyylvilikktgvdmyx6a:
+    resolution: {integrity: sha512-7PGLWa9MZ5x/cWy8EH2VzI4T8q5WpuHbixzCDXqixP/WyqwIrg5NDUPgYuFnB4IEIZF+6nA265mYzswFo/h1Pw==}
     peerDependencies:
-      leaflet: ^1.8.0
-      react: ^18.0.0
-      react-dom: ^18.0.0
+      leaflet: ^1.7.1
+      react: ^17.0.1
+      react-dom: ^17.0.1
     dependencies:
       leaflet: 1.8.0
       react: 17.0.2
