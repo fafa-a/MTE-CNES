@@ -1,17 +1,17 @@
-/* eslint-disable no-undef */
 import { useDispatch } from "react-redux"
+import { useEffect, useState, useCallback } from "react"
 
 export default function useCheckboxHook({ storeAction, value }) {
-  const [isChecked, setIsChecked] = useState(false)
-  const dispatch = useDispatch()
+	const [isChecked, setIsChecked] = useState(false)
+	const dispatch = useDispatch()
 
-  useEffect(() => {
-    setIsChecked(value)
-  }, [value])
+	useEffect(() => {
+		setIsChecked(value)
+	}, [value])
 
-  const onChange = useCallback(() => {
-    dispatch(storeAction())
-  }, [dispatch, storeAction])
+	const onChange = useCallback(() => {
+		dispatch(storeAction())
+	}, [dispatch, storeAction])
 
-  return { isChecked, onChange }
+	return { isChecked, onChange }
 }

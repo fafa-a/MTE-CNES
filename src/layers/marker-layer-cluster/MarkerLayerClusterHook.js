@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { useMapEvents } from "react-leaflet"
 export default function useMarkerLayerClusterHook(data) {
 	const coordinates = data.features.map((feature) => {

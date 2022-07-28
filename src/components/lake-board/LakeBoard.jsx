@@ -1,76 +1,75 @@
-/* eslint-disable no-undef */
-  import ReactTooltip from "react-tooltip"
-	import useLakeBoardHook from "./LakeBoardHook"
-	import { LakeSelection } from "./lake-selection/LakeSelection"
-	import { styled, theme } from "@/stitches.config"
-	import { v4 as uuid } from "@lukeed/uuid"
+import ReactTooltip from "react-tooltip"
+import useLakeBoardHook from "./LakeBoardHook"
+import { LakeSelection } from "./lake-selection/LakeSelection"
+import { styled, theme } from "@/stitches.config"
+import { v4 as uuid } from "@lukeed/uuid"
+import { CarbonCloseOutline } from "../carbon-icons"
+const Container = styled("div", {
+	color: "$text",
+	display: "flex",
+	flexDirection: "column",
+	height: "45%",
+	padding: theme.space.sm,
+	minWidth: "100%",
+	maxWidth: "100%",
+	overflow: "auto",
+})
+const H3 = styled("h3", {
+	fontFamily: "arial",
+	marginBottom: theme.space.sm,
+})
 
-	const Container = styled("div", {
-		color: "$text",
-		display: "flex",
-		flexDirection: "column",
-		height: "45%",
-		padding: theme.space.sm,
-		minWidth: "100%",
-		maxWidth: "100%",
-		overflow: "auto",
-	})
-	const H3 = styled("h3", {
-		fontFamily: "arial",
-		marginBottom: theme.space.sm,
-	})
+const HeadContainer = styled("div", {
+	display: "flex",
+	justifyContent: "space-between",
+})
+const Button = styled("button", {
+	"borderStyle": "none",
+	"cursor": "pointer",
+	"height": "60%",
+	"padding": "0",
+	"display": "grid",
+	"placeItems": "center",
+	"width": "20px",
+	"backgroundColor": "transparent",
+	"color": "$iconColor",
 
-	const HeadContainer = styled("div", {
-		display: "flex",
-		justifyContent: "space-between",
-	})
-	const Button = styled("button", {
-		"borderStyle": "none",
-		"cursor": "pointer",
-		"height": "60%",
-		"padding": "0",
-		"display": "grid",
-		"placeItems": "center",
-		"width": "20px",
-		"backgroundColor": "transparent",
-		"color": "$iconColor",
+	"&:hover": {
+		color: "$iconHoverColor",
+	},
+})
+const Tooltip = styled(ReactTooltip, {
+	fontFamily: "sans-serif",
+	fontSize: `${theme.fontSizes.xs}!important`,
+	marginTop: "0 !important",
+	padding: "4px 8px !important",
+	zIndex: "1111 !important",
+})
 
-		"&:hover": {
-			color: "$iconHoverColor",
-		},
-	})
-	const Tooltip = styled(ReactTooltip, {
-		fontFamily: "sans-serif",
-		fontSize: `${theme.fontSizes.xs}!important`,
-		marginTop: "0 !important",
-		padding: "4px 8px !important",
-		zIndex: "1111 !important",
-	})
+export const LakeBoard = () => {
+	const { dataSelection, clearSelection } = useLakeBoardHook()
+	return (
+		<Container>
+			<HeadContainer>
+				<H3>Selected lakes</H3>
+				<Button data-tip data-for="removeSelection" onClick={clearSelection}>
+					<CarbonCloseOutline fontSize={14} />
+				</Button>
+				<Tooltip id="removeSelection" place="top" effect="solid">
+					<span>Remove selection</span>
+				</Tooltip>
+			</HeadContainer>
 
-	export const LakeBoard = () => {
-		const { dataSelection, clearSelection } = useLakeBoardHook()
-		return (
-			<Container>
-				<HeadContainer>
-					<H3>Selected lakes</H3>
-					<Button data-tip data-for="removeSelection" onClick={clearSelection}>
-						<IconCarbonCloseOutline fontSize={14} />
-					</Button>
-					<Tooltip id="removeSelection" place="top" effect="solid">
-						<span>Remove selection</span>
-					</Tooltip>
-				</HeadContainer>
-
-				{dataSelection.length > 0 &&
-					dataSelection.map((item, index) => (
-						<LakeSelection
-							key={uuid()}
-							id={item.id}
-							name={item.name}
-							coordinates={item.coordinates}
-							index={index}
-						/>
-					))}
-			</Container>
-		)
-	}
+			{dataSelection.length > 0 &&
+				dataSelection.map((item, index) => (
+					<LakeSelection
+						key={uuid()}
+						id={item.id}
+						name={item.name}
+						coordinates={item.coordinates}
+						index={index}
+					/>
+				))}
+		</Container>
+	)
+}

@@ -2,7 +2,6 @@ import DATA_TYPES from "./DataTypes"
 import OBSERVATION_TYPES from "./ObservationTypes"
 import DURATION_TYPES from "./DurationTypes"
 import CHART_TYPES from "./ChartTypes"
-import COMPARE_TYPES from "./ModeTypes"
 import MODE_TYPES from "./ModeTypes"
 
 const config = {

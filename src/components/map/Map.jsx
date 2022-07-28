@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import useMapHook from "./MapHook"
 import { LayersControl, MapContainer, TileLayer } from "react-leaflet"
 import { styled } from "@stitches/react"
@@ -19,7 +18,7 @@ export const Map = () => {
 	return (
 		<StyledMapContainer center={coordinates} zoom={2.5} scrollWheelZoom={true}>
 			<LayersControl position="topright">
-				<LayersControl.BaseLayer name="OSM Strets">
+				<LayersControl.BaseLayer checked name="OSM Strets">
 					<TileLayer
 						attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 						url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

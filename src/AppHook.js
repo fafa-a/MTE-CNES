@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+import { useEffect, useState, useCallback } from "react"
 import { useSelector } from "react-redux"
 import { useDispatch } from "react-redux"
 import { addLake } from "./stores/lakesSlice"
@@ -12,7 +12,6 @@ import {
 } from "./config"
 import { csv } from "d3"
 import { extractDataByYear, groupDataByYear } from "./utils"
-import { useEffect } from "react"
 import { desactiveLake } from "@stores/lakesSlice"
 
 export function useAppHook() {
@@ -32,13 +31,11 @@ export function useAppHook() {
 	const { activeLakes, lakeIdToDesactivate, dataLakes } = useSelector(
 		(state) => state.lakes
 	)
-	const { lakes } = useSelector((state) => state)
 	const { OPTIC, RADAR, DAY, PERIOD, REFERENCE, YEAR, dataType, charType } =
 		form
 	const { getSeriePath, getTimeseriesPath } = SeriePathUtils
 	const dispatch = useDispatch()
 	const { unit } = AppConfig.attributes[dataType]
-
 	const toggleTheme = useCallback(() => {
 		setTheme(theme === "dark" ? "light" : "dark")
 	})
