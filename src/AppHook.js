@@ -140,13 +140,14 @@ export function useAppHook() {
 	)
 
 	useEffect(() => {
-		if (activeLakes.length === 0) return
+    if (activeLakes.length === 0) return
 		const seriePathTmp = []
-		activeLakes
-			.map((lake) => {
-				return { id: lake.id, name: lake.name }
-			})
-			.forEach((lake) => {
+		const allActiveLakes = activeLakes.map((lake) => {
+			return { id: lake.id, name: lake.name }
+		})
+
+		for (const lake of allActiveLakes) {
+			if (!dataLakes[lake.id]?.[dataType]) {
 				const seriePathByday = getSeriePathByDay(lake.id, lake.name)
 				const seriePathByPeriod = getSeriePathByPeriod(lake.id, lake.name)
 				const referencePath = getTimeseriesPath(lake.id, "andalousie")
@@ -155,7 +156,9 @@ export function useAppHook() {
 					...seriePathByPeriod,
 					referencePath,
 				])
-			})
+			}
+		}
+
 		if (JSON.stringify(seriePathTmp) === JSON.stringify(seriePath)) return
 		setSeriePath(seriePathTmp)
 	}, [
