@@ -410,28 +410,30 @@ useEffect(() => {
 	handleFetchData()
 }, [fetchData, handleFetchData])
 
-useEffect(() => {
-	if (!lakeDataWithReference.length === 0) return
-	lakeDataWithReference.forEach((data, index) => {
-		dispatch(
-			addLake({
-				lakeId: activeLakes.at(-1).id,
-				dataType,
-				lakeData: data,
-				byYear: lakeDataByYear[index],
-				seriePath: seriePath[index],
-			})
-		)
-	})
-}, [lakeDataWithReference, lakeDataByYear, dispatch, seriePath, activeLakes])
+	useEffect(() => {
+		if (!lakeData || activeLakes.length === 0) return
+		if (dataType === DataTypes.FILLING_RATE && !fillingRateReference.length)
+			return
 
-useEffect(() => {
-	console.log({ lakes })
-}, [lakes])
-return {
-	showLakeInfo,
-	isOneLakeActive,
-	toggleTheme,
-	theme,
-}
-}
+		lakeDataWithReference.forEach((data, index) => {
+			dispatch(
+				addLake({
+					lakeId: activeLakes[index].id,
+					dataType,
+					lakeData: data,
+					byYear: lakeDataByYear[0],
+					seriePath: seriePath[index],
+				})
+			)
+		})
+		lakeData,
+		dataType,
+		fillingRateReference.length,
+		dispatch,
+		seriePath,
+		activeLakes,
+	])
+
+	return {
+		showLakeInfo,
+		isOneLakeActive,
