@@ -12,7 +12,6 @@ const SDiv = styled("div", {
 })
 
 export const Dashboard = () => {
-  console.log("dashboard")
 	return (
 		<SDiv>
 			<LakeBoard />
