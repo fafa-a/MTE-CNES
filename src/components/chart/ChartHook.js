@@ -471,7 +471,7 @@ export default function useChartHook() {
 			xAxisKey: "date",
 			yAxisKey: "value",
 		},
-		animation: false,
+		animation: true,
 	}
 
 	useEffect(() => {
