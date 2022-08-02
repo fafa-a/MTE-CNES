@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
+import { DataTypes } from "../config"
 
 const initialState = {
 	dataLakes: {},
@@ -27,23 +28,65 @@ const initialState = {
 		},
 	},
 	loadedLakes: [],
+	totalVolume: [],
 	lakeIdToDesactivate: "",
 	coordinatesLakeToCenter: [],
 }
+let lastByVolume = ""
 export const lakesSlice = createSlice({
 	name: "lakes",
 	initialState,
 	reducers: {
 		addLake: (state, action) => {
-			const { lakeId, dataType, lakeData, byYear, seriePath } = action.payload
+			const { lakeId, dataType, lakeData, byYear, byVolume, seriePath } =
+				action.payload
 			if (state.dataLakes[lakeId]) {
 				state.dataLakes[lakeId] = {
 					...state.dataLakes[lakeId],
 					[dataType]: {
 						raw: lakeData,
 						byYear,
+						byVolume: dataType === DataTypes.VOLUME ? byVolume : [],
 						seriePath,
 					},
+				}
+			}
+			if (dataType === DataTypes.VOLUME) {
+				if (JSON.stringify(byVolume) !== lastByVolume) {
+					lastByVolume = JSON.stringify(byVolume)
+					if (state.totalVolume.length === 0) {
+						state.totalVolume = byVolume
+					} else {
+						if (state.totalVolume[0].length > byVolume[0].length) {
+							const firstDate = byVolume[0][0].date
+							const lastDate = byVolume[0].at(-1).date
+							state.totalVolume = state.totalVolume.map((obs) => {
+								return obs.filter((el) => {
+									return el.date >= firstDate && el.date <= lastDate
+								})
+							})
+						}
+						if (byVolume[0].length > state.totalVolume[0].length) {
+							const firstDate = state.totalVolume[0][0].date
+							const lastDate = state.totalVolume[0].at(-1).date
+							byVolume.map((obs) => {
+								return obs.filter((el) => {
+									return el.date >= firstDate && el.date <= lastDate
+								})
+							})
+						}
+						state.totalVolume = state.totalVolume.map((obs, index) => {
+							return obs.map((el, i) => {
+								const { date, value } = byVolume[index][i]
+								if (el.date === date) {
+									return {
+										date: el.date,
+										value: el.value + value,
+									}
+								}
+							})
+						})
+					}
 				}
 			}
 
@@ -52,6 +95,7 @@ export const lakesSlice = createSlice({
 					[dataType]: {
 						raw: lakeData,
 						byYear,
+						byVolume,
 						seriePath,
 					},
 				}
