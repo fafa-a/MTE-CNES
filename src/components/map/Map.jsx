@@ -16,7 +16,7 @@ export const Map = () => {
 	const { coordinates } = useMapHook()
 
 	return (
-		<StyledMapContainer center={coordinates} zoom={12.5} scrollWheelZoom={true}>
+		<StyledMapContainer center={coordinates} zoom={2.5} scrollWheelZoom={true}>
 			<LayersControl position="topright">
 				<LayersControl.BaseLayer checked name="OSM Strets">
 					<TileLayer
