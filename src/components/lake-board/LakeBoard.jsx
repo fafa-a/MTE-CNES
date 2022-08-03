@@ -51,7 +51,7 @@ export const LakeBoard = () => {
 	return (
 		<Container>
 			<HeadContainer>
-				<H3>Selected lakes</H3>
+				<H3>Selected reservoirs</H3>
 				<Button data-tip data-for="removeSelection" onClick={clearSelection}>
 					<CarbonCloseOutline fontSize={18} />
 				</Button>

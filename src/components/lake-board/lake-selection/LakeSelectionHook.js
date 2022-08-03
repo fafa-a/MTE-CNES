@@ -20,7 +20,7 @@ export const useLakeSelectionHook = ({ id, coordinates, index }) => {
 	const [isSelected, setIsSelected] = useState(false)
 	const dispatch = useDispatch()
 	const chartOptions = useSelector((state) => state.chart)
-	const { dataType, OPTIC, RADAR, YEAR, REFERENCE } = useSelector(
+	const { dataType, OPTIC, RADAR, YEAR, REFERENCE, VOLUME } = useSelector(
 		(state) => state.form
 	)
 
@@ -127,6 +127,7 @@ export const useLakeSelectionHook = ({ id, coordinates, index }) => {
 	return {
 		toggleChartVisibilty,
 		handleClickDesactiveLake,
+
 		handleDownloadFile,
 		bgOptic,
 		bgRadar,
@@ -140,5 +141,6 @@ export const useLakeSelectionHook = ({ id, coordinates, index }) => {
 		YEAR,
 		activeLakes,
 		toggleInfo,
+		VOLUME,
 	}
 }

@@ -131,32 +131,35 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 		YEAR,
 		activeLakes,
 		toggleInfo,
+		VOLUME,
 	} = useLakeSelectionHook({ id, name, coordinates, index })
 
 	return (
 		<StyledDiv css={isSelected && backgroundBorderColored}>
-			<StyledDivObservationTypes>
-				{OPTIC && (
-					<StyledDivContainerObsTypes>
-						<StyledSpanObsColor style={bgOptic} />
-						<StyledSpanLabel>optic</StyledSpanLabel>
-					</StyledDivContainerObsTypes>
-				)}
-				{RADAR && (
-					<StyledDivContainerObsTypes>
-						<StyledSpanObsColor style={bgRadar} />
-						<StyledSpanLabel>radar</StyledSpanLabel>
-					</StyledDivContainerObsTypes>
-				)}
-				{REFERENCE && (
-					<StyledDivContainerObsTypes>
-						<StyledSpanObsColor style={bgReference} />
-						<StyledSpanLabel>ref</StyledSpanLabel>
-					</StyledDivContainerObsTypes>
-				)}
-			</StyledDivObservationTypes>
+			{!VOLUME && (
+				<StyledDivObservationTypes>
+					{OPTIC && (
+						<StyledDivContainerObsTypes>
+							<StyledSpanObsColor style={bgOptic} />
+							<StyledSpanLabel>optic</StyledSpanLabel>
+						</StyledDivContainerObsTypes>
+					)}
+					{RADAR && (
+						<StyledDivContainerObsTypes>
+							<StyledSpanObsColor style={bgRadar} />
+							<StyledSpanLabel>radar</StyledSpanLabel>
+						</StyledDivContainerObsTypes>
+					)}
+					{REFERENCE && (
+						<StyledDivContainerObsTypes>
+							<StyledSpanObsColor style={bgReference} />
+							<StyledSpanLabel>ref</StyledSpanLabel>
+						</StyledDivContainerObsTypes>
+					)}
+				</StyledDivObservationTypes>
+			)}
 			<StyledContainerP
-				onClick={toggleSelectedLake}
+				onClick={!VOLUME ? toggleSelectedLake : undefined}
 				css={YEAR && increaseWidth}
 			>
 				<StyledParagraph css={isSelected && fontBold}>
@@ -165,32 +168,36 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 				</StyledParagraph>
 			</StyledContainerP>
 			<StyledContainerButton css={YEAR && decreaseWidth}>
-				{!isVisible && (
+				{!VOLUME && (
 					<>
-						<StyledButton
-							data-tip
-							data-for="visible"
-							onClick={toggleChartVisibilty}
-						>
-							<CarbonView fontSize={16} />
-						</StyledButton>
-						<StyledReactTooltip id="visible" place="top" effect="solid">
-							<span>Visible</span>
-						</StyledReactTooltip>
-					</>
-				)}
-				{isVisible && (
-					<>
-						<StyledButton
-							data-tip
-							data-for="hide"
-							onClick={toggleChartVisibilty}
-						>
-							<CarbonViewOff fontSize={16} />
-						</StyledButton>
-						<StyledReactTooltip id="hide" place="top" effect="solid">
-							<span>Hide chart</span>
-						</StyledReactTooltip>
+						{!isVisible && (
+							<>
+								<StyledButton
+									data-tip
+									data-for="visible"
+									onClick={toggleChartVisibilty}
+								>
+									<CarbonView fontSize={16} />
+								</StyledButton>
+								<StyledReactTooltip id="visible" place="top" effect="solid">
+									<span>Visible</span>
+								</StyledReactTooltip>
+							</>
+						)}
+						{isVisible && (
+							<>
+								<StyledButton
+									data-tip
+									data-for="hide"
+									onClick={toggleChartVisibilty}
+								>
+									<CarbonViewOff fontSize={16} />
+								</StyledButton>
+								<StyledReactTooltip id="hide" place="top" effect="solid">
+									<span>Hide chart</span>
+								</StyledReactTooltip>
+							</>
+						)}
 					</>
 				)}
 				{!YEAR && (
@@ -201,16 +208,20 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 						<StyledReactTooltip id="info" place="top" effect="solid">
 							<span>Info</span>
 						</StyledReactTooltip>
-						<StyledButton
-							data-tip
-							data-for="download"
-							onClick={handleDownloadFile}
-						>
-							<CarbonDownload fontSize={16} />
-						</StyledButton>
-						<StyledReactTooltip id="download" place="top" effect="solid">
-							<span>Download CSV</span>
-						</StyledReactTooltip>
+						{!VOLUME && (
+							<>
+								<StyledButton
+									data-tip
+									data-for="download"
+									onClick={handleDownloadFile}
+								>
+									<CarbonDownload fontSize={16} />
+								</StyledButton>
+								<StyledReactTooltip id="download" place="top" effect="solid">
+									<span>Download CSV</span>
+								</StyledReactTooltip>
+							</>
+						)}
 						<StyledButton
 							data-tip
 							data-for="remove"

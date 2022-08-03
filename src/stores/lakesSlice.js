@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, current } from "@reduxjs/toolkit"
 import { DataTypes } from "../config"
 
 const initialState = {
@@ -33,6 +33,7 @@ const initialState = {
 	coordinatesLakeToCenter: [],
 }
 let lastByVolume = ""
+let lastDataType = ""
 export const lakesSlice = createSlice({
 	name: "lakes",
 	initialState,
@@ -41,6 +42,11 @@ export const lakesSlice = createSlice({
 			const { lakeId, dataType, lakeData, byYear, byVolume, seriePath } =
 				action.payload
 			if (state.dataLakes[lakeId]) {
+				if (
+					dataType === DataTypes.VOLUME &&
+					JSON.stringify(byVolume) === lastByVolume
+				)
+					return
 				state.dataLakes[lakeId] = {
 					...state.dataLakes[lakeId],
 					[dataType]: {
@@ -51,13 +57,14 @@ export const lakesSlice = createSlice({
 					},
 				}
 			}
+			lastDataType = dataType
 			if (dataType === DataTypes.VOLUME) {
 				if (JSON.stringify(byVolume) !== lastByVolume) {
 					lastByVolume = JSON.stringify(byVolume)
 					if (state.totalVolume.length === 0) {
-						state.totalVolume = byVolume
+						state.totalVolume = [...byVolume]
 					} else {
-						if (state.totalVolume[0].length > byVolume[0].length) {
+						if (state.totalVolume[0]?.length > byVolume[0].length) {
 							const firstDate = byVolume[0][0].date
 							const lastDate = byVolume[0].at(-1).date
 							state.totalVolume = state.totalVolume.map((obs) => {
@@ -66,7 +73,7 @@ export const lakesSlice = createSlice({
 								})
 							})
 						}
-						if (byVolume[0].length > state.totalVolume[0].length) {
+						if (byVolume[0].length > state.totalVolume[0]?.length) {
 							const firstDate = state.totalVolume[0][0].date
 							const lastDate = state.totalVolume[0].at(-1).date
 							byVolume.map((obs) => {
@@ -154,6 +161,23 @@ export const lakesSlice = createSlice({
 					(lake) => lake.id !== lakeId
 				)
 			state.lakeIdToDesactivate = ""
+			if (state.activeLakes.length === 0) {
+				state.totalVolume = []
+			}
+			if (state.activeLakes.length > 0) {
+				state.totalVolume = state.totalVolume.map((obs, index) => {
+					return obs.map((el, i) => {
+						const { date, value } =
+							state.dataLakes[lakeId][DataTypes.VOLUME].byVolume[index][i]
+						if (el.date === date) {
+							return {
+								date: el.date,
+								value: el.value - value,
+							}
+						}
+					})
+				})
+			}
 		},
 		toggleLakeChartVisibility: (state, action) => {
 			const { lakeId } = action.payload

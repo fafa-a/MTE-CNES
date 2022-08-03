@@ -67,9 +67,6 @@ export default function useChartHook() {
 			setChartData([])
 		}
 	}, [dataType, lastDataTypes, lastObstypes, obsTypes])
-	useEffect(() => {
-		console.log({ dataSets })
-	}, [dataSets])
 
 	useEffect(() => {
 		if (!Object.values(dataLakes).length) return
@@ -93,7 +90,6 @@ export default function useChartHook() {
 				}
 			}
 		}
-		console.log({ dataTmp })
 
 		if (YEAR) {
 			const { id } = Object.values(activeLakes).at(-1)
@@ -301,7 +297,6 @@ export default function useChartHook() {
 			const lastDateGraph = getChartFirstDateNextMonth(allDatesSorted.at(-1))
 			setDateMax(lastDateGraph)
 		}
-
 		if (YEAR) {
 			chartData.forEach((year) => {
 				Object.values(year).forEach((obs, index) => {
@@ -447,8 +442,8 @@ export default function useChartHook() {
 
 					afterLabel(context) {
 						if (!VOLUME) return
-						const { date } = context.raw
 						if (VOLUME) {
+							const { date } = context.raw
 							const { index } = context.dataset
 							const allId = activeLakes.map((lake) => lake.id)
 							const allValue = allId.map((id) => {

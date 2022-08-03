@@ -498,10 +498,6 @@ useEffect(() => {
 	fullDataOfVolume,
 ])
 
-useEffect(() => {
-	console.log({ lakes })
-}, [lakes])
-
 	return {
 		showLakeInfo,
 		isOneLakeActive,

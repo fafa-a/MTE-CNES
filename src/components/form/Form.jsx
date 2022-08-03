@@ -90,7 +90,7 @@ export const Form = () => {
 					</StyledFlexRowDiv>
 				</StyledDiv>
 				<StyledDiv>
-					<StyledH3>Observation periods</StyledH3>
+					<StyledH3>Observation depth</StyledH3>
 					<StyledFlexRowDiv>
 						<Radiobox
 							storeAction={toggleDay}
