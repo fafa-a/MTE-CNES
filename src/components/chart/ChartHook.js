@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import { AppConfig } from "@/config"
 import { useSelector } from "react-redux"
-import { ObservationTypes } from "../../config"
+import { DataTypes, ObservationTypes } from "../../config"
 import { useEffect, useState, useCallback } from "react"
 export default function useChartHook() {
 	const [chartData, setChartData] = useState([])
@@ -14,11 +14,11 @@ export default function useChartHook() {
 	const [scales, setScales] = useState()
 	const form = useSelector((state) => state.form)
 	const { charType } = form
-	const { activeLakes, activeYears, dataLakes } = useSelector(
+	const { activeLakes, activeYears, dataLakes, totalVolume } = useSelector(
 		(state) => state.lakes
 	)
 	const chart = useSelector((state) => state.chart)
-	const { dataType, OPTIC, RADAR, DAY, PERIOD, REFERENCE, YEAR } = form
+	const { dataType, OPTIC, RADAR, DAY, PERIOD, REFERENCE, YEAR, VOLUME } = form
 	const { label, unit } = AppConfig.attributes[dataType]
 	useEffect(() => {
 		if (!activeLakes) return
@@ -36,7 +36,6 @@ export default function useChartHook() {
 		}
 		if (OPTIC && REFERENCE) {
 			setObsTypes([ObservationTypes.OPTIC, ObservationTypes.REFERENCE])
-
 		}
 		if (RADAR && REFERENCE) {
 			setObsTypes([ObservationTypes.RADAR, ObservationTypes.REFERENCE])
@@ -68,16 +67,24 @@ export default function useChartHook() {
 			setChartData([])
 		}
 	}, [dataType, lastDataTypes, lastObstypes, obsTypes])
+	useEffect(() => {
+		console.log({ dataSets })
+	}, [dataSets])
 
 	useEffect(() => {
 		if (!Object.values(dataLakes).length) return
 		const dataTmp = []
 
 		if (!YEAR) {
+			if (VOLUME) {
+				dataTmp.push([totalVolume])
+			}
 			for (const lake of activeLakes) {
 				const { id } = lake
 				if (!dataLakes[id][dataType]?.byYear) continue
-				const dataRaw = dataLakes[id][dataType].raw
+				const dataRaw = VOLUME
+					? dataLakes[id][dataType].byVolume
+					: dataLakes[id][dataType].raw
 				if (!REFERENCE) {
 					dataTmp.push([dataRaw.slice(0, 2)])
 				}
@@ -86,6 +93,7 @@ export default function useChartHook() {
 				}
 			}
 		}
+		console.log({ dataTmp })
 
 		if (YEAR) {
 			const { id } = Object.values(activeLakes).at(-1)
@@ -123,15 +131,13 @@ export default function useChartHook() {
 			let borderColor
 			let pointBackgroundColor
 
-
-
 			if (["OPTIC", "RADAR", "REFERENCE"].includes(obsType)) {
-					backgroundColor =
-						chart[dataType].style[obsType][indexColor].pointBackgroundColor
-					borderColor = chart[dataType].style[obsType][indexColor].borderColor
-					pointBackgroundColor =
-						chart[dataType].style[obsType][indexColor].pointBackgroundColor
-      }
+				backgroundColor =
+					chart[dataType].style[obsType][indexColor].pointBackgroundColor
+				borderColor = chart[dataType].style[obsType][indexColor].borderColor
+				pointBackgroundColor =
+					chart[dataType].style[obsType][indexColor].pointBackgroundColor
+			}
 			if (charType === "LINE") {
 				pointRadius = 0
 			}
@@ -162,20 +168,33 @@ export default function useChartHook() {
 			if (!YEAR) {
 				xAxisID = "x"
 			}
+			const isHidden = () => {
+				if (VOLUME && lakeName !== undefined) {
+					return true
+				}
+				if (VOLUME && lakeName === undefined) {
+					return false
+				}
+				if (!YEAR && !VOLUME) {
+					return !Object.values(activeLakes)[indexColor].chartVisible
+				}
+				if (YEAR && !VOLUME) {
+					return !Object.values(activeYears)[indexColor].chartVisible
+				}
+			}
 			return {
 				backgroundColor,
 				borderColor,
 				pointBackgroundColor,
 				borderWidth,
-				data: YEAR ? item : item,
+				data: item,
+				index,
 				label: `${obsType}`,
 				lakeName: `${lakeName}`,
 				pointRadius,
 				tension,
 				xAxisID,
-				hidden: !YEAR
-					? !Object.values(activeLakes)[indexColor].chartVisible
-					: !Object.values(activeYears)[indexColor].chartVisible,
+				hidden: isHidden(),
 			}
 		},
 		[chart, charType, dataType, obsTypes, unit, YEAR]
@@ -233,8 +252,8 @@ export default function useChartHook() {
 		}
 	}, [chart, YEAR, dataType, charType, unit])
 
-	const getChartStartDate = useCallback((arr) => {
-		const minDatevalue = new Date(arr.shift())
+	const getChartStartDate = useCallback((date) => {
+		const minDatevalue = new Date(date)
 		const firstDayMonth = new Date(
 			minDatevalue.getFullYear(),
 			minDatevalue.getMonth(),
@@ -243,8 +262,8 @@ export default function useChartHook() {
 		return firstDayMonth
 	}, [])
 
-	const getChartFirstDateNextMonth = useCallback((arr) => {
-		const maxDateValue = new Date(arr.at(-1))
+	const getChartFirstDateNextMonth = useCallback((date) => {
+		const maxDateValue = new Date(date)
 		const nextMonth = new Date(
 			maxDateValue.getFullYear(),
 			maxDateValue.getMonth() + 1,
@@ -252,7 +271,6 @@ export default function useChartHook() {
 		)
 		return nextMonth
 	}, [])
-
 	useEffect(() => {
 		const arr = []
 		const allDates = []
@@ -266,24 +284,21 @@ export default function useChartHook() {
 							itm,
 							obsTypes[idx],
 							idx,
-							activeLakes.map((lake) => lake.name)[index],
+							VOLUME
+								? activeLakes.map((lake) => lake.name)[index - 1]
+								: activeLakes.map((lake) => lake.name)[index],
 							index
 						)
-						const itemDates = itm
-							.filter(
-								(el) => !isNaN(el.value) && el.date !== "" && el.value !== "0"
-							)
-							.map((el) => el.date)
+						const itemDates = itm.map((el) => el.date)
 						allDates.push(...itemDates)
 						arr.push(data)
 					})
 				})
 			})
 			allDatesSorted = allDates.sort((a, b) => new Date(a) - new Date(b))
-			const firstDateGraph = getChartStartDate(allDatesSorted)
+			const firstDateGraph = getChartStartDate(allDatesSorted[0])
 			setDateMin(firstDateGraph)
-
-			const lastDateGraph = getChartFirstDateNextMonth(allDatesSorted)
+			const lastDateGraph = getChartFirstDateNextMonth(allDatesSorted.at(-1))
 			setDateMax(lastDateGraph)
 		}
 
@@ -298,15 +313,11 @@ export default function useChartHook() {
 							activeLakes.at(-1).name,
 							index
 						)
-						// const itemDates = item.map(el =>
-						//   el
-						//     .filter(el => !isNaN(el.value) && el.date !== "")
-						//     .map(el => new Date(el.date))
-						// )
-						// const datesSorted = itemDates[0].sort((a, b) => a - b)
-						// const firstDateGraph = getChartStartDate(datesSorted)
+
+						// const firstDateGraph = getChartStartDate(itm[0].date)
 						// setDateMin(firstDateGraph)
-						// const lastDateGraph = getChartFirstDateNextMonth(datesSorted)
+
+						// const lastDateGraph = getChartFirstDateNextMonth(itm.at(-1).date)
 						// setDateMax(lastDateGraph)
 						arr.push(data)
 					})
@@ -416,6 +427,7 @@ export default function useChartHook() {
 						return label
 					},
 					afterTitle(context) {
+						if (VOLUME) return
 						const { lakeName } = context[0].dataset
 						return `${lakeName}`
 					},
@@ -425,7 +437,31 @@ export default function useChartHook() {
 					},
 					label(context) {
 						const { formattedValue } = context
-						return ` ${label}: ${formattedValue} ${unit}`
+						if (!VOLUME) {
+							return ` ${label}: ${formattedValue} ${unit}`
+						}
+						if (VOLUME) {
+							return ` Total ${label}: ${formattedValue} ${unit}`
+						}
+					},
+
+					afterLabel(context) {
+						if (!VOLUME) return
+						const { date } = context.raw
+						if (VOLUME) {
+							const { index } = context.dataset
+							const allId = activeLakes.map((lake) => lake.id)
+							const allValue = allId.map((id) => {
+								return dataLakes[id][DataTypes.VOLUME].byVolume[index]
+									.filter((item) => item.date === date)
+									.map((item) => item.value)
+							})
+							return allValue.map((val, index) => {
+								const { name } = Object.values(activeLakes)[index]
+								const value = val[0].toFixed(3)
+								return ` ${name}: ${value} ${unit}`
+							})
+						}
 					},
 				},
 			},
