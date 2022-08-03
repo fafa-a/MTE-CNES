@@ -62,6 +62,7 @@ export const formSlice = createSlice({
 		},
 		toggleVolume: (state) => {
 			state.VOLUME = !state.VOLUME
+      state.dataType = state.VOLUME ? DataTypes.VOLUME : DataTypes.FILLING_RATE
 			state.isCleared = false
 		},
 		cleanForm: (state) => {

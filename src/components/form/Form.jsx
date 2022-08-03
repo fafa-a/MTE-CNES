@@ -119,7 +119,6 @@ export const Form = () => {
 							label={modeTypesValues.VOLUME.label}
 							abbr={modeTypesValues.VOLUME.label}
 							value={form.VOLUME}
-							disabled={true}
 						/>
 						<Checkbox
 							storeAction={toggleYear}
