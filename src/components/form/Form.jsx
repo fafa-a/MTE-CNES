@@ -1,13 +1,12 @@
 import useFormHook from "./FormHook"
 import { Checkbox } from "@components/checkbox/Checkbox"
-import { Button } from "@components/button/Button"
 import { Select } from "@components/select/Select"
 import { SelectOption } from "@components/select/SelectOption"
 import { styled, theme } from "@/stitches.config"
 import { DataTypes, ChartTypes, ModeTypes } from "../../config"
-
+import { CarbonDocumentDownload, CarbonZoomReset } from "../carbon-icons"
+import ReactTooltip from "react-tooltip"
 import {
-	cleanForm,
 	toggleOptic,
 	toggleRadar,
 	toggleDay,
@@ -31,24 +30,45 @@ const StyledContainer = styled("div", {
 	maxWidth: "100%",
 })
 
-const StyledDiv = styled("div", {
+const Div = styled("div", {
 	marginBottom: theme.space.base,
 })
 
-const StyledFlexRowDiv = styled("div", {
+const DivFlexRow = styled("div", {
 	display: "flex",
 	justifyContent: "space-evenly",
 })
 
-const StyledH3 = styled("h3", {
+const H3 = styled("h3", {
 	fontFamily: "arial",
 	marginBottom: theme.space.sm,
 })
-const StyledButton = styled("button", {
+const ButtonIconContainer = styled("div", {
+	marginTop: theme.space.xl,
+	width: "100%",
+	display: "flex",
+	justifyContent: "end",
+})
+
+const ButtonIcon = styled("button", {
+	"backgroundColor": "$background",
+	"color": "$iconColor",
+	"cursor": "pointer",
+	"borderColor": "$iconColor",
+	"borderRadius": theme.borderRadius.xs,
+	"marginLeft": theme.space.xs,
+	"&:hover": {
+		borderColor: "$iconHoverColor",
+		color: "$iconHoverColor",
+	},
+})
+
+const Tooltip = styled(ReactTooltip, {
 	fontFamily: "sans-serif",
-	textTransform: "capitalize",
-	marginTop: theme.space.sm,
-	cursor: "pointer",
+	fontSize: `${theme.fontSizes.xs}!important`,
+	marginTop: "0 !important",
+	padding: "4px 8px !important",
+	zIndex: "1111 !important",
 })
 export const Form = () => {
 	const {
@@ -59,13 +79,14 @@ export const Form = () => {
 		form,
 		modeTypesValues,
 		downloadChartImage,
+		resetZoomChart,
 	} = useFormHook()
 	return (
 		<StyledContainer>
 			<form action="">
-				<StyledDiv>
-					<StyledH3>Observation types</StyledH3>
-					<StyledFlexRowDiv>
+				<Div>
+					<H3>Observation types</H3>
+					<DivFlexRow>
 						<Checkbox
 							storeAction={toggleOptic}
 							id={observationTypesValues.OPTIC.abbr}
@@ -87,11 +108,11 @@ export const Form = () => {
 							abbr={observationTypesValues.REFERENCE.label}
 							value={form.REFERENCE}
 						/>
-					</StyledFlexRowDiv>
-				</StyledDiv>
-				<StyledDiv>
-					<StyledH3>Observation depth</StyledH3>
-					<StyledFlexRowDiv>
+					</DivFlexRow>
+				</Div>
+				<Div>
+					<H3>Observation depth</H3>
+					<DivFlexRow>
 						<Radiobox
 							storeAction={toggleDay}
 							id={durationValues.DAY.abbr}
@@ -108,11 +129,11 @@ export const Form = () => {
 							abbr={durationValues.PERIOD.abbr}
 							value={form.PERIOD}
 						/>
-					</StyledFlexRowDiv>
-				</StyledDiv>
-				<StyledDiv>
-					<StyledH3>Mode</StyledH3>
-					<StyledFlexRowDiv>
+					</DivFlexRow>
+				</Div>
+				<Div>
+					<H3>Mode</H3>
+					<DivFlexRow>
 						<Checkbox
 							storeAction={toggleVolume}
 							id={modeTypesValues.VOLUME.label}
@@ -127,10 +148,10 @@ export const Form = () => {
 							abbr={modeTypesValues.YEAR.label}
 							value={form.YEAR}
 						/>
-					</StyledFlexRowDiv>
-				</StyledDiv>
-				<StyledDiv>
-					<StyledH3>Attributes</StyledH3>
+					</DivFlexRow>
+				</Div>
+				<Div>
+					<H3>Attributes</H3>
 					<Select setAttributeValue={setAttributeValue} value={form.dataType}>
 						<SelectOption
 							value={DataTypes.FILLING_RATE}
@@ -145,9 +166,9 @@ export const Form = () => {
 							label={dataTypesValues.VOLUME.label}
 						/>
 					</Select>
-				</StyledDiv>
-				<StyledDiv>
-					<StyledH3>Chart types</StyledH3>
+				</Div>
+				<Div>
+					<H3>Chart types</H3>
 					<Select setAttributeValue={setChartType} value={form.chartType}>
 						<SelectOption
 							value={ChartTypes.LINE}
@@ -158,11 +179,21 @@ export const Form = () => {
 							label={chartTypesValues.SCATTER.label}
 						/>
 					</Select>
-				</StyledDiv>
-				<Button type="reset" value="clear form" cleanForm={cleanForm} />
-				<StyledButton onClick={downloadChartImage}>
-					Download chart image
-				</StyledButton>
+				</Div>
+				<ButtonIconContainer>
+					<ButtonIcon data-tip data-for="reset-zoom" onClick={resetZoomChart}>
+						<CarbonZoomReset fontSize={20} />
+					</ButtonIcon>
+					<Tooltip id="reset-zoom" place="top" effect="solid">
+						<span>Reset zoom chart</span>
+					</Tooltip>
+					<ButtonIcon data-tip data-for="download" onClick={downloadChartImage}>
+						<CarbonDocumentDownload fontSize={20} />
+					</ButtonIcon>
+					<Tooltip id="download" place="top" effect="solid">
+						<span>Download chart image</span>
+					</Tooltip>
+				</ButtonIconContainer>
 			</form>
 		</StyledContainer>
 	)

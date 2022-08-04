@@ -66,7 +66,7 @@ const StyledParagraph = styled("p", {
 const StyledDivObservationTypes = styled("div", {
 	height: "100%",
 	display: "flex",
-	flexDirection: "column",
+flexDirection: "column",
 	justifyContent: "space-evenly",
 	width: "20%",
 	// paddingLeft: theme.space.sm,

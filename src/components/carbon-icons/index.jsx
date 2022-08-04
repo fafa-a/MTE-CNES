@@ -184,3 +184,45 @@ export function CarbonClose(props) {
 		</svg>
 	)
 }
+
+export function CarbonDocumentDownload(props) {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			xmlnsXlink="http://www.w3.org/1999/xlink"
+			width="1em"
+			height="1em"
+			viewBox="0 0 32 32"
+			fontSize={props.fontSize}
+			{...props}
+		>
+			<path
+				fill="currentColor"
+				d="m30 25l-1.414-1.414L26 26.172V18h-2v8.172l-2.586-2.586L20 25l5 5l5-5z"
+			></path>
+			<path
+				fill="currentColor"
+				d="M18 28H8V4h8v6a2.006 2.006 0 0 0 2 2h6v3h2v-5a.91.91 0 0 0-.3-.7l-7-7A.909.909 0 0 0 18 2H8a2.006 2.006 0 0 0-2 2v24a2.006 2.006 0 0 0 2 2h10Zm0-23.6l5.6 5.6H18Z"
+			></path>
+		</svg>
+	)
+}
+
+export function CarbonZoomReset(props) {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			xmlnsXlink="http://www.w3.org/1999/xlink"
+			width="1em"
+			height="1em"
+			viewBox="0 0 32 32"
+			fontSize={props.fontSize}
+			{...props}
+		>
+			<path
+				fill="currentColor"
+				d="M22.448 21A10.855 10.855 0 0 0 25 14A10.99 10.99 0 0 0 6 6.466V2H4v8h8V8H7.332a8.977 8.977 0 1 1-2.1 8h-2.04A11.012 11.012 0 0 0 14 25a10.855 10.855 0 0 0 7-2.552L28.586 30L30 28.586Z"
+			></path>
+		</svg>
+	)
+}

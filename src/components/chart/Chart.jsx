@@ -46,13 +46,17 @@ const StyledDiv = styled("div", {
 })
 
 export const Chart = () => {
-  const { data, options, charType } = useChartHook()
+  const { data, options, charType, chartRef } = useChartHook()
 
   return (
-    <StyledDiv>
-      {charType === "LINE" && <Line options={options} data={data} />}
-      {charType === "SCATTER" && <Scatter options={options} data={data} />}
-    </StyledDiv>
-  )
+		<StyledDiv>
+			{charType === "LINE" && (
+				<Line options={options} data={data} ref={chartRef} />
+			)}
+			{charType === "SCATTER" && (
+				<Scatter options={options} data={data} ref={chartRef} />
+			)}
+		</StyledDiv>
+	)
 }
 //

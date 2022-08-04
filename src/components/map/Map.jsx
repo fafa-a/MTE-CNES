@@ -18,7 +18,7 @@ export const Map = () => {
 	return (
 		<StyledMapContainer center={coordinates} zoom={2.5} scrollWheelZoom={true}>
 			<LayersControl position="topright">
-				<LayersControl.BaseLayer checked name="OSM Strets">
+				<LayersControl.BaseLayer checked name="OSM Streets">
 					<TileLayer
 						attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 						url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

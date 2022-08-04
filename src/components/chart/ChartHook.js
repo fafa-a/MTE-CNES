@@ -1,8 +1,9 @@
 /* eslint-disable no-undef */
 import { AppConfig } from "@/config"
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import { DataTypes, ObservationTypes } from "../../config"
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState, useCallback, useRef } from "react"
+import { handleResetZoom } from "../../stores/chartSlice"
 export default function useChartHook() {
 	const [chartData, setChartData] = useState([])
 	const [dataSets, setDataSets] = useState([])
@@ -18,8 +19,11 @@ export default function useChartHook() {
 		(state) => state.lakes
 	)
 	const chart = useSelector((state) => state.chart)
+	const { zoomReset } = chart
 	const { dataType, OPTIC, RADAR, DAY, PERIOD, REFERENCE, YEAR, VOLUME } = form
 	const { label, unit } = AppConfig.attributes[dataType]
+	const chartRef = useRef()
+	const dispatch = useDispatch()
 	useEffect(() => {
 		if (!activeLakes) return
 		if (OPTIC) {
@@ -69,6 +73,13 @@ export default function useChartHook() {
 	}, [dataType, lastDataTypes, lastObstypes, obsTypes])
 
 	useEffect(() => {
+		if (zoomReset) {
+			chartRef.current.resetZoom()
+			dispatch(handleResetZoom({ zoom: false }))
+		}
+	}, [zoomReset])
+
+	useEffect(() => {
 		if (!Object.values(dataLakes).length) return
 		const dataTmp = []
 
@@ -78,7 +89,7 @@ export default function useChartHook() {
 			}
 			for (const lake of activeLakes) {
 				const { id } = lake
-				if (!dataLakes[id][dataType]?.byYear) continue
+				if (!dataLakes[id][dataType]?.raw) continue
 				const dataRaw = VOLUME
 					? dataLakes[id][dataType].byVolume
 					: dataLakes[id][dataType].raw
@@ -116,7 +127,7 @@ export default function useChartHook() {
 		setChartData(dataTmp)
 		setLastDataTypes(dataType)
 		setLastObstypes(obsTypes)
-	}, [dataLakes, REFERENCE, YEAR, dataType, obsTypes])
+	}, [dataLakes, REFERENCE, YEAR, dataType, obsTypes, VOLUME])
 
 	const setDataLines = useCallback(
 		(item, obsType, index, lakeName, indexColor) => {
@@ -247,7 +258,7 @@ export default function useChartHook() {
 				setDataSets(newData)
 			}
 		}
-	}, [chart, YEAR, dataType, charType, unit])
+	}, [chart, YEAR, dataType, charType, unit, VOLUME])
 
 	const getChartStartDate = useCallback((date) => {
 		const minDatevalue = new Date(date)
@@ -440,7 +451,6 @@ export default function useChartHook() {
 							return ` Total ${label}: ${formattedValue} ${unit}`
 						}
 					},
-
 					afterLabel(context) {
 						if (!VOLUME) return
 						if (VOLUME) {
@@ -749,5 +759,6 @@ export default function useChartHook() {
 		options,
 		form,
 		charType,
+		chartRef,
 	}
 }

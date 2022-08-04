@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit"
 import { ModeTypes, DataTypes, ObservationTypes } from "../config"
 
 const initialState = {
+	zoomReset: false,
 	style: {
 		default: {
 			borderWidth: 1.2,
@@ -558,6 +559,10 @@ export const chartSlice = createSlice({
 	name: "chart",
 	initialState,
 	reducers: {
+		handleResetZoom: (state, action) => {
+			const { zoom } = action.payload
+			state.zoomReset = zoom
+		},
 		addColor: (state, action) => {
 			const { dataType, obsType, color } = action.payload
 			state[dataType].style[obsType].push({
@@ -569,6 +574,6 @@ export const chartSlice = createSlice({
 	},
 })
 
-export const { addColor } = chartSlice.actions
+export const { addColor, handleResetZoom } = chartSlice.actions
 
 export default chartSlice.reducer
