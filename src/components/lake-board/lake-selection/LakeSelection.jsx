@@ -124,7 +124,7 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 		bgReference,
 		isVisible,
 		toggleSelectedLake,
-	isSelected,
+		isSelected,
 		OPTIC,
 		RADAR,
 		REFERENCE,
@@ -132,6 +132,8 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 		activeLakes,
 		toggleInfo,
 		VOLUME,
+		dataLakes,
+		dataType,
 	} = useLakeSelectionHook({ id, name, coordinates, index })
 
 	return (
@@ -160,19 +162,19 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 			)}
 			{!VOLUME && (
 				<StyledDivObservationTypes>
-					{OPTIC && (
+					{OPTIC && dataLakes[id][dataType].raw[0].length > 0 && (
 						<StyledDivContainerObsTypes>
 							<StyledSpanObsColor style={bgOptic} />
 							<StyledSpanLabel>optic</StyledSpanLabel>
 						</StyledDivContainerObsTypes>
 					)}
-					{RADAR && (
+					{RADAR && dataLakes[id][dataType].raw[1].length > 0 && (
 						<StyledDivContainerObsTypes>
 							<StyledSpanObsColor style={bgRadar} />
 							<StyledSpanLabel>radar</StyledSpanLabel>
 						</StyledDivContainerObsTypes>
 					)}
-					{REFERENCE && (
+					{REFERENCE && dataLakes[id][dataType].raw[2].length > 0 && (
 						<StyledDivContainerObsTypes>
 							<StyledSpanObsColor style={bgReference} />
 							<StyledSpanLabel>ref</StyledSpanLabel>
@@ -262,7 +264,6 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 					</>
 				)}
 			</StyledContainerButton>
-
 		</StyledDiv>
 	)
 }

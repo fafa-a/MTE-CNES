@@ -148,5 +148,7 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 		activeLakes,
 		toggleInfo,
 		VOLUME,
+		dataLakes,
+		dataType,
 	}
 }

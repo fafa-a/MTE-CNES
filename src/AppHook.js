@@ -202,8 +202,14 @@ const fetchData = useCallback(async () => {
 	for (const lake of seriePath) {
 		const dataTmp = []
 		for (const path of lake) {
-			const data = await csv(path)
-			dataTmp.push(data)
+			try {
+				const data = await csv(path)
+				dataTmp.push(data)
+			} catch (error) {
+				if (error.message === "404 Not Found") {
+					console.error(error)
+				}
+			}
 		}
 		arrTmp.push([dataTmp])
 	}
@@ -325,8 +331,7 @@ const handleFetchData = useCallback(async () => {
 		const dataFullDates = fillEmptyDataOfDate(data)
 		setFullDataOfVolume(dataFullDates)
 	}
-		setLakeData(data)
-
+	setLakeData(data)
 }, [fetchData])
 
 const handleValue = useCallback(
@@ -497,7 +502,9 @@ useEffect(() => {
 	activeLakes,
 	fullDataOfVolume,
 ])
-
+useEffect(() => {
+	console.log({ dataLakes })
+}, [lakes])
 	return {
 		showLakeInfo,
 		isOneLakeActive,
