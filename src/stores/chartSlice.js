@@ -396,9 +396,9 @@ const initialState = {
 		style: {
 			[ObservationTypes.OPTIC]: [
 				{
-					borderColor: "rgba(222, 237, 25)",
-					backgroundColor: "rgba(222, 237, 25)",
-					pointBackgroundColor: "rgb(222, 237, 25)",
+					backgroundColor: "rgba(0, 94, 184)",
+					borderColor: "rgba(0, 94, 184)",
+					pointBackgroundColor: "rgba(0, 94, 184)",
 				},
 				{
 					borderColor: "rgba(0, 237, 222)",
@@ -448,9 +448,9 @@ const initialState = {
 			],
 			[ObservationTypes.RADAR]: [
 				{
-					borderColor: "rgba(222, 237, 25,0.56)",
-					backgroundColor: "rgba(222, 237, 25,0.56)",
-					pointBackgroundColor: "rgb(222, 237, 25,0.56)",
+					backgroundColor: "rgba(0, 94, 184,0.56)",
+					borderColor: "rgb(0, 94, 184,0.56)",
+					pointBackgroundColor: "rgb(0, 94, 184,0.56)",
 				},
 				{
 					borderColor: "rgba(0, 237, 222,0.56)",
@@ -500,9 +500,9 @@ const initialState = {
 			],
 			[ObservationTypes.REFERENCE]: [
 				{
-					borderColor: "rgba(222, 237, 25,0.33)",
-					backgroundColor: "rgba(222, 237, 25,0.33)",
-					pointBackgroundColor: "rgb(222, 237, 25,0.33)",
+					backgroundColor: "rgba(0, 94, 184,.33)",
+					borderColor: "rgb(0, 94, 184,.33)",
+					pointBackgroundColor: "rgb(0, 94, 184,.33)",
 				},
 				{
 					borderColor: "rgba(0, 237, 222,0.33)",

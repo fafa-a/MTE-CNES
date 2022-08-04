@@ -161,6 +161,7 @@ export default function useChartHook() {
 				pointBackgroundColor =
 					chart.YEAR.style[xAxisID].REFERENCE.pointBackgroundColor
 			}
+
 			if (!YEAR) {
 				xAxisID = "x"
 			}

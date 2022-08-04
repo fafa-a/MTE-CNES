@@ -4,11 +4,11 @@
 		return `${baseDir}${lakeId}/${lakeId}${delimiter}${lakeName}${delimiter}${dataType}${delimiter}${obs}${duration}.csv`
  }
 
- const getTimeseriesPath = (lakeId, location) => {
+ const getTimeseriesPath = (lakeId, lakeName) => {
 		const baseDir = "/series/"
 		const delimiter = "_"
 		const timeseries = "ZSV_timeseries"
-		return `${baseDir}${lakeId}/${lakeId}${delimiter}${location}${delimiter}${timeseries}.csv`
+		return `${baseDir}${lakeId}/${lakeId}${delimiter}${lakeName}${delimiter}${timeseries}.csv`
  }
 
 export default { getSeriePath, getTimeseriesPath }

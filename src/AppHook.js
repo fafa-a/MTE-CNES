@@ -67,10 +67,9 @@ useEffect(() => {
 const handleSeriePath = useCallback(
 	(id, name, dataType, obs, duration) => {
 		if (!id) return
-		const lakeName = name.replace(/\s/g, "_")
 		const path = getSeriePath(
 			id,
-			lakeName,
+			name,
 			AppConfig.attributes[dataType].filePath,
 			AppConfig.observationTypes[obs].abbr,
 			AppConfig.duration[duration].abbr
@@ -149,9 +148,10 @@ useEffect(() => {
 
 	for (const lake of allActiveLakes) {
 		if (!dataLakes[lake.id]?.[dataType]) {
-			const seriePathByday = getSeriePathByDay(lake.id, lake.name)
-			const seriePathByPeriod = getSeriePathByPeriod(lake.id, lake.name)
-			const referencePath = getTimeseriesPath(lake.id, "andalousie")
+			const lakeName = lake.name.replace(/\s/g, "_")
+			const seriePathByday = getSeriePathByDay(lake.id, lakeName)
+			const seriePathByPeriod = getSeriePathByPeriod(lake.id, lakeName)
+			const referencePath = getTimeseriesPath(lake.id, lakeName)
 			seriePathTmp.push([
 				...seriePathByday,
 				...seriePathByPeriod,
