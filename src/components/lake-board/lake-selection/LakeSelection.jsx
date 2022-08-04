@@ -124,7 +124,7 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 		bgReference,
 		isVisible,
 		toggleSelectedLake,
-		isSelected,
+	isSelected,
 		OPTIC,
 		RADAR,
 		REFERENCE,
@@ -262,6 +262,7 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 					</>
 				)}
 			</StyledContainerButton>
+
 		</StyledDiv>
 	)
 }

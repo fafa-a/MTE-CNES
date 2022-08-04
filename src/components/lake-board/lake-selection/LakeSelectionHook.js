@@ -10,8 +10,9 @@ import {
 } from "@stores/lakesSlice"
 import { saveAs } from "file-saver"
 import { useDispatch, useSelector } from "react-redux"
+import JSZip from "jszip"
 
-export const useLakeSelectionHook = ({ id, coordinates, index }) => {
+export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 	const [bgOptic, setBgOptic] = useState({})
 	const [bgRadar, setBgRadar] = useState({})
 	const [bgReference, setBgReference] = useState({})
@@ -117,17 +118,22 @@ export const useLakeSelectionHook = ({ id, coordinates, index }) => {
 		dispatch(toggleLakeShowInfo({ lakeId: id }))
 	}, [dispatch, id])
 
-	const handleDownloadFile = useCallback(() => {
+	const handleDownloadFile = useCallback(async () => {
+		const zip = new JSZip()
 		for (const path of dataLakes[id][dataType].seriePath) {
 			const fileName = path.split("/").pop().split(".")[0]
-			saveAs(path, fileName)
+			const res = await fetch(path)
+			const blob = await res.blob()
+			zip.file(`${fileName}.csv`, blob)
 		}
+		zip.generateAsync({ type: "blob" }).then((content) => {
+			saveAs(content, `${name}_${dataType.toLowerCase()}.zip`)
+		})
 	}, [dataLakes, id, dataType])
 
 	return {
 		toggleChartVisibilty,
 		handleClickDesactiveLake,
-
 		handleDownloadFile,
 		bgOptic,
 		bgRadar,
