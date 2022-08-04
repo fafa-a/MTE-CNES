@@ -136,6 +136,28 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 
 	return (
 		<StyledDiv css={isSelected && backgroundBorderColored}>
+			{VOLUME && id === "total" && (
+				<StyledDivObservationTypes>
+					{OPTIC && (
+						<StyledDivContainerObsTypes>
+							<StyledSpanObsColor style={bgOptic} />
+							<StyledSpanLabel>optic</StyledSpanLabel>
+						</StyledDivContainerObsTypes>
+					)}
+					{RADAR && (
+						<StyledDivContainerObsTypes>
+							<StyledSpanObsColor style={bgRadar} />
+							<StyledSpanLabel>radar</StyledSpanLabel>
+						</StyledDivContainerObsTypes>
+					)}
+					{REFERENCE && (
+						<StyledDivContainerObsTypes>
+							<StyledSpanObsColor style={bgReference} />
+							<StyledSpanLabel>ref</StyledSpanLabel>
+						</StyledDivContainerObsTypes>
+					)}
+				</StyledDivObservationTypes>
+			)}
 			{!VOLUME && (
 				<StyledDivObservationTypes>
 					{OPTIC && (
@@ -200,7 +222,7 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 						)}
 					</>
 				)}
-				{!YEAR && (
+				{!YEAR && id !== "total" && (
 					<>
 						<StyledButton data-tip data-for="info" onClick={toggleInfo}>
 							<CarbonInformation fontSize={16} />
@@ -245,8 +267,8 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 }
 
 LakeSelection.propTypes = {
-  id: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  coordinates: PropTypes.array,
-  index: PropTypes.number.isRequired,
+	id: PropTypes.string.isRequired,
+	name: PropTypes.string.isRequired,
+	coordinates: PropTypes.array,
+	index: PropTypes.number,
 }

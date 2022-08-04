@@ -47,7 +47,7 @@ const Tooltip = styled(ReactTooltip, {
 })
 
 export const LakeBoard = () => {
-	const { dataSelection, clearSelection } = useLakeBoardHook()
+	const { VOLUME, dataSelection, clearSelection } = useLakeBoardHook()
 	return (
 		<Container>
 			<HeadContainer>
@@ -60,16 +60,20 @@ export const LakeBoard = () => {
 				</Tooltip>
 			</HeadContainer>
 
-			{dataSelection.length > 0 &&
-				dataSelection.map((item, index) => (
-					<LakeSelection
-						key={uuid()}
-						id={item.id}
-						name={item.name}
-						coordinates={item.coordinates}
-						index={index}
-					/>
-				))}
+			{dataSelection.length > 0 && (
+				<>
+					{VOLUME && <LakeSelection id="total" name="Total Volume" index={0} />}
+					{dataSelection.map((item, index) => (
+						<LakeSelection
+							key={uuid()}
+							id={item.id}
+							name={item.name}
+							coordinates={item.coordinates}
+							index={index}
+						/>
+					))}
+				</>
+			)}
 		</Container>
 	)
 }

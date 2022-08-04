@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react"
 export default function useLakeBoardHook() {
 	const [dataSelection, setDataSelection] = useState([])
 	const { activeLakes, data, activeYears } = useSelector((state) => state.lakes)
-	const { YEAR } = useSelector((state) => state.form)
+	const { YEAR, VOLUME } = useSelector((state) => state.form)
 	const dispatch = useDispatch()
 
 	useEffect(() => {
@@ -30,5 +30,6 @@ export default function useLakeBoardHook() {
 	return {
 		dataSelection,
 		clearSelection,
+		VOLUME,
 	}
 }
