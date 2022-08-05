@@ -210,6 +210,7 @@ export function useAppHook() {
 					.split("/")
 					[path.split("/").length - 1].split(".")[0]
 					.match(/^[^_]+/)[0]
+        console.log({ id })
 				try {
 					const data = await csv(path)
 					dataTmp.push(data)
