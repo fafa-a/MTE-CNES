@@ -1,7 +1,6 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@ant-design/icons': ^4.7.0
   '@iconify-json/carbon': ^1.1.6
   '@lukeed/uuid': ^2.0.0
   '@react-leaflet/core': 1.1.0
@@ -25,7 +24,6 @@ specifiers:
   jszip: ^3.10.1
   leaflet: ^1.8.0
   leaflet.markercluster: ^1.5.3
-  papaparse: ^5.3.2
   path: ^0.12.7
   prettier: 2.7.1
   prop-types: ^15.8.1
@@ -35,14 +33,12 @@ specifiers:
   react-dom: ^17.0.2
   react-leaflet: '>=3.1.0 <3.2.0'
   react-leaflet-markercluster: 3.0.0-rc1
-  react-papaparse: ^4.0.2
   react-redux: ^8.0.2
   react-tooltip: ^4.2.21
   rollup-plugin-geojson: ^0.1.0
   vite: ^2.9.9
 
 dependencies:
-  '@ant-design/icons': 4.7.0_sfoxds7t5ydpegc3knd667wn6m
   '@lukeed/uuid': 2.0.0
   '@react-leaflet/core': 1.1.0_6k6ga34dyylvilikktgvdmyx6a
   '@reduxjs/toolkit': 1.8.2_thunyjspsylz6iliyoygaytnnq
@@ -58,7 +54,6 @@ dependencies:
   jszip: 3.10.1
   leaflet: 1.8.0
   leaflet.markercluster: 1.5.3_leaflet@1.8.0
-  papaparse: 5.3.2
   path: 0.12.7
   prop-types: 15.8.1
   rc-util: 5.21.5_sfoxds7t5ydpegc3knd667wn6m
@@ -67,7 +62,6 @@ dependencies:
   react-dom: 17.0.2_react@17.0.2
   react-leaflet: 3.1.0_6k6ga34dyylvilikktgvdmyx6a
   react-leaflet-markercluster: 3.0.0-rc1_sfoxds7t5ydpegc3knd667wn6m
-  react-papaparse: 4.0.2
   react-redux: 8.0.2_lc2dihjbtf6eny6pheutrryeay
   react-tooltip: 4.2.21_sfoxds7t5ydpegc3knd667wn6m
   rollup-plugin-geojson: 0.1.0_rollup@2.75.5
@@ -92,32 +86,6 @@ packages:
     dependencies:
       '@jridgewell/gen-mapping': 0.1.1
       '@jridgewell/trace-mapping': 0.3.13
-
-  /@ant-design/colors/6.0.0:
-    resolution: {integrity: sha512-qAZRvPzfdWHtfameEGP2Qvuf838NhergR35o+EuVyB5XvSA98xod5r4utvi4TJ3ywmevm290g9nsCG5MryrdWQ==}
-    dependencies:
-      '@ctrl/tinycolor': 3.4.1
-    dev: false
-
-  /@ant-design/icons-svg/4.2.1:
-    resolution: {integrity: sha512-EB0iwlKDGpG93hW8f85CTJTs4SvMX7tt5ceupvhALp1IF44SeUFOMhKUOYqpsoYWQKAOuTRDMqn75rEaKDp0Xw==}
-    dev: false
-
-  /@ant-design/icons/4.7.0_sfoxds7t5ydpegc3knd667wn6m:
-    resolution: {integrity: sha512-aoB4Z7JA431rt6d4u+8xcNPPCrdufSRMUOpxa1ab6mz1JCQZOEVolj2WVs/tDFmN62zzK30mNelEsprLYsSF3g==}
-    engines: {node: '>=8'}
-    peerDependencies:
-      react: '>=16.0.0'
-      react-dom: '>=16.0.0'
-    dependencies:
-      '@ant-design/colors': 6.0.0
-      '@ant-design/icons-svg': 4.2.1
-      '@babel/runtime': 7.18.3
-      classnames: 2.3.1
-      rc-util: 5.21.5_sfoxds7t5ydpegc3knd667wn6m
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
-    dev: false
 
   /@babel/code-frame/7.16.7:
     resolution: {integrity: sha512-iAXqUn8IIeBTNd72xsFlgaXHkMBMt6y4HJp1tIaK465CWLT/fG1aqB7ykr95gHHmlBdGbFeWWfyB4NJJ0nmeIg==}
@@ -1646,11 +1614,6 @@ packages:
       to-fast-properties: 2.0.0
     dev: true
 
-  /@ctrl/tinycolor/3.4.1:
-    resolution: {integrity: sha512-ej5oVy6lykXsvieQtqZxCOaLT+xD4+QNarq78cIYISHmZXshCvROLudpQN3lfL8G0NL7plMSSK+zlyvCaIJ4Iw==}
-    engines: {node: '>=10'}
-    dev: false
-
   /@eslint/eslintrc/1.3.0:
     resolution: {integrity: sha512-UWW0TMTmk2d7hLcWD1/e2g5HDM/HQ3csaLSqXCfqwh4uNDuNqlaKWXmEsL4Cs41Z0KnILNvwbHAah3C2yt06kw==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -2000,16 +1963,6 @@ packages:
   /@types/json5/0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: true
-
-  /@types/node/17.0.38:
-    resolution: {integrity: sha512-5jY9RhV7c0Z4Jy09G+NIDTsCZ5G0L5n+Z+p+Y7t5VJHM30bgwzSjVtlcBxqAj+6L/swIlvtOSzr8rBk/aNyV2g==}
-    dev: false
-
-  /@types/papaparse/5.3.2:
-    resolution: {integrity: sha512-BNbCHJkTE4RwmAFkCxEalET4mDvGr/1ld7ZtQ4i/laWI/iiVt+GL07stdvufle4KfywyvloqqpIiJscXNCrKxA==}
-    dependencies:
-      '@types/node': 17.0.38
-    dev: false
 
   /@types/parse-json/4.0.0:
     resolution: {integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==}
@@ -2470,10 +2423,6 @@ packages:
     dependencies:
       chart.js: 3.8.0
       hammerjs: 2.0.8
-    dev: false
-
-  /classnames/2.3.1:
-    resolution: {integrity: sha512-OlQdbZ7gLfGarSqxesMesDa5uz7KFbID8Kpq/SxIoNGDqY8lSYs0D+hhtBXhcdB3rcbXArFr7vlHheLk1voeNA==}
     dev: false
 
   /color-convert/1.9.3:
@@ -4151,10 +4100,6 @@ packages:
     resolution: {integrity: sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==}
     dev: false
 
-  /papaparse/5.3.2:
-    resolution: {integrity: sha512-6dNZu0Ki+gyV0eBsFKJhYr+MdQYAzFUGlBMNj3GNrmHxmz1lfRa24CjFObPXtjcetlOv5Ad299MhIK0znp3afw==}
-    dev: false
-
   /parent-module/1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
     engines: {node: '>=6'}
@@ -4316,14 +4261,6 @@ packages:
       leaflet: 1.8.0
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
-    dev: false
-
-  /react-papaparse/4.0.2:
-    resolution: {integrity: sha512-epMdLfJgDcD7tpau897HiRY8vU2Zr6+MCnxo1di1lA+xpri8L/hQAy7ehSBTCVMvUt/O9LgB5Wx3VT9R6Bg2lg==}
-    engines: {node: '>=8', npm: '>=5'}
-    dependencies:
-      '@types/papaparse': 5.3.2
-      papaparse: 5.3.2
     dev: false
 
   /react-redux/8.0.2_lc2dihjbtf6eny6pheutrryeay:

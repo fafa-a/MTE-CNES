@@ -10,7 +10,6 @@
 		"lint:fix": "eslint \"src/**/*.{js,jsx}\" --fix"
 	},
 	"dependencies": {
-		"@ant-design/icons": "^4.7.0",
 		"@lukeed/uuid": "^2.0.0",
 		"@react-leaflet/core": "1.1.0",
 		"@reduxjs/toolkit": "^1.8.2",
@@ -26,7 +25,6 @@
 		"jszip": "^3.10.1",
 		"leaflet": "^1.8.0",
 		"leaflet.markercluster": "^1.5.3",
-		"papaparse": "^5.3.2",
 		"path": "^0.12.7",
 		"prop-types": "^15.8.1",
 		"rc-util": "^5.21.0",
@@ -35,7 +33,6 @@
 		"react-dom": "^17.0.2",
 		"react-leaflet": ">=3.1.0 <3.2.0",
 		"react-leaflet-markercluster": "3.0.0-rc1",
-		"react-papaparse": "^4.0.2",
 		"react-redux": "^8.0.2",
 		"react-tooltip": "^4.2.21",
 		"rollup-plugin-geojson": "^0.1.0"
