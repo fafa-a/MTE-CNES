@@ -226,3 +226,27 @@ export function CarbonZoomReset(props) {
 		</svg>
 	)
 }
+
+export function CarbonWarningAlt(props) {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			xmlnsXlink="http://www.w3.org/1999/xlink"
+			width="1em"
+			height="1em"
+			viewBox="0 0 32 32"
+			fontSize={props.fontSize}
+			color={props.color}
+			{...props}
+		>
+			<path
+				fill="currentColor"
+				d="M16 23a1.5 1.5 0 1 0 1.5 1.5A1.5 1.5 0 0 0 16 23zm-1-11h2v9h-2z"
+			></path>
+			<path
+				fill="currentColor"
+				d="M29 30H3a1 1 0 0 1-.887-1.461l13-25a1 1 0 0 1 1.774 0l13 25A1 1 0 0 1 29 30ZM4.65 28h22.7l.001-.003L16.002 6.17h-.004L4.648 27.997Z"
+			></path>
+		</svg>
+	)
+}

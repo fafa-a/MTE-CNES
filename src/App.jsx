@@ -4,6 +4,7 @@ import { Map } from "@components/map/Map"
 import { Chart } from "@components/chart/Chart"
 import { Dashboard } from "@components/dashboard/Dashboard"
 import { LakeCard } from "@components/lake-card/LakeCard"
+import { Modal } from "./components/modal/Modal"
 import { globalStyles, styled, darkTheme } from "@/stitches.config"
 globalStyles()
 import "leaflet/dist/leaflet.css"
@@ -33,7 +34,14 @@ const themeMap = {
 	dark: darkTheme,
 }
 const App = () => {
-	const { toggleTheme, theme, showLakeInfo, isOneLakeActive } = useAppHook()
+	const {
+		toggleTheme,
+		theme,
+		showLakeInfo,
+		isOneLakeActive,
+		noDataLake,
+		handleSetNoDataLake,
+	} = useAppHook()
 
 	return (
 		<Container className={themeMap[theme]}>
@@ -42,6 +50,12 @@ const App = () => {
 			<SAppContainer>
 				<Dashboard />
 				<SMapChartContainer>
+					{noDataLake && (
+						<Modal
+							isOpen={noDataLake}
+							handleSetNoDataLake={handleSetNoDataLake}
+						/>
+					)}
 					<Map isOneLakeActive={isOneLakeActive} />
 					{isOneLakeActive && <Chart />}
 				</SMapChartContainer>

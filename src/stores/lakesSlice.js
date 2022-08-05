@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { DataTypes } from "../config"
-import { useSelector } from "react-redux"
 const initialState = {
 	dataLakes: {},
 	activeLakes: [],
@@ -41,6 +40,7 @@ export const lakesSlice = createSlice({
 		addLake: (state, action) => {
 			const { lakeId, dataType, lakeData, byYear, byVolume, seriePath } =
 				action.payload
+
 			if (state.dataLakes[lakeId]) {
 				if (
 					dataType === DataTypes.VOLUME &&
@@ -58,7 +58,10 @@ export const lakesSlice = createSlice({
 				}
 			}
 			lastDataType = dataType
-			if (dataType === DataTypes.VOLUME && JSON.stringify(byVolume) !== lastByVolume) {
+			if (
+				dataType === DataTypes.VOLUME &&
+				JSON.stringify(byVolume) !== lastByVolume
+			) {
 				lastByVolume = JSON.stringify(byVolume)
 				if (state.totalVolume.length === 0) {
 					state.totalVolume = [...byVolume]

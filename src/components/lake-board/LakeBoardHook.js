@@ -4,8 +4,10 @@ import { useDispatch } from "react-redux"
 import { useCallback, useEffect, useState } from "react"
 export default function useLakeBoardHook() {
 	const [dataSelection, setDataSelection] = useState([])
-	const { activeLakes, data, activeYears } = useSelector((state) => state.lakes)
-	const { YEAR, VOLUME } = useSelector((state) => state.form)
+	const { activeLakes, data, activeYears, dataLakes } = useSelector(
+		(state) => state.lakes
+	)
+	const { YEAR, VOLUME, dataType } = useSelector((state) => state.form)
 	const dispatch = useDispatch()
 
 	useEffect(() => {
@@ -13,13 +15,13 @@ export default function useLakeBoardHook() {
 			setDataSelection([])
 			return
 		}
-		if (!YEAR) {
+		if (!YEAR && dataLakes[activeLakes.at(-1).id]?.[dataType]) {
 			setDataSelection(activeLakes)
 		}
 		if (YEAR) {
 			setDataSelection(Object.values(activeYears))
 		}
-	}, [YEAR, activeLakes, activeYears, data])
+	}, [YEAR, activeLakes, activeYears, data, dataLakes])
 
 	const clearSelection = useCallback(() => {
 		if (!YEAR) {

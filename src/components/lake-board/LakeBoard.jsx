@@ -63,7 +63,7 @@ export const LakeBoard = () => {
 			{dataSelection.length > 0 && (
 				<>
 					{VOLUME && <LakeSelection id="total" name="Total Volume" index={0} />}
-					{/* {dataSelection.map((item, index) => (
+					{dataSelection.map((item, index) => (
 						<LakeSelection
 							key={uuid()}
 							id={item.id}
@@ -71,7 +71,7 @@ export const LakeBoard = () => {
 							coordinates={item.coordinates}
 							index={index}
 						/>
-					))} */}
+					))}
 				</>
 			)}
 		</Container>
