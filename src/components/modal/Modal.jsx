@@ -9,7 +9,7 @@ const Div = styled("div", {
 	transform: "translate(-50%, -50%)",
 	zIndex: "1111",
 	width: "350px",
-	height: "120px",
+	height: "130px",
 	backgroundColor: "white",
 	color: "black",
 	border: `1px solid ${theme.colors.disaster}`,

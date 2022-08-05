@@ -23,6 +23,7 @@ const SMapChartContainer = styled("div", {
 	flexDirection: "column",
 	height: "92vh",
 	width: "87vw",
+	position: "relative",
 })
 
 const Container = styled("div", {
