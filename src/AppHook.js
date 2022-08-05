@@ -213,8 +213,7 @@ export function useAppHook() {
 				try {
 					const data = await csv(path)
 					dataTmp.push(data)
-				} catch (error) {
-				}
+				} catch (error) {}
 			}
 			if (dataTmp.length === 0) {
 				dispatch(desactiveLake({ lakeId: id }))
@@ -223,7 +222,7 @@ export function useAppHook() {
 			arrTmp.push([dataTmp])
 		}
 		return arrTmp
-	}, [seriePath])
+	}, [seriePath, dispatch])
 
 	const handleSetNoDataLake = useCallback(() => {
 		setNodataLake(false)
