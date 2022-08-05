@@ -31,7 +31,8 @@ export const Header = ({ toggleTheme, theme }) => {
 				<Logo colorTheme={theme} />
 			</SLogoSpan>
 			<SContainer>
-				<SearchBar />
+				<div></div>
+				{/* <SearchBar /> */}
 				<Title />
 				<IconTheme toggleTheme={toggleTheme} colorTheme={theme} />
 			</SContainer>
