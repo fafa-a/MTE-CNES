@@ -442,8 +442,8 @@ export function useAppHook() {
 							? {
 									date: el.date,
 									hour: el.hour,
-									volume: (1 * el.volume) / 1_000_000,
-									area: (1 * el.area) / 10_000,
+									volume: handleValue(el.volume, "hm³"),
+									area: handleValue(el.area, "ha"),
 							  }
 							: {
 									date: el.date,
