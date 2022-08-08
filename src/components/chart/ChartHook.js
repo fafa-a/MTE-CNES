@@ -93,13 +93,36 @@ export default function useChartHook() {
 				const dataRaw = VOLUME
 					? dataLakes[id][dataType].byVolume
 					: dataLakes[id][dataType].raw
-				if (!REFERENCE) {
-					dataTmp.push([dataRaw.slice(0, 2)])
-				}
-				if (REFERENCE) {
+
+				if (OPTIC && RADAR && REFERENCE) {
 					dataTmp.push([dataRaw])
 				}
+
+				if (OPTIC && !RADAR && !REFERENCE) {
+					dataTmp.push([dataRaw.slice(0, 1)])
+				}
+
+				if (OPTIC && !RADAR && REFERENCE) {
+					dataTmp.push([dataRaw.slice(0, -1)])
+				}
+
+				if (!OPTIC && RADAR && !REFERENCE) {
+					dataTmp.push([dataRaw.slice(1, 2)])
+				}
+
+				if (!OPTIC && RADAR && REFERENCE) {
+					dataTmp.push([dataRaw.slice(1, dataRaw.length)])
+				}
+
+				if (OPTIC && RADAR && !REFERENCE) {
+					dataTmp.push([dataRaw.slice(0, 2)])
+				}
+
+				if (!OPTIC && !RADAR && REFERENCE) {
+					dataTmp.push([[dataRaw.at(-1)]])
+				}
 			}
+			console.log("dataTmp", dataTmp)
 		}
 
 		if (YEAR) {
@@ -207,7 +230,9 @@ export default function useChartHook() {
 		},
 		[chart, charType, dataType, obsTypes, unit, YEAR]
 	)
-
+	useEffect(() => {
+		console.log(dataSets)
+	}, [dataSets])
 	useEffect(() => {
 		if (!dataSets.length) return
 		const newData = [...dataSets]
