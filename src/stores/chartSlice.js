@@ -407,9 +407,9 @@ const initialState = {
 					pointBackgroundColor: "rgb(0, 237, 222)",
 				},
 				{
-					borderColor: "rgba(0, 222, 237)",
-					backgroundColor: "rgba(0, 222, 237)",
-					pointBackgroundColor: "rgb(0, 222, 237)",
+					borderColor: "rgba(0, 222, 137)",
+					backgroundColor: "rgba(0, 222, 137)",
+					pointBackgroundColor: "rgb(0, 222, 137)",
 				},
 				{
 					borderColor: "rgba(237, 222, 0)",
@@ -459,9 +459,9 @@ const initialState = {
 					pointBackgroundColor: "rgb(0, 237, 222,0.56)",
 				},
 				{
-					borderColor: "rgba(0, 222, 237,0.56)",
-					backgroundColor: "rgba(0, 222, 237,0.56)",
-					pointBackgroundColor: "rgb(0, 222, 237,0.56)",
+					borderColor: "rgba(0, 222, 137,0.56)",
+					backgroundColor: "rgba(0, 222, 137,0.56)",
+					pointBackgroundColor: "rgb(0, 222, 137,0.56)",
 				},
 				{
 					borderColor: "rgba(237, 222, 0,0.56)",
@@ -511,9 +511,9 @@ const initialState = {
 					pointBackgroundColor: "rgb(0, 237, 222,0.33)",
 				},
 				{
-					borderColor: "rgba(0, 222, 27,0.33)",
-					backgroundColor: "rgba(0, 222, 27,0.33)",
-					pointBackgroundColor: "rgb(0, 222, 27,0.33)",
+					borderColor: "rgba(0, 222, 137,0.33)",
+					backgroundColor: "rgba(0, 222, 137,0.33)",
+					pointBackgroundColor: "rgb(0, 222, 137,0.33)",
 				},
 				{
 					borderColor: "rgba(237, 222,27 ,0.33)",

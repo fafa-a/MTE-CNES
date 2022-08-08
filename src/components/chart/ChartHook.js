@@ -131,6 +131,7 @@ export default function useChartHook() {
 
 	const setDataLines = useCallback(
 		(item, obsType, index, lakeName, indexColor) => {
+			console.log({ indexColor })
 			if (!item) return
 			const { borderWidth } = chart.style.default
 			let { tension, pointRadius } = AppConfig.attributes[dataType]
@@ -279,62 +280,63 @@ export default function useChartHook() {
 		)
 		return nextMonth
 	}, [])
-	useEffect(() => {
-		const arr = []
-		const allDates = []
-		let allDatesSorted = []
-		if (!Object.values(dataLakes).length && chartData[0].length === 0) return
-		if (!YEAR) {
-			chartData.forEach((key, index) => {
-				key.forEach((item) => {
-					item.forEach((itm, idx) => {
-						const data = setDataLines(
-							itm,
-							obsTypes[idx],
-							idx,
-							VOLUME
-								? activeLakes.map((lake) => lake.name)[index - 1]
-								: activeLakes.map((lake) => lake.name)[index],
-							index
-						)
-						const itemDates = itm.map((el) => el.date)
-						allDates.push(...itemDates)
-						arr.push(data)
-					})
+
+useEffect(() => {
+	const arr = []
+	const allDates = []
+	let allDatesSorted = []
+	if (!Object.values(dataLakes).length && chartData[0].length === 0) return
+	if (!YEAR) {
+		chartData.forEach((key, index) => {
+			key.forEach((item) => {
+				item.forEach((itm, idx) => {
+					const data = setDataLines(
+						itm,
+						obsTypes[idx],
+						idx,
+						VOLUME
+							? activeLakes.map((lake) => lake.name)[index - 1]
+							: activeLakes.map((lake) => lake.name)[index],
+						index
+					)
+					const itemDates = itm.map((el) => el.date)
+					allDates.push(...itemDates)
+					arr.push(data)
 				})
 			})
-			allDatesSorted = allDates.sort((a, b) => new Date(a) - new Date(b))
-			const firstDateGraph = getChartStartDate(allDatesSorted[0])
-			setDateMin(firstDateGraph)
-			const lastDateGraph = getChartFirstDateNextMonth(allDatesSorted.at(-1))
-			setDateMax(lastDateGraph)
-		}
-		if (YEAR) {
-			chartData.forEach((year) => {
-				Object.values(year).forEach((obs, index) => {
-					obs.forEach((itm, idx) => {
-						const data = setDataLines(
-							itm[0],
-							obsTypes[idx],
-							index,
-							activeLakes.at(-1).name,
-							index
-						)
+		})
+		allDatesSorted = allDates.sort((a, b) => new Date(a) - new Date(b))
+		const firstDateGraph = getChartStartDate(allDatesSorted[0])
+		setDateMin(firstDateGraph)
+		const lastDateGraph = getChartFirstDateNextMonth(allDatesSorted.at(-1))
+		setDateMax(lastDateGraph)
+	}
+	if (YEAR) {
+		chartData.forEach((year) => {
+			Object.values(year).forEach((obs, index) => {
+				obs.forEach((itm, idx) => {
+					const data = setDataLines(
+						itm[0],
+						obsTypes[idx],
+						index,
+						activeLakes.at(-1).name,
+						index
+					)
 
-						// const firstDateGraph = getChartStartDate(itm[0].date)
-						// setDateMin(firstDateGraph)
+					// const firstDateGraph = getChartStartDate(itm[0].date)
+					// setDateMin(firstDateGraph)
 
-						// const lastDateGraph = getChartFirstDateNextMonth(itm.at(-1).date)
-						// setDateMax(lastDateGraph)
-						arr.push(data)
-					})
+					// const lastDateGraph = getChartFirstDateNextMonth(itm.at(-1).date)
+					// setDateMax(lastDateGraph)
+					arr.push(data)
 				})
 			})
-		}
-		setDataSets([...arr])
+		})
+	}
+	setDataSets([...arr])
 
-		arr.length = 0
-	}, [YEAR, chartData])
+	arr.length = 0
+}, [YEAR, chartData])
 
 	useEffect(() => {
 		if (!YEAR) {

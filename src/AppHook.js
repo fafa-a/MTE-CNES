@@ -301,6 +301,7 @@ export function useAppHook() {
 		)
 			return
 		const arrTmp = []
+
 		lakeData.forEach((lake, index) => {
 			let data = []
 
@@ -325,6 +326,13 @@ export function useAppHook() {
 			}
 			arrTmp.push(data)
 		})
+		if (
+			lakeDataWithReference.length > 0 &&
+			JSON.stringify(arrTmp[0].at(-1)) ===
+				JSON.stringify(lakeDataWithReference[0].at(-1))
+		)
+			return
+
 		setLakeDataWithReference(arrTmp)
 	}, [
 		surfaceReference,
@@ -332,9 +340,6 @@ export function useAppHook() {
 		fillingRateReference,
 		lakeData,
 		dataType,
-		OPTIC,
-		RADAR,
-		REFERENCE,
 	])
 
 	const handleFetchData = useCallback(async () => {
@@ -427,7 +432,6 @@ export function useAppHook() {
 		},
 		[getStartDate, getLastDate]
 	)
-
 	const formatValue = useCallback(
 		(data) => {
 			return data.map((obs) => {
@@ -509,11 +513,15 @@ export function useAppHook() {
 		lakeDataWithReference,
 		lakeDataByYear,
 		dataType,
-		fillingRateReference.length,
 		dispatch,
 		seriePath,
 		fullDataOfVolume,
 	])
+
+	useEffect(() => {
+		console.log({ dataLakes })
+	}, [dataLakes])
+
 	return {
 		showLakeInfo,
 		isOneLakeActive,

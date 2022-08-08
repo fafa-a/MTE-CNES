@@ -31,8 +31,9 @@ const initialState = {
 	lakeIdToDesactivate: "",
 	coordinatesLakeToCenter: [],
 }
-let lastByVolume = ""
-let lastDataType = ""
+let lastByVolume
+let lastLakeData
+let lastDataTypes
 export const lakesSlice = createSlice({
 	name: "lakes",
 	initialState,
@@ -40,31 +41,35 @@ export const lakesSlice = createSlice({
 		addLake: (state, action) => {
 			const { lakeId, dataType, lakeData, byYear, byVolume, seriePath } =
 				action.payload
-
+			if (
+				lastDataTypes === dataType &&
+				lastLakeData === JSON.stringify(lakeData)
+			)
+				return
+			if (!byYear) return
 			if (state.dataLakes[lakeId]) {
 				if (
 					dataType === DataTypes.VOLUME &&
 					JSON.stringify(byVolume) === lastByVolume
 				)
 					return
+
 				state.dataLakes[lakeId] = {
 					...state.dataLakes[lakeId],
 					[dataType]: {
 						raw: lakeData,
 						byYear,
-						byVolume: dataType === DataTypes.VOLUME ? byVolume : [],
+						byVolume: byVolume ? byVolume : [],
 						seriePath,
 					},
 				}
 			}
-			lastDataType = dataType
-			if (
-				dataType === DataTypes.VOLUME &&
-				JSON.stringify(byVolume) !== lastByVolume
-			) {
+			lastLakeData = JSON.stringify(lakeData)
+			lastDataTypes = dataType
+			if (dataType === DataTypes.VOLUME) {
 				lastByVolume = JSON.stringify(byVolume)
 				if (state.totalVolume.length === 0) {
-					state.totalVolume = [...byVolume]
+					state.totalVolume = byVolume
 				} else {
 					if (state.totalVolume[0]?.length > byVolume[0].length) {
 						const firstDate = byVolume[0][0].date
