@@ -122,7 +122,6 @@ export default function useChartHook() {
 					dataTmp.push([[dataRaw.at(-1)]])
 				}
 			}
-			console.log("dataTmp", dataTmp)
 		}
 
 		if (YEAR) {
@@ -230,9 +229,6 @@ export default function useChartHook() {
 		},
 		[chart, charType, dataType, obsTypes, unit, YEAR]
 	)
-	useEffect(() => {
-		console.log(dataSets)
-	}, [dataSets])
 	useEffect(() => {
 		if (!dataSets.length) return
 		const newData = [...dataSets]
@@ -779,6 +775,10 @@ useEffect(() => {
 	const data = {
 		datasets: dataSets,
 	}
+
+  useEffect(() => {
+		console.log({ dataSets })
+	}, [dataSets])
 
 	return {
 		data,

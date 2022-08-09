@@ -28,21 +28,19 @@ export function useAppHook() {
 	const [showLakeInfo, setShowLakeInfo] = useState(false)
 	const [isOneLakeActive, setIsOneLakeActive] = useState(false)
 	const [theme, setTheme] = useState("dark")
+	const [lastDataType, setLastDataType] = useState(DataTypes.FILLING_RATE)
 	const [noDataLake, setNodataLake] = useState(false)
 	const form = useSelector((state) => state.form)
-	const { activeLakes, lakeIdToDesactivate, dataLakes } = useSelector(
-		(state) => state.lakes
-	)
+	const { activeLakes, lakeIdToDesactivate, dataLakes, totalVolume } =
+		useSelector((state) => state.lakes)
 	const { lakes } = useSelector((state) => state)
-	const { OPTIC, RADAR, DAY, PERIOD, REFERENCE, YEAR, dataType, charType } =
-		form
+	const { OPTIC, RADAR, DAY, PERIOD, REFERENCE, YEAR, dataType } = form
 	const { getSeriePath, getTimeseriesPath } = SeriePathUtils
 	const dispatch = useDispatch()
 	const { unit } = AppConfig.attributes[dataType]
 	const toggleTheme = useCallback(() => {
 		setTheme(theme === "dark" ? "light" : "dark")
 	})
-
 
 	useEffect(() => {
 		if (!Object.values(activeLakes)) return
@@ -54,6 +52,14 @@ export function useAppHook() {
 		else setShowLakeInfo(false)
 		if (Object.values(activeLakes).length > 0) setIsOneLakeActive(true)
 	}, [activeLakes])
+
+	useEffect(() => {
+		if (dataType !== lastDataType) {
+			setLakeData([])
+			setLakeDataByYear([])
+		}
+		setLastDataType(dataType)
+	}, [dataType])
 
 	useEffect(() => {
 		if (!lakeIdToDesactivate) return
@@ -189,14 +195,15 @@ export function useAppHook() {
 		let lakeDataTmp = []
 		if (YEAR && dataLakes[activeLakes.at(-1).id][dataType]?.byYear) return
 		lakeDataWithReference.forEach((obs) => {
+			let dataYear = []
 			obs.forEach((data) => {
-				const dataYear = extractDataByYear(data)
-				lakeDataTmp.push(dataYear)
+				dataYear.push(extractDataByYear(data))
 			})
-			const dataByYear = groupDataByYear(lakeDataTmp)
-			lakeDataTmp = []
+			const dataByYear = groupDataByYear(dataYear)
+
 			lakeDataTmp.push(dataByYear)
 		})
+
 		setLakeDataByYear(lakeDataTmp)
 	}, [lakeDataWithReference])
 
@@ -213,8 +220,7 @@ export function useAppHook() {
 				try {
 					const data = await csv(path)
 					dataTmp.push(data)
-				} catch (error) {
-				}
+				} catch (error) {}
 			}
 			if (dataTmp.length === 0) {
 				dispatch(desactiveLake({ lakeId: id }))
@@ -346,8 +352,19 @@ export function useAppHook() {
 		const dataRaw = await fetchData()
 		const data = await formatValue(dataRaw)
 		if (dataType === DataTypes.VOLUME) {
-			const dataFullDates = fillEmptyDataOfDate(data)
-			setFullDataOfVolume(dataFullDates)
+			if (seriePath.length > 1) {
+				let dataTmp = []
+				for (const lake of data) {
+					const dataFullDates = fillEmptyDataOfDate([lake])
+					console.log("full", dataFullDates)
+					dataTmp.push(dataFullDates[0])
+				}
+				setFullDataOfVolume(dataTmp)
+			} else {
+				const dataFullDates = fillEmptyDataOfDate(data)
+				console.log("full", dataFullDates)
+				setFullDataOfVolume(dataFullDates)
+			}
 		}
 		setLakeData(data)
 	}, [fetchData])
@@ -496,31 +513,42 @@ export function useAppHook() {
 
 	useEffect(() => {
 		if (lakeDataWithReference.length === 0) return
+		if (lakeDataWithReference.length !== lakeDataByYear.length) return
+		if (
+			dataType === DataTypes.VOLUME &&
+			lakeDataWithReference.length !== fullDataOfVolume.length
+		)
+			return
 		lakeDataWithReference.forEach((data, index) => {
+			console.log("in", fullDataOfVolume[index])
 			dispatch(
 				addLake({
-					lakeId: activeLakes.at(-1).id,
+					lakeId:
+						lakeDataWithReference.length === 1
+							? activeLakes.at(-1).id
+							: activeLakes[index].id,
 					dataType,
 					lakeData: data,
-					byYear: lakeDataByYear[0],
-					byVolume: dataType === DataTypes.VOLUME && fullDataOfVolume[0],
+					byYear: lakeDataByYear[index],
+					byVolume: dataType === DataTypes.VOLUME && fullDataOfVolume[index],
 					seriePath: seriePath[index],
 				})
 			)
 		})
 	}, [
-		lakeData,
 		lakeDataWithReference,
 		lakeDataByYear,
-		dataType,
+		// dataType,
 		dispatch,
-		seriePath,
+		//seriePath,
 		fullDataOfVolume,
 	])
-
 	useEffect(() => {
-		console.log({ dataLakes })
-	}, [dataLakes])
+		console.log({ fullDataOfVolume })
+	}, [fullDataOfVolume])
+	useEffect(() => {
+		console.log({ totalVolume })
+	}, [totalVolume])
 
 	return {
 		showLakeInfo,
