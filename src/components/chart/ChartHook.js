@@ -85,7 +85,33 @@ export default function useChartHook() {
 
 		if (!YEAR) {
 			if (VOLUME) {
-				dataTmp.push([totalVolume])
+				if (OPTIC && RADAR && REFERENCE) {
+					dataTmp.push([totalVolume])
+				}
+
+				if (OPTIC && !RADAR && !REFERENCE) {
+					dataTmp.push([totalVolume.slice(0, 1)])
+				}
+
+				if (OPTIC && !RADAR && REFERENCE) {
+					dataTmp.push([totalVolume.slice(0, -1)])
+				}
+
+				if (!OPTIC && RADAR && !REFERENCE) {
+					dataTmp.push([totalVolume.slice(1, 2)])
+				}
+
+				if (!OPTIC && RADAR && REFERENCE) {
+					dataTmp.push([totalVolume.slice(1, totalVolume.length)])
+				}
+
+				if (OPTIC && RADAR && !REFERENCE) {
+					dataTmp.push([totalVolume.slice(0, 2)])
+				}
+
+				if (!OPTIC && !RADAR && REFERENCE) {
+					dataTmp.push([[totalVolume.at(-1)]])
+				}
 			}
 			for (const lake of activeLakes) {
 				const { id } = lake
@@ -123,7 +149,7 @@ export default function useChartHook() {
 				}
 			}
 		}
-
+		console.log({ dataTmp })
 		if (YEAR) {
 			const { id } = Object.values(activeLakes).at(-1)
 
