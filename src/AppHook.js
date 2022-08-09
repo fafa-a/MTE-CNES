@@ -542,9 +542,6 @@ export function useAppHook() {
 		//seriePath,
 		fullDataOfVolume,
 	])
-	useEffect(() => {
-		console.log({ lakes })
-	}, [lakes])
 
 	return {
 		showLakeInfo,

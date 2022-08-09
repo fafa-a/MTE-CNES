@@ -42,7 +42,6 @@ export const lakesSlice = createSlice({
 		addLake: (state, action) => {
 			const { lakeId, dataType, lakeData, byYear, byVolume, seriePath } =
 				action.payload
-      console.log({ lakeId })
 			if (lakeId === lastId && dataType === lastDataTypes) return
 			if (lastLakeData === JSON.stringify(lakeData)) return
 			if (!byYear) return

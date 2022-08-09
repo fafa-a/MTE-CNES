@@ -149,7 +149,6 @@ export default function useChartHook() {
 				}
 			}
 		}
-		console.log({ dataTmp })
 		if (YEAR) {
 			const { id } = Object.values(activeLakes).at(-1)
 
