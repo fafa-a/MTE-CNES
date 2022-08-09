@@ -35,36 +35,75 @@ let lastByVolume
 let lastLakeData
 let lastDataTypes
 let lastId
+let lastObsDepth
 export const lakesSlice = createSlice({
 	name: "lakes",
 	initialState,
 	reducers: {
 		addLake: (state, action) => {
-			const { lakeId, dataType, lakeData, byYear, byVolume, seriePath } =
-				action.payload
-			if (lakeId === lastId && dataType === lastDataTypes) return
+			const {
+				lakeId,
+				dataType,
+				lakeData,
+				byYear,
+				byVolume,
+				seriePath,
+				obsDepth,
+			} = action.payload
+			if (
+				lakeId === lastId &&
+				dataType === lastDataTypes &&
+				lastObsDepth === obsDepth
+			)
+				return
 			if (lastLakeData === JSON.stringify(lakeData)) return
 			if (!byYear) return
 
-			if (state.dataLakes[lakeId]) {
+			if (!state.dataLakes[lakeId][dataType]) {
+				state.dataLakes[lakeId][dataType] = {
+					[obsDepth]: {
+						raw: lakeData,
+						byYear,
+						byVolume,
+						seriePath,
+					},
+				}
+			}
+
+			// if (state.dataLakes[lakeId][dataType]) {
+			// 	state.dataLakes[lakeId][dataType] = {
+			// 		...state.dataLakes[lakeId][dataType],
+			// 		[obsDepth]: {
+			// 			raw: lakeData,
+			// 			byYear,
+			// 			byVolume,
+			// 			seriePath,
+			// 		},
+			// 	}
+			// }
+
+			if (state.dataLakes[lakeId][dataType]) {
 				if (
 					dataType === DataTypes.VOLUME &&
 					JSON.stringify(byVolume) === lastByVolume
 				)
 					return
-				state.dataLakes[lakeId] = {
-					...state.dataLakes[lakeId],
-					[dataType]: {
+
+				state.dataLakes[lakeId][dataType] = {
+					...state.dataLakes[lakeId][dataType],
+					[obsDepth]: {
 						raw: lakeData,
 						byYear,
-						byVolume: byVolume ? byVolume : [],
+						byVolume,
 						seriePath,
 					},
 				}
 			}
+
 			lastLakeData = JSON.stringify(lakeData)
 			lastDataTypes = dataType
 			lastId = lakeId
+			lastObsDepth = obsDepth
 			lastByVolume = JSON.stringify(byVolume)
 
 			if (dataType === DataTypes.VOLUME) {
@@ -111,17 +150,6 @@ export const lakesSlice = createSlice({
 							})
 						})
 					}
-				}
-			}
-
-			if (!state.dataLakes[lakeId]) {
-				state.dataLakes[lakeId] = {
-					[dataType]: {
-						raw: lakeData,
-						byYear,
-						byVolume,
-						seriePath,
-					},
 				}
 			}
 

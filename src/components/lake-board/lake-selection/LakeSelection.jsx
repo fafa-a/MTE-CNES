@@ -134,6 +134,7 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 		VOLUME,
 		dataLakes,
 		dataType,
+		obsDepth,
 	} = useLakeSelectionHook({ id, name, coordinates, index })
 
 	return (
@@ -162,24 +163,25 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 			)}
 			{!VOLUME && !YEAR && (
 				<StyledDivObservationTypes>
-					{OPTIC && dataLakes[id]?.[dataType].raw[0].length > 0 && (
+					{OPTIC && dataLakes[id]?.[dataType]?.[obsDepth]?.raw[0].length > 0 && (
 						<StyledDivContainerObsTypes>
 							<StyledSpanObsColor style={bgOptic} />
 							<StyledSpanLabel>optic</StyledSpanLabel>
 						</StyledDivContainerObsTypes>
 					)}
-					{RADAR && dataLakes[id]?.[dataType].raw[1].length > 0 && (
+					{RADAR && dataLakes[id]?.[dataType]?.[obsDepth]?.raw[1].length > 0 && (
 						<StyledDivContainerObsTypes>
 							<StyledSpanObsColor style={bgRadar} />
 							<StyledSpanLabel>radar</StyledSpanLabel>
 						</StyledDivContainerObsTypes>
 					)}
-					{REFERENCE && dataLakes[id]?.[dataType].raw[2].length > 0 && (
-						<StyledDivContainerObsTypes>
-							<StyledSpanObsColor style={bgReference} />
-							<StyledSpanLabel>ref</StyledSpanLabel>
-						</StyledDivContainerObsTypes>
-					)}
+					{REFERENCE &&
+						dataLakes[id]?.[dataType]?.[obsDepth]?.raw[2].length > 0 && (
+							<StyledDivContainerObsTypes>
+								<StyledSpanObsColor style={bgReference} />
+								<StyledSpanLabel>ref</StyledSpanLabel>
+							</StyledDivContainerObsTypes>
+						)}
 				</StyledDivObservationTypes>
 			)}
 			{YEAR && (

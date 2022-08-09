@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import { AppConfig } from "@/config"
 import { useSelector, useDispatch } from "react-redux"
-import { DataTypes, ObservationTypes } from "../../config"
+import { DataTypes, DurationTypes, ObservationTypes } from "../../config"
 import { useEffect, useState, useCallback, useRef } from "react"
 import { handleResetZoom } from "../../stores/chartSlice"
 export default function useChartHook() {
@@ -12,15 +12,25 @@ export default function useChartHook() {
 	const [obsTypes, setObsTypes] = useState([])
 	const [lastDataTypes, setLastDataTypes] = useState([])
 	const [lastObstypes, setLastObstypes] = useState([])
+	const [obsDepth, setObsDepth] = useState()
 	const [scales, setScales] = useState()
 	const form = useSelector((state) => state.form)
-	const { charType } = form
 	const { activeLakes, activeYears, dataLakes, totalVolume } = useSelector(
 		(state) => state.lakes
 	)
 	const chart = useSelector((state) => state.chart)
 	const { zoomReset } = chart
-	const { dataType, OPTIC, RADAR, DAY, PERIOD, REFERENCE, YEAR, VOLUME } = form
+	const {
+		dataType,
+		OPTIC,
+		RADAR,
+		DAY,
+		PERIOD,
+		REFERENCE,
+		YEAR,
+		VOLUME,
+		charType,
+	} = form
 	const { label, unit } = AppConfig.attributes[dataType]
 	const chartRef = useRef()
 	const dispatch = useDispatch()
@@ -60,6 +70,12 @@ export default function useChartHook() {
 		}
 		if (YEAR && chartData.length > 1) {
 			setChartData([])
+		}
+		if (DAY) {
+			setObsDepth(DurationTypes.DAY)
+		}
+		if (PERIOD) {
+			setObsDepth(DurationTypes.PERIOD)
 		}
 	}, [DAY, OPTIC, PERIOD, RADAR, REFERENCE, YEAR, activeLakes, form])
 
@@ -115,10 +131,11 @@ export default function useChartHook() {
 			}
 			for (const lake of activeLakes) {
 				const { id } = lake
-				if (!dataLakes[id][dataType]?.raw) continue
+        if(!dataLakes[id][dataType]?.[obsDepth]) return
+				if (!dataLakes[id][dataType]?.[obsDepth].raw) continue
 				const dataRaw = VOLUME
-					? dataLakes[id][dataType].byVolume
-					: dataLakes[id][dataType].raw
+					? dataLakes[id][dataType][obsDepth].byVolume
+					: dataLakes[id][dataType][obsDepth].raw
 
 				if (OPTIC && RADAR && REFERENCE) {
 					dataTmp.push([dataRaw])
@@ -152,8 +169,8 @@ export default function useChartHook() {
 		if (YEAR) {
 			const { id } = Object.values(activeLakes).at(-1)
 
-			if (!dataLakes[id][dataType]?.byYear) return
-			const dataByYear = Object.values(dataLakes[id][dataType].byYear)
+			if (!dataLakes[id][dataType]?.[obsDepth].byYear) return
+			const dataByYear = Object.values(dataLakes[id][dataType][obsDepth].byYear)
 
 			if (REFERENCE && !OPTIC) {
 				const dataWithoutOptic = dataByYear.map((obs) => obs.slice(1, 3))
@@ -326,62 +343,62 @@ export default function useChartHook() {
 		return nextMonth
 	}, [])
 
-useEffect(() => {
-	const arr = []
-	const allDates = []
-	let allDatesSorted = []
-	if (!Object.values(dataLakes).length && chartData[0].length === 0) return
-	if (!YEAR) {
-		chartData.forEach((key, index) => {
-			key.forEach((item) => {
-				item.forEach((itm, idx) => {
-					const data = setDataLines(
-						itm,
-						obsTypes[idx],
-						idx,
-						VOLUME
-							? activeLakes.map((lake) => lake.name)[index - 1]
-							: activeLakes.map((lake) => lake.name)[index],
-						index
-					)
-					const itemDates = itm.map((el) => el.date)
-					allDates.push(...itemDates)
-					arr.push(data)
+	useEffect(() => {
+		const arr = []
+		const allDates = []
+		let allDatesSorted = []
+		if (!Object.values(dataLakes).length && chartData[0].length === 0) return
+		if (!YEAR) {
+			chartData.forEach((key, index) => {
+				key.forEach((item) => {
+					item.forEach((itm, idx) => {
+						const data = setDataLines(
+							itm,
+							obsTypes[idx],
+							idx,
+							VOLUME
+								? activeLakes.map((lake) => lake.name)[index - 1]
+								: activeLakes.map((lake) => lake.name)[index],
+							index
+						)
+						const itemDates = itm.map((el) => el.date)
+						allDates.push(...itemDates)
+						arr.push(data)
+					})
 				})
 			})
-		})
-		allDatesSorted = allDates.sort((a, b) => new Date(a) - new Date(b))
-		const firstDateGraph = getChartStartDate(allDatesSorted[0])
-		setDateMin(firstDateGraph)
-		const lastDateGraph = getChartFirstDateNextMonth(allDatesSorted.at(-1))
-		setDateMax(lastDateGraph)
-	}
-	if (YEAR) {
-		chartData.forEach((year) => {
-			Object.values(year).forEach((obs, index) => {
-				obs.forEach((itm, idx) => {
-					const data = setDataLines(
-						itm[0],
-						obsTypes[idx],
-						index,
-						activeLakes.at(-1).name,
-						index
-					)
+			allDatesSorted = allDates.sort((a, b) => new Date(a) - new Date(b))
+			const firstDateGraph = getChartStartDate(allDatesSorted[0])
+			setDateMin(firstDateGraph)
+			const lastDateGraph = getChartFirstDateNextMonth(allDatesSorted.at(-1))
+			setDateMax(lastDateGraph)
+		}
+		if (YEAR) {
+			chartData.forEach((year) => {
+				Object.values(year).forEach((obs, index) => {
+					obs.forEach((itm, idx) => {
+						const data = setDataLines(
+							itm[0],
+							obsTypes[idx],
+							index,
+							activeLakes.at(-1).name,
+							index
+						)
 
-					// const firstDateGraph = getChartStartDate(itm[0].date)
-					// setDateMin(firstDateGraph)
+						// const firstDateGraph = getChartStartDate(itm[0].date)
+						// setDateMin(firstDateGraph)
 
-					// const lastDateGraph = getChartFirstDateNextMonth(itm.at(-1).date)
-					// setDateMax(lastDateGraph)
-					arr.push(data)
+						// const lastDateGraph = getChartFirstDateNextMonth(itm.at(-1).date)
+						// setDateMax(lastDateGraph)
+						arr.push(data)
+					})
 				})
 			})
-		})
-	}
-	setDataSets([...arr])
+		}
+		setDataSets([...arr])
 
-	arr.length = 0
-}, [YEAR, chartData])
+		arr.length = 0
+	}, [YEAR, chartData])
 
 	useEffect(() => {
 		if (!YEAR) {
@@ -505,7 +522,7 @@ useEffect(() => {
 							const { index } = context.dataset
 							const allId = activeLakes.map((lake) => lake.id)
 							const allValue = allId.map((id) => {
-								return dataLakes[id][DataTypes.VOLUME].byVolume[index]
+								return dataLakes[id][DataTypes.VOLUME][obsDepth].byVolume[index]
 									.filter((item) => item.date === date)
 									.map((item) => item.value)
 							})
@@ -800,7 +817,6 @@ useEffect(() => {
 	const data = {
 		datasets: dataSets,
 	}
-
 
 	return {
 		data,
