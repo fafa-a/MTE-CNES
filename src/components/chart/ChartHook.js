@@ -776,9 +776,6 @@ useEffect(() => {
 		datasets: dataSets,
 	}
 
-  useEffect(() => {
-		console.log({ dataSets })
-	}, [dataSets])
 
 	return {
 		data,

@@ -150,13 +150,15 @@ export function useAppHook() {
 
 	useEffect(() => {
 		if (activeLakes.length === 0) return
+		let lastDuration
+		let duration = DAY ? DurationTypes.DAY : DurationTypes.PERIOD
 		const seriePathTmp = []
 		const allActiveLakes = activeLakes.map((lake) => {
 			return { id: lake.id, name: lake.name }
 		})
 
 		for (const lake of allActiveLakes) {
-			if (!dataLakes[lake.id]?.[dataType]) {
+			if (!dataLakes[lake.id]?.[dataType] ) {
 				const lakeName = lake.name.replace(/\s/g, "_")
 				const seriePathByday = getSeriePathByDay(lake.id, lakeName)
 				const seriePathByPeriod = getSeriePathByPeriod(lake.id, lakeName)
@@ -168,7 +170,7 @@ export function useAppHook() {
 				])
 			}
 		}
-
+		lastDuration = duration
 		if (JSON.stringify(seriePathTmp) === JSON.stringify(seriePath)) return
 		setSeriePath(seriePathTmp)
 	}, [dataType, OPTIC, RADAR, DAY, PERIOD, REFERENCE, activeLakes])
@@ -356,13 +358,11 @@ export function useAppHook() {
 				let dataTmp = []
 				for (const lake of data) {
 					const dataFullDates = fillEmptyDataOfDate([lake])
-					console.log("full", dataFullDates)
 					dataTmp.push(dataFullDates[0])
 				}
 				setFullDataOfVolume(dataTmp)
 			} else {
 				const dataFullDates = fillEmptyDataOfDate(data)
-				console.log("full", dataFullDates)
 				setFullDataOfVolume(dataFullDates)
 			}
 		}
@@ -520,7 +520,6 @@ export function useAppHook() {
 		)
 			return
 		lakeDataWithReference.forEach((data, index) => {
-			console.log("in", fullDataOfVolume[index])
 			dispatch(
 				addLake({
 					lakeId:
@@ -544,11 +543,8 @@ export function useAppHook() {
 		fullDataOfVolume,
 	])
 	useEffect(() => {
-		console.log({ fullDataOfVolume })
-	}, [fullDataOfVolume])
-	useEffect(() => {
-		console.log({ totalVolume })
-	}, [totalVolume])
+		console.log({ lakes })
+	}, [lakes])
 
 	return {
 		showLakeInfo,

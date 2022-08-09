@@ -57,10 +57,16 @@ export const formSlice = createSlice({
 			state.isCleared = false
 		},
 		toggleYear: (state) => {
+      if (state.VOLUME === true) {
+				state.VOLUME = false
+			}
 			state.YEAR = !state.YEAR
 			state.isCleared = false
 		},
 		toggleVolume: (state) => {
+      if (state.YEAR === true) {
+				state.YEAR = false
+			}
 			state.VOLUME = !state.VOLUME
       state.dataType = state.VOLUME ? DataTypes.VOLUME : DataTypes.FILLING_RATE
 			state.isCleared = false
