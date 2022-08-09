@@ -7,8 +7,12 @@ const StyledOption = styled("option", {
   width: "100%",
 })
 
-export const SelectOption = ({ label, value }) => {
-  return <StyledOption value={value}>{label}</StyledOption>
+export const SelectOption = ({ label, value, disabled }) => {
+	return (
+		<StyledOption value={value} disabled={disabled}>
+			{label}
+		</StyledOption>
+	)
 }
 
 SelectOption.propTypes = {

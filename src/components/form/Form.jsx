@@ -152,14 +152,20 @@ export const Form = () => {
 				</Div>
 				<Div>
 					<H3>Attributes</H3>
-					<Select setAttributeValue={setAttributeValue} value={form.dataType}>
+					<Select
+						setAttributeValue={setAttributeValue}
+						value={form.dataType}
+						disabled={form.VOLUME}
+					>
 						<SelectOption
 							value={DataTypes.FILLING_RATE}
 							label={dataTypesValues.FILLING_RATE.label}
+							disabled={form.VOLUME}
 						/>
 						<SelectOption
 							value={DataTypes.SURFACE}
 							label={dataTypesValues.SURFACE.label}
+							disabled={form.VOLUME}
 						/>
 						<SelectOption
 							value={DataTypes.VOLUME}

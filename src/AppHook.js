@@ -28,21 +28,19 @@ export function useAppHook() {
 	const [showLakeInfo, setShowLakeInfo] = useState(false)
 	const [isOneLakeActive, setIsOneLakeActive] = useState(false)
 	const [theme, setTheme] = useState("dark")
+	const [lastDataType, setLastDataType] = useState(DataTypes.FILLING_RATE)
 	const [noDataLake, setNodataLake] = useState(false)
 	const form = useSelector((state) => state.form)
-	const { activeLakes, lakeIdToDesactivate, dataLakes } = useSelector(
-		(state) => state.lakes
-	)
+	const { activeLakes, lakeIdToDesactivate, dataLakes, totalVolume } =
+		useSelector((state) => state.lakes)
 	const { lakes } = useSelector((state) => state)
-	const { OPTIC, RADAR, DAY, PERIOD, REFERENCE, YEAR, dataType, charType } =
-		form
+	const { OPTIC, RADAR, DAY, PERIOD, REFERENCE, YEAR, dataType } = form
 	const { getSeriePath, getTimeseriesPath } = SeriePathUtils
 	const dispatch = useDispatch()
 	const { unit } = AppConfig.attributes[dataType]
 	const toggleTheme = useCallback(() => {
 		setTheme(theme === "dark" ? "light" : "dark")
 	})
-
 
 	useEffect(() => {
 		if (!Object.values(activeLakes)) return
@@ -54,6 +52,14 @@ export function useAppHook() {
 		else setShowLakeInfo(false)
 		if (Object.values(activeLakes).length > 0) setIsOneLakeActive(true)
 	}, [activeLakes])
+
+	useEffect(() => {
+		if (dataType !== lastDataType) {
+			setLakeData([])
+			setLakeDataByYear([])
+		}
+		setLastDataType(dataType)
+	}, [dataType])
 
 	useEffect(() => {
 		if (!lakeIdToDesactivate) return
@@ -144,13 +150,15 @@ export function useAppHook() {
 
 	useEffect(() => {
 		if (activeLakes.length === 0) return
+		let lastDuration
+		let duration = DAY ? DurationTypes.DAY : DurationTypes.PERIOD
 		const seriePathTmp = []
 		const allActiveLakes = activeLakes.map((lake) => {
 			return { id: lake.id, name: lake.name }
 		})
 
 		for (const lake of allActiveLakes) {
-			if (!dataLakes[lake.id]?.[dataType]) {
+			if (!dataLakes[lake.id]?.[dataType] ) {
 				const lakeName = lake.name.replace(/\s/g, "_")
 				const seriePathByday = getSeriePathByDay(lake.id, lakeName)
 				const seriePathByPeriod = getSeriePathByPeriod(lake.id, lakeName)
@@ -162,7 +170,7 @@ export function useAppHook() {
 				])
 			}
 		}
-
+		lastDuration = duration
 		if (JSON.stringify(seriePathTmp) === JSON.stringify(seriePath)) return
 		setSeriePath(seriePathTmp)
 	}, [dataType, OPTIC, RADAR, DAY, PERIOD, REFERENCE, activeLakes])
@@ -189,14 +197,15 @@ export function useAppHook() {
 		let lakeDataTmp = []
 		if (YEAR && dataLakes[activeLakes.at(-1).id][dataType]?.byYear) return
 		lakeDataWithReference.forEach((obs) => {
+			let dataYear = []
 			obs.forEach((data) => {
-				const dataYear = extractDataByYear(data)
-				lakeDataTmp.push(dataYear)
+				dataYear.push(extractDataByYear(data))
 			})
-			const dataByYear = groupDataByYear(lakeDataTmp)
-			lakeDataTmp = []
+			const dataByYear = groupDataByYear(dataYear)
+
 			lakeDataTmp.push(dataByYear)
 		})
+
 		setLakeDataByYear(lakeDataTmp)
 	}, [lakeDataWithReference])
 
@@ -302,6 +311,7 @@ export function useAppHook() {
 		)
 			return
 		const arrTmp = []
+
 		lakeData.forEach((lake, index) => {
 			let data = []
 
@@ -326,6 +336,13 @@ export function useAppHook() {
 			}
 			arrTmp.push(data)
 		})
+		if (
+			lakeDataWithReference.length > 0 &&
+			JSON.stringify(arrTmp[0].at(-1)) ===
+				JSON.stringify(lakeDataWithReference[0].at(-1))
+		)
+			return
+
 		setLakeDataWithReference(arrTmp)
 	}, [
 		surfaceReference,
@@ -333,17 +350,23 @@ export function useAppHook() {
 		fillingRateReference,
 		lakeData,
 		dataType,
-		OPTIC,
-		RADAR,
-		REFERENCE,
 	])
 
 	const handleFetchData = useCallback(async () => {
 		const dataRaw = await fetchData()
 		const data = await formatValue(dataRaw)
 		if (dataType === DataTypes.VOLUME) {
-			const dataFullDates = fillEmptyDataOfDate(data)
-			setFullDataOfVolume(dataFullDates)
+			if (seriePath.length > 1) {
+				let dataTmp = []
+				for (const lake of data) {
+					const dataFullDates = fillEmptyDataOfDate([lake])
+					dataTmp.push(dataFullDates[0])
+				}
+				setFullDataOfVolume(dataTmp)
+			} else {
+				const dataFullDates = fillEmptyDataOfDate(data)
+				setFullDataOfVolume(dataFullDates)
+			}
 		}
 		setLakeData(data)
 	}, [fetchData])
@@ -428,7 +451,6 @@ export function useAppHook() {
 		},
 		[getStartDate, getLastDate]
 	)
-
 	const formatValue = useCallback(
 		(data) => {
 			return data.map((obs) => {
@@ -439,8 +461,8 @@ export function useAppHook() {
 							? {
 									date: el.date,
 									hour: el.hour,
-									volume: (1 * el.volume) / 1_000_000,
-									area: (1 * el.area) / 10_000,
+									volume: handleValue(el.volume, "hm³"),
+									area: handleValue(el.area, "ha"),
 							  }
 							: {
 									date: el.date,
@@ -493,28 +515,36 @@ export function useAppHook() {
 
 	useEffect(() => {
 		if (lakeDataWithReference.length === 0) return
+		if (lakeDataWithReference.length !== lakeDataByYear.length) return
+		if (
+			dataType === DataTypes.VOLUME &&
+			lakeDataWithReference.length !== fullDataOfVolume.length
+		)
+			return
 		lakeDataWithReference.forEach((data, index) => {
 			dispatch(
 				addLake({
-					lakeId: activeLakes.at(-1).id,
+					lakeId:
+						lakeDataWithReference.length === 1
+							? activeLakes.at(-1).id
+							: activeLakes[index].id,
 					dataType,
 					lakeData: data,
-					byYear: lakeDataByYear[0],
-					byVolume: dataType === DataTypes.VOLUME && fullDataOfVolume[0],
+					byYear: lakeDataByYear[index],
+					byVolume: dataType === DataTypes.VOLUME && fullDataOfVolume[index],
 					seriePath: seriePath[index],
 				})
 			)
 		})
 	}, [
-		lakeData,
 		lakeDataWithReference,
 		lakeDataByYear,
-		dataType,
-		fillingRateReference.length,
+		// dataType,
 		dispatch,
-		seriePath,
+		//seriePath,
 		fullDataOfVolume,
 	])
+
 	return {
 		showLakeInfo,
 		isOneLakeActive,

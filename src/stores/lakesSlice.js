@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, current } from "@reduxjs/toolkit"
 import { DataTypes } from "../config"
 const initialState = {
 	dataLakes: {},
@@ -31,8 +31,10 @@ const initialState = {
 	lakeIdToDesactivate: "",
 	coordinatesLakeToCenter: [],
 }
-let lastByVolume = ""
-let lastDataType = ""
+let lastByVolume
+let lastLakeData
+let lastDataTypes
+let lastId
 export const lakesSlice = createSlice({
 	name: "lakes",
 	initialState,
@@ -40,6 +42,9 @@ export const lakesSlice = createSlice({
 		addLake: (state, action) => {
 			const { lakeId, dataType, lakeData, byYear, byVolume, seriePath } =
 				action.payload
+			if (lakeId === lastId && dataType === lastDataTypes) return
+			if (lastLakeData === JSON.stringify(lakeData)) return
+			if (!byYear) return
 
 			if (state.dataLakes[lakeId]) {
 				if (
@@ -52,20 +57,40 @@ export const lakesSlice = createSlice({
 					[dataType]: {
 						raw: lakeData,
 						byYear,
-						byVolume: dataType === DataTypes.VOLUME ? byVolume : [],
+						byVolume: byVolume ? byVolume : [],
 						seriePath,
 					},
 				}
 			}
-			lastDataType = dataType
-			if (
-				dataType === DataTypes.VOLUME &&
-				JSON.stringify(byVolume) !== lastByVolume
-			) {
-				lastByVolume = JSON.stringify(byVolume)
+			lastLakeData = JSON.stringify(lakeData)
+			lastDataTypes = dataType
+			lastId = lakeId
+			lastByVolume = JSON.stringify(byVolume)
+
+			if (dataType === DataTypes.VOLUME) {
 				if (state.totalVolume.length === 0) {
-					state.totalVolume = [...byVolume]
+					state.totalVolume = byVolume
 				} else {
+					if (byVolume[0].length >= state.totalVolume[0]?.length) {
+						const firstDate = state.totalVolume[0][0].date
+						const lastDate = state.totalVolume[0].at(-1).date
+						byVolume.map((obs) => {
+							return obs.filter((el) => {
+								return el.date >= firstDate && el.date <= lastDate
+							})
+						})
+						state.totalVolume = state.totalVolume.map((obs, index) => {
+							return obs.map((el, i) => {
+								const { date, value } = byVolume[index][i]
+								if (el.date === date) {
+									return {
+										date: el.date,
+										value: el.value + value,
+									}
+								}
+							})
+						})
+					}
 					if (state.totalVolume[0]?.length > byVolume[0].length) {
 						const firstDate = byVolume[0][0].date
 						const lastDate = byVolume[0].at(-1).date
@@ -74,27 +99,18 @@ export const lakesSlice = createSlice({
 								return el.date >= firstDate && el.date <= lastDate
 							})
 						})
-					}
-					if (byVolume[0].length > state.totalVolume[0]?.length) {
-						const firstDate = state.totalVolume[0][0].date
-						const lastDate = state.totalVolume[0].at(-1).date
-						byVolume.map((obs) => {
-							return obs.filter((el) => {
-								return el.date >= firstDate && el.date <= lastDate
+						state.totalVolume = state.totalVolume.map((obs, index) => {
+							return obs.map((el, i) => {
+								const { date, value } = byVolume[index][i]
+								if (el.date === date) {
+									return {
+										date: el.date,
+										value: el.value + value,
+									}
+								}
 							})
 						})
 					}
-					state.totalVolume = state.totalVolume.map((obs, index) => {
-						return obs.map((el, i) => {
-							const { date, value } = byVolume[index][i]
-							if (el.date === date) {
-								return {
-									date: el.date,
-									value: el.value + value,
-								}
-							}
-						})
-					})
 				}
 			}
 

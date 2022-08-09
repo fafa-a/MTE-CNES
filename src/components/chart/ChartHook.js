@@ -85,7 +85,33 @@ export default function useChartHook() {
 
 		if (!YEAR) {
 			if (VOLUME) {
-				dataTmp.push([totalVolume])
+				if (OPTIC && RADAR && REFERENCE) {
+					dataTmp.push([totalVolume])
+				}
+
+				if (OPTIC && !RADAR && !REFERENCE) {
+					dataTmp.push([totalVolume.slice(0, 1)])
+				}
+
+				if (OPTIC && !RADAR && REFERENCE) {
+					dataTmp.push([totalVolume.slice(0, -1)])
+				}
+
+				if (!OPTIC && RADAR && !REFERENCE) {
+					dataTmp.push([totalVolume.slice(1, 2)])
+				}
+
+				if (!OPTIC && RADAR && REFERENCE) {
+					dataTmp.push([totalVolume.slice(1, totalVolume.length)])
+				}
+
+				if (OPTIC && RADAR && !REFERENCE) {
+					dataTmp.push([totalVolume.slice(0, 2)])
+				}
+
+				if (!OPTIC && !RADAR && REFERENCE) {
+					dataTmp.push([[totalVolume.at(-1)]])
+				}
 			}
 			for (const lake of activeLakes) {
 				const { id } = lake
@@ -93,15 +119,36 @@ export default function useChartHook() {
 				const dataRaw = VOLUME
 					? dataLakes[id][dataType].byVolume
 					: dataLakes[id][dataType].raw
-				if (!REFERENCE) {
+
+				if (OPTIC && RADAR && REFERENCE) {
+					dataTmp.push([dataRaw])
+				}
+
+				if (OPTIC && !RADAR && !REFERENCE) {
+					dataTmp.push([dataRaw.slice(0, 1)])
+				}
+
+				if (OPTIC && !RADAR && REFERENCE) {
+					dataTmp.push([dataRaw.slice(0, -1)])
+				}
+
+				if (!OPTIC && RADAR && !REFERENCE) {
+					dataTmp.push([dataRaw.slice(1, 2)])
+				}
+
+				if (!OPTIC && RADAR && REFERENCE) {
+					dataTmp.push([dataRaw.slice(1, dataRaw.length)])
+				}
+
+				if (OPTIC && RADAR && !REFERENCE) {
 					dataTmp.push([dataRaw.slice(0, 2)])
 				}
-				if (REFERENCE) {
-					dataTmp.push([dataRaw])
+
+				if (!OPTIC && !RADAR && REFERENCE) {
+					dataTmp.push([[dataRaw.at(-1)]])
 				}
 			}
 		}
-
 		if (YEAR) {
 			const { id } = Object.values(activeLakes).at(-1)
 
@@ -207,7 +254,6 @@ export default function useChartHook() {
 		},
 		[chart, charType, dataType, obsTypes, unit, YEAR]
 	)
-
 	useEffect(() => {
 		if (!dataSets.length) return
 		const newData = [...dataSets]
@@ -279,62 +325,63 @@ export default function useChartHook() {
 		)
 		return nextMonth
 	}, [])
-	useEffect(() => {
-		const arr = []
-		const allDates = []
-		let allDatesSorted = []
-		if (!Object.values(dataLakes).length && chartData[0].length === 0) return
-		if (!YEAR) {
-			chartData.forEach((key, index) => {
-				key.forEach((item) => {
-					item.forEach((itm, idx) => {
-						const data = setDataLines(
-							itm,
-							obsTypes[idx],
-							idx,
-							VOLUME
-								? activeLakes.map((lake) => lake.name)[index - 1]
-								: activeLakes.map((lake) => lake.name)[index],
-							index
-						)
-						const itemDates = itm.map((el) => el.date)
-						allDates.push(...itemDates)
-						arr.push(data)
-					})
+
+useEffect(() => {
+	const arr = []
+	const allDates = []
+	let allDatesSorted = []
+	if (!Object.values(dataLakes).length && chartData[0].length === 0) return
+	if (!YEAR) {
+		chartData.forEach((key, index) => {
+			key.forEach((item) => {
+				item.forEach((itm, idx) => {
+					const data = setDataLines(
+						itm,
+						obsTypes[idx],
+						idx,
+						VOLUME
+							? activeLakes.map((lake) => lake.name)[index - 1]
+							: activeLakes.map((lake) => lake.name)[index],
+						index
+					)
+					const itemDates = itm.map((el) => el.date)
+					allDates.push(...itemDates)
+					arr.push(data)
 				})
 			})
-			allDatesSorted = allDates.sort((a, b) => new Date(a) - new Date(b))
-			const firstDateGraph = getChartStartDate(allDatesSorted[0])
-			setDateMin(firstDateGraph)
-			const lastDateGraph = getChartFirstDateNextMonth(allDatesSorted.at(-1))
-			setDateMax(lastDateGraph)
-		}
-		if (YEAR) {
-			chartData.forEach((year) => {
-				Object.values(year).forEach((obs, index) => {
-					obs.forEach((itm, idx) => {
-						const data = setDataLines(
-							itm[0],
-							obsTypes[idx],
-							index,
-							activeLakes.at(-1).name,
-							index
-						)
+		})
+		allDatesSorted = allDates.sort((a, b) => new Date(a) - new Date(b))
+		const firstDateGraph = getChartStartDate(allDatesSorted[0])
+		setDateMin(firstDateGraph)
+		const lastDateGraph = getChartFirstDateNextMonth(allDatesSorted.at(-1))
+		setDateMax(lastDateGraph)
+	}
+	if (YEAR) {
+		chartData.forEach((year) => {
+			Object.values(year).forEach((obs, index) => {
+				obs.forEach((itm, idx) => {
+					const data = setDataLines(
+						itm[0],
+						obsTypes[idx],
+						index,
+						activeLakes.at(-1).name,
+						index
+					)
 
-						// const firstDateGraph = getChartStartDate(itm[0].date)
-						// setDateMin(firstDateGraph)
+					// const firstDateGraph = getChartStartDate(itm[0].date)
+					// setDateMin(firstDateGraph)
 
-						// const lastDateGraph = getChartFirstDateNextMonth(itm.at(-1).date)
-						// setDateMax(lastDateGraph)
-						arr.push(data)
-					})
+					// const lastDateGraph = getChartFirstDateNextMonth(itm.at(-1).date)
+					// setDateMax(lastDateGraph)
+					arr.push(data)
 				})
 			})
-		}
-		setDataSets([...arr])
+		})
+	}
+	setDataSets([...arr])
 
-		arr.length = 0
-	}, [YEAR, chartData])
+	arr.length = 0
+}, [YEAR, chartData])
 
 	useEffect(() => {
 		if (!YEAR) {
@@ -753,6 +800,7 @@ export default function useChartHook() {
 	const data = {
 		datasets: dataSets,
 	}
+
 
 	return {
 		data,

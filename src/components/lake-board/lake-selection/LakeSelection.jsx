@@ -160,21 +160,21 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 					)}
 				</StyledDivObservationTypes>
 			)}
-			{!VOLUME && (
+			{!VOLUME && !YEAR && (
 				<StyledDivObservationTypes>
-					{OPTIC && dataLakes[id][dataType]?.raw[0].length > 0 && (
+					{OPTIC && dataLakes[id]?.[dataType].raw[0].length > 0 && (
 						<StyledDivContainerObsTypes>
 							<StyledSpanObsColor style={bgOptic} />
 							<StyledSpanLabel>optic</StyledSpanLabel>
 						</StyledDivContainerObsTypes>
 					)}
-					{RADAR && dataLakes[id][dataType]?.raw[1].length > 0 && (
+					{RADAR && dataLakes[id]?.[dataType].raw[1].length > 0 && (
 						<StyledDivContainerObsTypes>
 							<StyledSpanObsColor style={bgRadar} />
 							<StyledSpanLabel>radar</StyledSpanLabel>
 						</StyledDivContainerObsTypes>
 					)}
-					{REFERENCE && dataLakes[id][dataType]?.raw[2].length > 0 && (
+					{REFERENCE && dataLakes[id]?.[dataType].raw[2].length > 0 && (
 						<StyledDivContainerObsTypes>
 							<StyledSpanObsColor style={bgReference} />
 							<StyledSpanLabel>ref</StyledSpanLabel>
@@ -182,6 +182,29 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 					)}
 				</StyledDivObservationTypes>
 			)}
+			{YEAR && (
+				<StyledDivObservationTypes>
+					{OPTIC && (
+						<StyledDivContainerObsTypes>
+							<StyledSpanObsColor style={bgOptic} />
+							<StyledSpanLabel>optic</StyledSpanLabel>
+						</StyledDivContainerObsTypes>
+					)}
+					{RADAR && (
+						<StyledDivContainerObsTypes>
+							<StyledSpanObsColor style={bgRadar} />
+							<StyledSpanLabel>radar</StyledSpanLabel>
+						</StyledDivContainerObsTypes>
+					)}
+					{REFERENCE && (
+						<StyledDivContainerObsTypes>
+							<StyledSpanObsColor style={bgReference} />
+							<StyledSpanLabel>ref</StyledSpanLabel>
+						</StyledDivContainerObsTypes>
+					)}
+				</StyledDivObservationTypes>
+			)}
+
 			<StyledContainerP
 				onClick={!VOLUME ? toggleSelectedLake : undefined}
 				css={YEAR && increaseWidth}
