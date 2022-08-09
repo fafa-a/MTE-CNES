@@ -30,21 +30,26 @@ export default function usePolygonLayerHook() {
 	const centerPolygon = useCallback(() => {
 		map.flyTo(coordinates)
 		map.setView(coordinates, 11)
-	}, [coordinates, map])
-
+	}, [coordinates])
 	useEffect(() => {
-		if (!id) return
-		setColor("#CDF0EA")
 		if (Object.values(activeLakes).length === 1) {
 			resizeMap()
 		}
-		centerPolygon()
-	}, [activeLakes, centerPolygon, id, resizeMap])
+	}, [activeLakes])
+
+	useEffect(() => {
+		if (!id) return
+		const container = document.getElementsByClassName("leaflet-container")
+		if ((container[0].style.height = "45%")) {
+			setColor("#CDF0EA")
+			centerPolygon()
+		}
+	}, [id])
 
 	const centerSelectedPolygon = useCallback(() => {
 		const { lakeId, coordinates } = coordinatesLakeToCenter
-		setCoordinates(coordinates)
 		setId(lakeId)
+		setCoordinates(coordinates)
 	}, [coordinatesLakeToCenter])
 
 	useEffect(() => {
