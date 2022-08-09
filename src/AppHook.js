@@ -30,9 +30,12 @@ export function useAppHook() {
 	const [theme, setTheme] = useState("dark")
 	const [lastDataType, setLastDataType] = useState(DataTypes.FILLING_RATE)
 	const [noDataLake, setNodataLake] = useState(false)
+  const [obsDepth, setObsDepth] = useState(DurationTypes.PERIOD)
+	const [lastObsDepth, setLastObsDepth] = useState(DurationTypes.PERIOD)
 	const form = useSelector((state) => state.form)
-	const { activeLakes, lakeIdToDesactivate, dataLakes, totalVolume } =
-		useSelector((state) => state.lakes)
+	const { activeLakes, lakeIdToDesactivate, dataLakes } = useSelector(
+		(state) => state.lakes
+	)
 	const { lakes } = useSelector((state) => state)
 	const { OPTIC, RADAR, DAY, PERIOD, REFERENCE, YEAR, dataType } = form
 	const { getSeriePath, getTimeseriesPath } = SeriePathUtils
@@ -41,6 +44,27 @@ export function useAppHook() {
 	const toggleTheme = useCallback(() => {
 		setTheme(theme === "dark" ? "light" : "dark")
 	})
+	useEffect(() => {
+		if (DAY) {
+			setObsDepth(DurationTypes.DAY)
+		}
+		if (PERIOD) {
+			setObsDepth(DurationTypes.PERIOD)
+		}
+		setLastObsDepth(obsDepth)
+	}, [DAY, PERIOD])
+	useEffect(() => {
+		if (lastObsDepth !== obsDepth) {
+			setLakeData([])
+			setLakeDataWithReference([])
+			setLakeDataByYear([])
+			setFullDataOfVolume([])
+			setTmpFillingRateReference([])
+			setFillingRateReference([])
+			setSurfaceReference([])
+			setVolumeReference([])
+		}
+	}, [lastObsDepth, obsDepth])
 
 	useEffect(() => {
 		if (!Object.values(activeLakes)) return
@@ -150,15 +174,14 @@ export function useAppHook() {
 
 	useEffect(() => {
 		if (activeLakes.length === 0) return
-		let lastDuration
-		let duration = DAY ? DurationTypes.DAY : DurationTypes.PERIOD
+
 		const seriePathTmp = []
 		const allActiveLakes = activeLakes.map((lake) => {
 			return { id: lake.id, name: lake.name }
 		})
 
 		for (const lake of allActiveLakes) {
-			if (!dataLakes[lake.id]?.[dataType] ) {
+			if (!dataLakes[lake.id]?.[dataType]?.[obsDepth]) {
 				const lakeName = lake.name.replace(/\s/g, "_")
 				const seriePathByday = getSeriePathByDay(lake.id, lakeName)
 				const seriePathByPeriod = getSeriePathByPeriod(lake.id, lakeName)
@@ -170,10 +193,9 @@ export function useAppHook() {
 				])
 			}
 		}
-		lastDuration = duration
 		if (JSON.stringify(seriePathTmp) === JSON.stringify(seriePath)) return
 		setSeriePath(seriePathTmp)
-	}, [dataType, OPTIC, RADAR, DAY, PERIOD, REFERENCE, activeLakes])
+	}, [dataType, obsDepth, REFERENCE, activeLakes])
 
 	useEffect(() => {
 		if (lakeData[0]?.length === 0) return
@@ -195,7 +217,9 @@ export function useAppHook() {
 
 	useEffect(() => {
 		let lakeDataTmp = []
-		if (YEAR && dataLakes[activeLakes.at(-1).id][dataType]?.byYear) return
+		if (YEAR && dataLakes[activeLakes.at(-1).id][dataType][obsDepth].byYear)
+			return
+
 		lakeDataWithReference.forEach((obs) => {
 			let dataYear = []
 			obs.forEach((data) => {
@@ -205,7 +229,6 @@ export function useAppHook() {
 
 			lakeDataTmp.push(dataByYear)
 		})
-
 		setLakeDataByYear(lakeDataTmp)
 	}, [lakeDataWithReference])
 
@@ -342,7 +365,6 @@ export function useAppHook() {
 				JSON.stringify(lakeDataWithReference[0].at(-1))
 		)
 			return
-
 		setLakeDataWithReference(arrTmp)
 	}, [
 		surfaceReference,
@@ -533,6 +555,7 @@ export function useAppHook() {
 					byYear: lakeDataByYear[index],
 					byVolume: dataType === DataTypes.VOLUME && fullDataOfVolume[index],
 					seriePath: seriePath[index],
+					obsDepth,
 				})
 			)
 		})
@@ -544,6 +567,10 @@ export function useAppHook() {
 		//seriePath,
 		fullDataOfVolume,
 	])
+
+	useEffect(() => {
+		console.log({ dataLakes })
+	}, [dataLakes])
 
 	return {
 		showLakeInfo,

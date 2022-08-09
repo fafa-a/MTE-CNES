@@ -11,6 +11,7 @@ import {
 import { saveAs } from "file-saver"
 import { useDispatch, useSelector } from "react-redux"
 import JSZip from "jszip"
+import { DurationTypes } from "../../../config"
 
 export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 	const [bgOptic, setBgOptic] = useState({})
@@ -19,11 +20,11 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 	const [year, setYear] = useState([])
 	const [isVisible, setIsVisible] = useState(true)
 	const [isSelected, setIsSelected] = useState(false)
+	const [obsDepth, setObsDepth] = useState()
 	const dispatch = useDispatch()
 	const chartOptions = useSelector((state) => state.chart)
-	const { dataType, OPTIC, RADAR, YEAR, REFERENCE, VOLUME } = useSelector(
-		(state) => state.form
-	)
+	const { dataType, OPTIC, RADAR, YEAR, REFERENCE, VOLUME, DAY, PERIOD } =
+		useSelector((state) => state.form)
 
 	const { activeLakes, dataLakes, activeYears } = useSelector(
 		(state) => state.lakes
@@ -46,7 +47,14 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 			})
 		}
 	}, [YEAR, activeLakes, activeYears, id])
-
+	useEffect(() => {
+		if (DAY) {
+			setObsDepth(DurationTypes.DAY)
+		}
+		if (PERIOD) {
+			setObsDepth(DurationTypes.PERIOD)
+		}
+	}, [DAY, PERIOD])
 	useEffect(() => {
 		setlakeIconsOptions()
 	}, [setlakeIconsOptions])
@@ -120,7 +128,7 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 
 	const handleDownloadFile = useCallback(async () => {
 		const zip = new JSZip()
-		for (const path of dataLakes[id][dataType].seriePath) {
+		for (const path of dataLakes[id][dataType][obsDepth].seriePath) {
 			const fileName = path.split("/").pop().split(".")[0]
 			const res = await fetch(path)
 			const blob = await res.blob()
@@ -150,5 +158,6 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 		VOLUME,
 		dataLakes,
 		dataType,
+		obsDepth,
 	}
 }
