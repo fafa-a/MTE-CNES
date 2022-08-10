@@ -53,6 +53,7 @@ export function useAppHook() {
 		}
 		setLastObsDepth(obsDepth)
 	}, [DAY, PERIOD])
+
 	useEffect(() => {
 		if (lastObsDepth !== obsDepth) {
 			setLakeData([])
@@ -217,7 +218,7 @@ export function useAppHook() {
 
 	useEffect(() => {
 		let lakeDataTmp = []
-		if (YEAR && dataLakes[activeLakes.at(-1).id][dataType][obsDepth].byYear)
+		if (YEAR && dataLakes[activeLakes.at(-1).id][dataType]?.[obsDepth].byYear)
 			return
 
 		lakeDataWithReference.forEach((obs) => {
@@ -360,19 +361,14 @@ export function useAppHook() {
 			arrTmp.push(data)
 		})
 		if (
+			dataType === DataTypes.FILLING_RATE &&
 			lakeDataWithReference.length > 0 &&
 			JSON.stringify(arrTmp[0].at(-1)) ===
 				JSON.stringify(lakeDataWithReference[0].at(-1))
 		)
 			return
 		setLakeDataWithReference(arrTmp)
-	}, [
-		surfaceReference,
-		volumeReference,
-		fillingRateReference,
-		lakeData,
-		dataType,
-	])
+	}, [surfaceReference, volumeReference, fillingRateReference])
 
 	const handleFetchData = useCallback(async () => {
 		const dataRaw = await fetchData()
@@ -568,9 +564,7 @@ export function useAppHook() {
 		fullDataOfVolume,
 	])
 
-	useEffect(() => {
-		console.log({ dataLakes })
-	}, [dataLakes])
+
 
 	return {
 		showLakeInfo,

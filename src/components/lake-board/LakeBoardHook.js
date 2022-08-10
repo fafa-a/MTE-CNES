@@ -1,14 +1,13 @@
 import { useSelector } from "react-redux"
-import { clearActiveLakes } from "../../stores/lakesSlice"
+import { clearActiveLakes, clearActiveYears } from "../../stores/lakesSlice"
 import { useDispatch } from "react-redux"
 import { useCallback, useEffect, useState } from "react"
 import { DurationTypes } from "../../config"
 export default function useLakeBoardHook() {
 	const [dataSelection, setDataSelection] = useState([])
 	const [obsDepth, setObsDepth] = useState()
-	const { activeLakes, data, activeYears, dataLakes } = useSelector(
-		(state) => state.lakes
-	)
+	const { activeLakes, data, activeYears, dataLakes, yearsVisible } =
+		useSelector((state) => state.lakes)
 	const { YEAR, VOLUME, dataType, DAY, PERIOD } = useSelector(
 		(state) => state.form
 	)
@@ -34,13 +33,19 @@ export default function useLakeBoardHook() {
 		if (YEAR) {
 			setDataSelection(Object.values(activeYears))
 		}
-	}, [YEAR, activeLakes, activeYears, data, dataLakes])
+		if (!yearsVisible) {
+			setDataSelection([])
+		}
+	}, [YEAR, activeLakes, activeYears, data, dataLakes, yearsVisible])
 
 	const clearSelection = useCallback(() => {
 		if (!YEAR) {
 			dispatch(clearActiveLakes())
 		}
-	}, [dispatch])
+		if (YEAR) {
+			dispatch(clearActiveYears())
+		}
+	}, [dispatch, YEAR])
 
 	return {
 		dataSelection,

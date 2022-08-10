@@ -3,6 +3,7 @@ import { DataTypes } from "../config"
 const initialState = {
 	dataLakes: {},
 	activeLakes: [],
+	yearsVisible: true,
 	activeYears: {
 		2018: {
 			id: "2018",
@@ -58,29 +59,17 @@ export const lakesSlice = createSlice({
 				return
 			if (lastLakeData === JSON.stringify(lakeData)) return
 			if (!byYear) return
-
-			if (!state.dataLakes[lakeId][dataType]) {
-				state.dataLakes[lakeId][dataType] = {
-					[obsDepth]: {
-						raw: lakeData,
-						byYear,
-						byVolume,
-						seriePath,
-					},
+        if (state.dataLakes[lakeId][dataType]?.[obsDepth]) return
+				if (!state.dataLakes[lakeId][dataType]) {
+					state.dataLakes[lakeId][dataType] = {
+						[obsDepth]: {
+							raw: lakeData,
+							byYear,
+							byVolume,
+							seriePath,
+						},
+					}
 				}
-			}
-
-			// if (state.dataLakes[lakeId][dataType]) {
-			// 	state.dataLakes[lakeId][dataType] = {
-			// 		...state.dataLakes[lakeId][dataType],
-			// 		[obsDepth]: {
-			// 			raw: lakeData,
-			// 			byYear,
-			// 			byVolume,
-			// 			seriePath,
-			// 		},
-			// 	}
-			// }
 
 			if (state.dataLakes[lakeId][dataType]) {
 				if (
@@ -170,6 +159,9 @@ export const lakesSlice = createSlice({
 				state.dataLakes[lakeId] = {
 					info,
 				}
+			}
+			if (!state.yearsVisible) {
+				state.yearsVisible = true
 			}
 		},
 		updateActiveLakes: (state, action) => {
@@ -287,7 +279,9 @@ export const lakesSlice = createSlice({
 		clearActiveLakes: (state) => {
 			state.activeLakes = []
 		},
-		clearActiveYears: (state, action) => {},
+		clearActiveYears: (state) => {
+			state.yearsVisible = false
+		},
 	},
 })
 
@@ -304,6 +298,7 @@ export const {
 	addLakeInfo,
 	toggleLakeShowInfo,
 	clearActiveLakes,
+	clearActiveYears,
 } = lakesSlice.actions
 
 export default lakesSlice.reducer
