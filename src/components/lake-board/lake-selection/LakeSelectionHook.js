@@ -20,7 +20,7 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 	const [year, setYear] = useState([])
 	const [isVisible, setIsVisible] = useState(true)
 	const [isSelected, setIsSelected] = useState(false)
-	const [obsDepth, setObsDepth] = useState()
+	const [obsDepth, setObsDepth] = useState(DurationTypes.PERIOD)
 	const dispatch = useDispatch()
 	const chartOptions = useSelector((state) => state.chart)
 	const { dataType, OPTIC, RADAR, YEAR, REFERENCE, VOLUME, DAY, PERIOD } =

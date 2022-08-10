@@ -15,9 +15,8 @@ export default function useChartHook() {
 	const [obsDepth, setObsDepth] = useState()
 	const [scales, setScales] = useState()
 	const form = useSelector((state) => state.form)
-	const { activeLakes, activeYears, dataLakes, totalVolume } = useSelector(
-		(state) => state.lakes
-	)
+	const { activeLakes, activeYears, dataLakes, totalVolume, yearsVisible } =
+		useSelector((state) => state.lakes)
 	const chart = useSelector((state) => state.chart)
 	const { zoomReset } = chart
 	const {
@@ -77,7 +76,10 @@ export default function useChartHook() {
 		if (PERIOD) {
 			setObsDepth(DurationTypes.PERIOD)
 		}
-	}, [DAY, OPTIC, PERIOD, RADAR, REFERENCE, YEAR, activeLakes, form])
+		if (YEAR && !yearsVisible) {
+			setDataSets([])
+		}
+	}, [DAY, OPTIC, PERIOD, RADAR, REFERENCE, YEAR, activeLakes, yearsVisible])
 
 	useEffect(() => {
 		if (
@@ -171,7 +173,8 @@ export default function useChartHook() {
 				}
 			}
 		}
-		if (YEAR) {
+		if (YEAR && yearsVisible) {
+			if (activeLakes.length === 0) return
 			const { id } = Object.values(activeLakes).at(-1)
 
 			if (!dataLakes[id][dataType]?.[obsDepth].byYear) return
@@ -372,6 +375,7 @@ export default function useChartHook() {
 		const arr = []
 		const allDates = []
 		let allDatesSorted = []
+		if (chartData.length === 0) return
 		if (!Object.values(dataLakes).length && chartData[0].length === 0) return
 		if (!YEAR) {
 			chartData.forEach((key, index) => {
@@ -401,7 +405,7 @@ export default function useChartHook() {
 		if (
 			YEAR &&
 			Object.entries(
-				dataLakes[activeLakes.at(-1).id][dataType][obsDepth].byYear
+				dataLakes[activeLakes.at(-1).id][dataType]?.[obsDepth].byYear
 			).length === chartData[0].length
 		) {
 			chartData.forEach((year) => {
@@ -847,14 +851,6 @@ export default function useChartHook() {
 	const data = {
 		datasets: dataSets,
 	}
-
-	useEffect(() => {
-		console.log({ dataSets, options })
-	}, [dataSets])
-
-	useEffect(() => {
-		console.log({ chartData })
-	}, [chartData])
 
 	return {
 		data,
