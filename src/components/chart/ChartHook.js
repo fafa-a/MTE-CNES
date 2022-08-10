@@ -77,9 +77,6 @@ export default function useChartHook() {
 		if (PERIOD) {
 			setObsDepth(DurationTypes.PERIOD)
 		}
-    if (activeLakes.length === 0) {
-			setChartData([])
-		}
 	}, [DAY, OPTIC, PERIOD, RADAR, REFERENCE, YEAR, activeLakes, form])
 
 	useEffect(() => {
@@ -175,7 +172,6 @@ export default function useChartHook() {
 			}
 		}
 		if (YEAR) {
-      if (activeLakes.length === 0) return
 			const { id } = Object.values(activeLakes).at(-1)
 
 			if (!dataLakes[id][dataType]?.[obsDepth].byYear) return
@@ -402,7 +398,12 @@ export default function useChartHook() {
 			const lastDateGraph = getChartFirstDateNextMonth(allDatesSorted.at(-1))
 			setDateMax(lastDateGraph)
 		}
-		if (YEAR) {
+		if (
+			YEAR &&
+			Object.entries(
+				dataLakes[activeLakes.at(-1).id][dataType][obsDepth].byYear
+			).length === chartData[0].length
+		) {
 			chartData.forEach((year) => {
 				Object.values(year).forEach((obs, index) => {
 					obs.forEach((itm, idx) => {
@@ -846,6 +847,14 @@ export default function useChartHook() {
 	const data = {
 		datasets: dataSets,
 	}
+
+	useEffect(() => {
+		console.log({ dataSets, options })
+	}, [dataSets])
+
+	useEffect(() => {
+		console.log({ chartData })
+	}, [chartData])
 
 	return {
 		data,
