@@ -19,12 +19,16 @@ export default function useFormHook() {
 	const downloadChartImage = useCallback(
 		(e) => {
 			e.preventDefault()
-			const img = document.getElementsByTagName("canvas")
-			if (img[1]) {
-				saveAs(
-					img[1].toDataURL("image/png"),
-					`${filenameLakes}_${form.dataType.toLowerCase()}_chart.png`
-				)
+			const img = document.getElementsByTagName("canvas")[1]
+			if (img.toDataURL("image/png")) {
+				try {
+					saveAs(
+						img.toDataURL("image/png"),
+						`${filenameLakes}_${form.dataType.toLowerCase()}_chart.png`
+					)
+				} catch (error) {
+					console.error(error)
+				}
 			}
 		},
 		[filenameLakes, form.dataType]
