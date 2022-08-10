@@ -20,10 +20,12 @@ export default function useFormHook() {
 		(e) => {
 			e.preventDefault()
 			const img = document.getElementsByTagName("canvas")
-			saveAs(
-				img[1].toDataURL("image/png"),
-				`${filenameLakes}_${form.dataType.toLowerCase()}_chart.png`
-			)
+			if (img[1]) {
+				saveAs(
+					img[1].toDataURL("image/png"),
+					`${filenameLakes}_${form.dataType.toLowerCase()}_chart.png`
+				)
+			}
 		},
 		[filenameLakes, form.dataType]
 	)
