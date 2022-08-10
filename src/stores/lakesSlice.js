@@ -94,12 +94,10 @@ export const lakesSlice = createSlice({
 			lastId = lakeId
 			lastObsDepth = obsDepth
 			lastByVolume = JSON.stringify(byVolume)
-console.log({ byVolume })
 if (dataType === DataTypes.VOLUME) {
 	if (state.totalVolume.length === 0) {
 		state.totalVolume = byVolume
 
-		console.log(current(state))
 	} else {
 		if (byVolume[0].length >= state.totalVolume[0]?.length) {
 			const firstDate = state.totalVolume[0][0].date
@@ -109,7 +107,6 @@ if (dataType === DataTypes.VOLUME) {
 					return el.date >= firstDate && el.date <= lastDate
 				})
 			})
-			console.log({ byVolumeDateFilter })
 			state.totalVolume = state.totalVolume.map((obs, index) => {
 				return obs.map((el, i) => {
 					const { date, value } = byVolumeDateFilter[index][i]
@@ -122,13 +119,10 @@ if (dataType === DataTypes.VOLUME) {
 				})
 			})
 		}
-		console.log(current(state))
 		if (state.totalVolume[0]?.length > byVolume[0].length) {
 			const firstDate = byVolume[0][0].date
 			const lastDate = byVolume[0].at(-1).date
 			state.totalVolume = state.totalVolume.map((obs) => {
-				console.log(current(obs))
-
 				return obs.filter((el) => {
 					return el.date >= firstDate && el.date <= lastDate
 				})

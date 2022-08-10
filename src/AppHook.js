@@ -574,9 +574,6 @@ export function useAppHook() {
 		fullDataOfVolume,
 	])
 
-	useEffect(() => {
-		console.log({ fullDataOfVolume })
-	}, [fullDataOfVolume])
 
 	return {
 		showLakeInfo,
