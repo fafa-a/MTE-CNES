@@ -77,6 +77,9 @@ export default function useChartHook() {
 		if (PERIOD) {
 			setObsDepth(DurationTypes.PERIOD)
 		}
+    if (activeLakes.length === 0) {
+			setChartData([])
+		}
 	}, [DAY, OPTIC, PERIOD, RADAR, REFERENCE, YEAR, activeLakes, form])
 
 	useEffect(() => {
@@ -172,6 +175,7 @@ export default function useChartHook() {
 			}
 		}
 		if (YEAR) {
+      if (activeLakes.length === 0) return
 			const { id } = Object.values(activeLakes).at(-1)
 
 			if (!dataLakes[id][dataType]?.[obsDepth].byYear) return

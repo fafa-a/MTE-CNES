@@ -212,7 +212,9 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 				css={YEAR && increaseWidth}
 			>
 				<StyledParagraph css={isSelected && fontBold}>
-					{YEAR && `${name} ${activeLakes.at(-1).name}`}
+					{YEAR &&
+						activeLakes.length > 0 &&
+						`${name} ${activeLakes.at(-1).name}`}
 					{!YEAR && name}
 				</StyledParagraph>
 			</StyledContainerP>
