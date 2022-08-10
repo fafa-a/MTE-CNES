@@ -94,53 +94,59 @@ export const lakesSlice = createSlice({
 			lastId = lakeId
 			lastObsDepth = obsDepth
 			lastByVolume = JSON.stringify(byVolume)
+console.log({ byVolume })
+if (dataType === DataTypes.VOLUME) {
+	if (state.totalVolume.length === 0) {
+		state.totalVolume = byVolume
 
-			if (dataType === DataTypes.VOLUME) {
-				if (state.totalVolume.length === 0) {
-					state.totalVolume = byVolume
-				} else {
-					if (byVolume[0].length >= state.totalVolume[0]?.length) {
-						const firstDate = state.totalVolume[0][0].date
-						const lastDate = state.totalVolume[0].at(-1).date
-						byVolume.map((obs) => {
-							return obs.filter((el) => {
-								return el.date >= firstDate && el.date <= lastDate
-							})
-						})
-						state.totalVolume = state.totalVolume.map((obs, index) => {
-							return obs.map((el, i) => {
-								const { date, value } = byVolume[index][i]
-								if (el.date === date) {
-									return {
-										date: el.date,
-										value: el.value + value,
-									}
-								}
-							})
-						})
+		console.log(current(state))
+	} else {
+		if (byVolume[0].length >= state.totalVolume[0]?.length) {
+			const firstDate = state.totalVolume[0][0].date
+			const lastDate = state.totalVolume[0].at(-1).date
+			const byVolumeDateFilter = byVolume.map((obs) => {
+				return obs.filter((el) => {
+					return el.date >= firstDate && el.date <= lastDate
+				})
+			})
+			console.log({ byVolumeDateFilter })
+			state.totalVolume = state.totalVolume.map((obs, index) => {
+				return obs.map((el, i) => {
+					const { date, value } = byVolumeDateFilter[index][i]
+					if (el.date === date) {
+						return {
+							date: el.date,
+							value: el.value + value,
+						}
 					}
-					if (state.totalVolume[0]?.length > byVolume[0].length) {
-						const firstDate = byVolume[0][0].date
-						const lastDate = byVolume[0].at(-1).date
-						state.totalVolume = state.totalVolume.map((obs) => {
-							return obs.filter((el) => {
-								return el.date >= firstDate && el.date <= lastDate
-							})
-						})
-						state.totalVolume = state.totalVolume.map((obs, index) => {
-							return obs.map((el, i) => {
-								const { date, value } = byVolume[index][i]
-								if (el.date === date) {
-									return {
-										date: el.date,
-										value: el.value + value,
-									}
-								}
-							})
-						})
+				})
+			})
+		}
+		console.log(current(state))
+		if (state.totalVolume[0]?.length > byVolume[0].length) {
+			const firstDate = byVolume[0][0].date
+			const lastDate = byVolume[0].at(-1).date
+			state.totalVolume = state.totalVolume.map((obs) => {
+				console.log(current(obs))
+
+				return obs.filter((el) => {
+					return el.date >= firstDate && el.date <= lastDate
+				})
+			})
+			state.totalVolume = state.totalVolume.map((obs, index) => {
+				return obs.map((el, i) => {
+					const { date, value } = byVolume[index][i]
+					if (el.date === date) {
+						return {
+							date: el.date,
+							value: el.value + value,
+						}
 					}
-				}
-			}
+				})
+			})
+		}
+	}
+}
 
 			if (!state.loadedLakes.includes(lakeId)) {
 				state.loadedLakes.push(lakeId)

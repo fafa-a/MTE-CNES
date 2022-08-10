@@ -406,7 +406,7 @@ export function useAppHook() {
 			?.map((el) => {
 				return el[0].date
 			})
-			.sort((a, b) => (new Date(a) > new Date(b) ? -1 : 1))[0]
+			.sort((a, b) => (new Date(a) < new Date(b) ? -1 : 1))
 		return firstDate
 	}, [])
 
@@ -415,7 +415,7 @@ export function useAppHook() {
 			?.map((el) => {
 				return el.at(-1).date
 			})
-			.sort((a, b) => (new Date(a) < new Date(b) ? -1 : 1))[0]
+			.sort((a, b) => (new Date(a) > new Date(b) ? -1 : 1))[0]
 		return lastDate
 	}, [])
 
@@ -423,10 +423,11 @@ export function useAppHook() {
 		(arr) => {
 			const arrOfDates = []
 			const newData = []
-			const startingDate = new Date(getStartDate(arr))
+			const startingDate = getStartDate(arr)
 			const endingDate = new Date(getLastDate(arr))
+
 			for (
-				let d = new Date(startingDate);
+				let d = new Date(startingDate[0]);
 				d <= endingDate;
 				d.setDate(d.getDate() + 1)
 			) {
@@ -439,17 +440,18 @@ export function useAppHook() {
 				return obs.filter((el) => {
 					if (index === 2) {
 						return (
-							el.date >= startingDate.toISOString().slice(0, 10) &&
+							el.date >= new Date(startingDate[0]).toISOString().slice(0, 10) &&
 							el.date <= endingDate.toISOString().slice(0, 10) &&
 							el.hour === "00:00:00"
 						)
 					}
 					return (
-						el.date >= startingDate.toISOString().slice(0, 10) &&
+						el.date >= new Date(startingDate[0]).toISOString().slice(0, 10) &&
 						el.date <= endingDate.toISOString().slice(0, 10)
 					)
 				})
 			})
+
 			obsTypesDateFiltered.forEach((obs, index) => {
 				arrOfDates.forEach((date) => {
 					if (obs.map((el) => el.date).includes(date)) {
@@ -462,7 +464,15 @@ export function useAppHook() {
 						value,
 					})
 				})
-				newData.push(arrTmp)
+
+				newData.push(
+					arrTmp.filter((el) => {
+						return (
+							el.date >= new Date(startingDate[1]).toISOString().slice(0, 10) &&
+							el.date <= endingDate.toISOString().slice(0, 10)
+						)
+					})
+				)
 				arrTmp = []
 			})
 			return [newData]
@@ -564,7 +574,9 @@ export function useAppHook() {
 		fullDataOfVolume,
 	])
 
-
+	useEffect(() => {
+		console.log({ fullDataOfVolume })
+	}, [fullDataOfVolume])
 
 	return {
 		showLakeInfo,
