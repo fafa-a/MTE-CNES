@@ -217,7 +217,7 @@ export function useAppHook() {
 
 	useEffect(() => {
 		let lakeDataTmp = []
-		if (YEAR && dataLakes[activeLakes.at(-1).id][dataType][obsDepth].byYear)
+		if (YEAR && dataLakes[activeLakes.at(-1).id][dataType]?.[obsDepth].byYear)
 			return
 
 		lakeDataWithReference.forEach((obs) => {

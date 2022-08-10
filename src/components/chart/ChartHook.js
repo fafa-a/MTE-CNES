@@ -131,8 +131,9 @@ export default function useChartHook() {
 			}
 			for (const lake of activeLakes) {
 				const { id } = lake
-        if(!dataLakes[id][dataType]?.[obsDepth]) return
+				if (!dataLakes[id][dataType]?.[obsDepth]) return
 				if (!dataLakes[id][dataType]?.[obsDepth].raw) continue
+
 				const dataRaw = VOLUME
 					? dataLakes[id][dataType][obsDepth].byVolume
 					: dataLakes[id][dataType][obsDepth].raw
@@ -146,6 +147,9 @@ export default function useChartHook() {
 				}
 
 				if (OPTIC && !RADAR && REFERENCE) {
+					if (dataRaw[2].length === 0) {
+						dataTmp.push([dataRaw.slice(0, 1)])
+					}
 					dataTmp.push([dataRaw.slice(0, -1)])
 				}
 
@@ -162,6 +166,7 @@ export default function useChartHook() {
 				}
 
 				if (!OPTIC && !RADAR && REFERENCE) {
+					if (dataRaw.length < 3) return
 					dataTmp.push([[dataRaw.at(-1)]])
 				}
 			}
@@ -172,20 +177,40 @@ export default function useChartHook() {
 			if (!dataLakes[id][dataType]?.[obsDepth].byYear) return
 			const dataByYear = Object.values(dataLakes[id][dataType][obsDepth].byYear)
 
-			if (REFERENCE && !OPTIC) {
-				const dataWithoutOptic = dataByYear.map((obs) => obs.slice(1, 3))
-				dataTmp.push(dataWithoutOptic)
-			}
-			if (REFERENCE && !RADAR) {
-				const dataWithoutRadar = dataByYear.map((obs) => obs.slice(0, -1))
-				dataTmp.push(dataWithoutRadar)
-			}
-			if (REFERENCE && OPTIC && RADAR) {
+			if (OPTIC && RADAR && REFERENCE) {
 				dataTmp.push(dataByYear)
 			}
-			if (!REFERENCE && OPTIC && RADAR) {
-				const dataByYearWithoutRef = dataByYear.map((obs) => obs.slice(0, 2))
-				dataTmp.push(dataByYearWithoutRef)
+
+			if (OPTIC && !RADAR && !REFERENCE) {
+				dataTmp.push(dataByYear.map((obs) => obs.slice(0, 1)))
+			}
+
+			if (OPTIC && !RADAR && REFERENCE) {
+				if (dataByYear[0].length === 2) {
+					dataTmp.push(dataByYear.map((obs) => obs.slice(0, 1)))
+				}
+				if (dataByYear[0].length === 3) {
+					dataTmp.push(
+						dataByYear.map((obs) => [obs.slice(0, 1)[0], obs.at(-1)])
+					)
+				}
+			}
+
+			if (!OPTIC && RADAR && !REFERENCE) {
+				dataTmp.push(dataByYear.map((obs) => obs.slice(1, 2)))
+			}
+
+			if (!OPTIC && RADAR && REFERENCE) {
+				dataTmp.push(dataByYear.map((obs) => obs.slice(1, 3)))
+			}
+
+			if (OPTIC && RADAR && !REFERENCE) {
+				dataTmp.push(dataByYear.map((obs) => obs.slice(0, 2)))
+			}
+
+			if (!OPTIC && !RADAR && REFERENCE) {
+				if (dataByYear[0].length === 2) return
+				dataTmp.push(dataByYear.map((obs) => obs.at(-1)))
 			}
 		}
 		setChartData(dataTmp)
@@ -248,7 +273,7 @@ export default function useChartHook() {
 					return false
 				}
 				if (!YEAR && !VOLUME) {
-					return !Object.values(activeLakes)[indexColor].chartVisible
+					return !Object.values(activeLakes)[indexColor]?.chartVisible
 				}
 				if (YEAR && !VOLUME) {
 					return !Object.values(activeYears)[indexColor].chartVisible
