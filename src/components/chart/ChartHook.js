@@ -79,6 +79,9 @@ export default function useChartHook() {
 		if (YEAR && !yearsVisible) {
 			setDataSets([])
 		}
+		if (activeLakes.length === 0) {
+			setDataSets([])
+		}
 	}, [DAY, OPTIC, PERIOD, RADAR, REFERENCE, YEAR, activeLakes, yearsVisible])
 
 	useEffect(() => {
@@ -139,7 +142,6 @@ export default function useChartHook() {
 				const dataRaw = VOLUME
 					? dataLakes[id][dataType][obsDepth].byVolume
 					: dataLakes[id][dataType][obsDepth].raw
-
 				if (OPTIC && RADAR && REFERENCE) {
 					dataTmp.push([dataRaw])
 				}
@@ -851,6 +853,7 @@ export default function useChartHook() {
 	const data = {
 		datasets: dataSets,
 	}
+
 
 	return {
 		data,

@@ -59,29 +59,17 @@ export const lakesSlice = createSlice({
 				return
 			if (lastLakeData === JSON.stringify(lakeData)) return
 			if (!byYear) return
-
-			if (!state.dataLakes[lakeId][dataType]) {
-				state.dataLakes[lakeId][dataType] = {
-					[obsDepth]: {
-						raw: lakeData,
-						byYear,
-						byVolume,
-						seriePath,
-					},
+        if (state.dataLakes[lakeId][dataType]?.[obsDepth]) return
+				if (!state.dataLakes[lakeId][dataType]) {
+					state.dataLakes[lakeId][dataType] = {
+						[obsDepth]: {
+							raw: lakeData,
+							byYear,
+							byVolume,
+							seriePath,
+						},
+					}
 				}
-			}
-
-			// if (state.dataLakes[lakeId][dataType]) {
-			// 	state.dataLakes[lakeId][dataType] = {
-			// 		...state.dataLakes[lakeId][dataType],
-			// 		[obsDepth]: {
-			// 			raw: lakeData,
-			// 			byYear,
-			// 			byVolume,
-			// 			seriePath,
-			// 		},
-			// 	}
-			// }
 
 			if (state.dataLakes[lakeId][dataType]) {
 				if (

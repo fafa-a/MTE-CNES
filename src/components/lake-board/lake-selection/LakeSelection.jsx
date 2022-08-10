@@ -137,10 +137,6 @@
 			obsDepth,
 		} = useLakeSelectionHook({ id, name, coordinates, index })
 
-		let byYear
-		if (dataLakes[id]?.[dataType]) {
-			byYear = Object.entries(dataLakes[id]?.[dataType][obsDepth].byYear)
-		}
 
 		return (
 			<StyledDiv css={isSelected && backgroundBorderColored}>
@@ -191,19 +187,19 @@
 				)}
 				{YEAR && (
 					<StyledDivObservationTypes>
-						{OPTIC && byYear?.[0][1][0]?.length > 0 && (
+						{OPTIC && (
 							<StyledDivContainerObsTypes>
 								<StyledSpanObsColor style={bgOptic} />
 								<StyledSpanLabel>optic</StyledSpanLabel>
 							</StyledDivContainerObsTypes>
 						)}
-						{RADAR && byYear?.[0][1][1]?.length > 0 && (
+						{RADAR && (
 							<StyledDivContainerObsTypes>
 								<StyledSpanObsColor style={bgRadar} />
 								<StyledSpanLabel>radar</StyledSpanLabel>
 							</StyledDivContainerObsTypes>
 						)}
-						{REFERENCE && byYear?.[0][1][2]?.length > 0 && (
+						{REFERENCE && (
 							<StyledDivContainerObsTypes>
 								<StyledSpanObsColor style={bgReference} />
 								<StyledSpanLabel>ref</StyledSpanLabel>
