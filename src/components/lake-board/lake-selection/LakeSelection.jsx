@@ -135,26 +135,26 @@
 			dataLakes,
 			dataType,
 			obsDepth,
+			totalVolume,
 		} = useLakeSelectionHook({ id, name, coordinates, index })
-
 
 		return (
 			<StyledDiv css={isSelected && backgroundBorderColored}>
 				{VOLUME && id === "total" && (
 					<StyledDivObservationTypes>
-						{OPTIC && (
+						{OPTIC && totalVolume[0]?.length > 0 && (
 							<StyledDivContainerObsTypes>
 								<StyledSpanObsColor style={bgOptic} />
 								<StyledSpanLabel>optic</StyledSpanLabel>
 							</StyledDivContainerObsTypes>
 						)}
-						{RADAR && (
+						{RADAR && totalVolume[1]?.length > 0 && (
 							<StyledDivContainerObsTypes>
 								<StyledSpanObsColor style={bgRadar} />
 								<StyledSpanLabel>radar</StyledSpanLabel>
 							</StyledDivContainerObsTypes>
 						)}
-						{REFERENCE && (
+						{REFERENCE && totalVolume[2]?.length > 0 && (
 							<StyledDivContainerObsTypes>
 								<StyledSpanObsColor style={bgReference} />
 								<StyledSpanLabel>ref</StyledSpanLabel>

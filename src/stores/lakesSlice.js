@@ -99,6 +99,9 @@ if (dataType === DataTypes.VOLUME) {
 		state.totalVolume = byVolume
 
 	} else {
+    if (byVolume.length === 2) {
+			state.totalVolume.length = 2
+		}
 		if (byVolume[0].length >= state.totalVolume[0]?.length) {
 			const firstDate = state.totalVolume[0][0].date
 			const lastDate = state.totalVolume[0].at(-1).date

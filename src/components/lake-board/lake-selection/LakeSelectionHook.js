@@ -26,7 +26,7 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 	const { dataType, OPTIC, RADAR, YEAR, REFERENCE, VOLUME, DAY, PERIOD } =
 		useSelector((state) => state.form)
 
-	const { activeLakes, dataLakes, activeYears } = useSelector(
+	const { activeLakes, dataLakes, activeYears, totalVolume } = useSelector(
 		(state) => state.lakes
 	)
 	const setlakeIconsOptions = useCallback(() => {
@@ -159,5 +159,6 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 		dataLakes,
 		dataType,
 		obsDepth,
+    totalVolume
 	}
 }
