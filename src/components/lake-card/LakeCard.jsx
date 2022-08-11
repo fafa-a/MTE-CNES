@@ -125,13 +125,13 @@ export const LakeCard = () => {
 						<li>lat : {lake.damCoord[0]}</li>
 						<li>long : {lake.damCoord[1]}</li>
 					</ul>
-					<p>
+					<span>
 						<span>Reservoirs coordinates:</span>
 						<ul>
 							<li>lat : {lake.lakeCoord[0]}</li>
 							<li>long : {lake.lakeCoord[1]}</li>
 						</ul>
-					</p>
+					</span>
 				</SDivCoord>
 			</SArticle>
 		</SDiv>
