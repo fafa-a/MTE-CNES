@@ -266,6 +266,12 @@ if (dataType === DataTypes.VOLUME) {
 			const { lakeId } = action.payload
 			if (state.activeLakes.map((lake) => lake.id).includes(lakeId)) {
 				state.activeLakes = state.activeLakes.map((lake) => {
+          if (lake.showInfo && lake.id !== lakeId) {
+						return {
+							...lake,
+							showInfo: false,
+						}
+					}
 					if (lake.id === lakeId) {
 						return {
 							...lake,

@@ -123,6 +123,7 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 	}, [YEAR, dispatch, id])
 
 	const toggleInfo = useCallback(() => {
+    console.log("in");
 		dispatch(toggleLakeShowInfo({ lakeId: id }))
 	}, [dispatch, id])
 
