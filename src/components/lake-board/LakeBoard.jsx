@@ -15,7 +15,7 @@ const Container = styled("div", {
 	overflow: "auto",
 })
 const H3 = styled("h3", {
-	fontFamily: "arial",
+	fontFamily: "sans-serif",
 	marginBottom: theme.space.sm,
 })
 

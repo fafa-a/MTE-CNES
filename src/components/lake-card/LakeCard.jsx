@@ -16,7 +16,7 @@ const SDiv = styled("div", {
 	"borderRadius": theme.borderRadius.sm,
 	"display": "flex",
 	"flexDirection": "column",
-	"fontFamily": "arial",
+	"fontFamily": "sans-serif",
 
 	"color": "$text",
 	"& p > span": {
@@ -45,7 +45,7 @@ const SButton = styled("button", {
 })
 
 const SReactTooltip = styled(ReactTooltip, {
-	fontFamily: "arial",
+	fontFamily: "sans-serif",
 	fontSize: `${theme.fontSizes.xs}!important`,
 	marginTop: "0 !important",
 	padding: "4px 8px !important",
@@ -111,10 +111,12 @@ export const LakeCard = () => {
 						<span> Id SWOT :</span> {lake.id}
 					</p>
 					<p>
-						<span>Main use :</span> {lake.mainUse}
+						<span>Main use :</span>{" "}
+						{lake.mainUse !== "NULL" ? lake.mainUse : "n/a"}
 					</p>
 					<p>
-						<span>Near city :</span> {lake.nearCity}
+						<span>Near city :</span>{" "}
+						{lake.nearCity !== "NULL" ? lake.nearCity : "n/a"}
 					</p>
 				</SDivId>
 				<SDivCoord>

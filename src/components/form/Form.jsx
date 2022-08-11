@@ -20,7 +20,7 @@ import {
 import { Radiobox } from "../radiobox/RadioBox"
 
 const StyledContainer = styled("div", {
-	fontFamily: "arial",
+	fontFamily: "san-serif",
 	color: "$text",
 	display: "flex",
 	flexDirection: "column",
@@ -40,7 +40,7 @@ const DivFlexRow = styled("div", {
 })
 
 const H3 = styled("h3", {
-	fontFamily: "arial",
+	fontFamily: "sans-serif",
 	marginBottom: theme.space.sm,
 })
 const ButtonIconContainer = styled("div", {
