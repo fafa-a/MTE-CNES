@@ -361,13 +361,11 @@ export function useAppHook() {
 			arrTmp.push(data)
 		})
 		if (
-			dataType === DataTypes.FILLING_RATE &&
-			arrTmp[0].at(-1).length > 0 &&
-			JSON.stringify(arrTmp[0].at(-1)) ===
-				JSON.stringify(lakeDataWithReference[0]?.at(-1))
-		)
-			return
-		setLakeDataWithReference(arrTmp)
+			JSON.stringify(arrTmp[0].at(-1)) !==
+			JSON.stringify(lakeDataWithReference[0]?.at(-1))
+		) {
+			setLakeDataWithReference(arrTmp)
+		}
 	}, [lakeData, surfaceReference, volumeReference, fillingRateReference])
 
 	const handleFetchData = useCallback(async () => {
