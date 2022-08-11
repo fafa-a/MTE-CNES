@@ -364,7 +364,7 @@ export function useAppHook() {
 			dataType === DataTypes.FILLING_RATE &&
 			arrTmp[0].at(-1).length > 0 &&
 			JSON.stringify(arrTmp[0].at(-1)) ===
-				JSON.stringify(lakeDataWithReference[0].at(-1))
+				JSON.stringify(lakeDataWithReference[0]?.at(-1))
 		)
 			return
 		setLakeDataWithReference(arrTmp)
@@ -415,7 +415,7 @@ export function useAppHook() {
 			?.map((el) => {
 				return el.at(-1).date
 			})
-			.sort((a, b) => (new Date(a) > new Date(b) ? -1 : 1))[0]
+			.sort((a, b) => (new Date(a) < new Date(b) ? -1 : 1))[0]
 		return lastDate
 	}, [])
 
@@ -425,7 +425,6 @@ export function useAppHook() {
 			const newData = []
 			const startingDate = getStartDate(arr)
 			const endingDate = new Date(getLastDate(arr))
-
 			for (
 				let d = new Date(startingDate[0]);
 				d <= endingDate;
@@ -468,7 +467,8 @@ export function useAppHook() {
 				newData.push(
 					arrTmp.filter((el) => {
 						return (
-							el.date >= new Date(startingDate[1]).toISOString().slice(0, 10) &&
+							el.date >=
+								new Date(startingDate.at(-1)).toISOString().slice(0, 10) &&
 							el.date <= endingDate.toISOString().slice(0, 10)
 						)
 					})
