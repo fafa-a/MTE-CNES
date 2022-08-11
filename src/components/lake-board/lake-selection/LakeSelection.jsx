@@ -177,22 +177,24 @@
 				)}
 				{!VOLUME && !YEAR && (
 					<StyledDivObservationTypes>
-						{OPTIC && dataLakes[id]?.[dataType]?.[obsDepth]?.raw[0].length > 0 && (
-							<StyledDivContainerObsTypes>
-								<StyledSpanObsColor style={bgOptic} />
-								<SpanBgWhite />
-								<StyledSpanLabel>optic</StyledSpanLabel>
-							</StyledDivContainerObsTypes>
-						)}
-						{RADAR && dataLakes[id]?.[dataType]?.[obsDepth]?.raw[1].length > 0 && (
-							<StyledDivContainerObsTypes>
-								<StyledSpanObsColor style={bgRadar} />
-								<SpanBgWhite />
-								<StyledSpanLabel>radar</StyledSpanLabel>
-							</StyledDivContainerObsTypes>
-						)}
+						{OPTIC &&
+							dataLakes[id]?.[dataType]?.[obsDepth]?.raw[0]?.length > 0 && (
+								<StyledDivContainerObsTypes>
+									<StyledSpanObsColor style={bgOptic} />
+									<SpanBgWhite />
+									<StyledSpanLabel>optic</StyledSpanLabel>
+								</StyledDivContainerObsTypes>
+							)}
+						{RADAR &&
+							dataLakes[id]?.[dataType]?.[obsDepth]?.raw[1]?.length > 0 && (
+								<StyledDivContainerObsTypes>
+									<StyledSpanObsColor style={bgRadar} />
+									<SpanBgWhite />
+									<StyledSpanLabel>radar</StyledSpanLabel>
+								</StyledDivContainerObsTypes>
+							)}
 						{REFERENCE &&
-							dataLakes[id]?.[dataType]?.[obsDepth]?.raw[2].length > 0 && (
+							dataLakes[id]?.[dataType]?.[obsDepth]?.raw[2]?.length > 0 && (
 								<StyledDivContainerObsTypes>
 									<StyledSpanObsColor style={bgReference} />
 									<SpanBgWhite />
