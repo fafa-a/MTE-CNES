@@ -82,6 +82,16 @@
 		width: "8px",
 		height: "8px",
 		display: "inline-block",
+		zIndex: "1",
+	})
+	const SpanBgWhite = styled("span", {
+		backgroundColor: "white",
+		position: "relative",
+		top: "0",
+		left: "0",
+		width: "8px",
+		height: "8px",
+		marginLeft: "-8px",
 	})
 
 	const StyledSpanLabel = styled("span", {
@@ -145,18 +155,21 @@
 						{OPTIC && totalVolume[0]?.length > 0 && (
 							<StyledDivContainerObsTypes>
 								<StyledSpanObsColor style={bgOptic} />
+								<SpanBgWhite />
 								<StyledSpanLabel>optic</StyledSpanLabel>
 							</StyledDivContainerObsTypes>
 						)}
 						{RADAR && totalVolume[1]?.length > 0 && (
 							<StyledDivContainerObsTypes>
 								<StyledSpanObsColor style={bgRadar} />
+								<SpanBgWhite />
 								<StyledSpanLabel>radar</StyledSpanLabel>
 							</StyledDivContainerObsTypes>
 						)}
 						{REFERENCE && totalVolume[2]?.length > 0 && (
 							<StyledDivContainerObsTypes>
 								<StyledSpanObsColor style={bgReference} />
+								<SpanBgWhite />
 								<StyledSpanLabel>ref</StyledSpanLabel>
 							</StyledDivContainerObsTypes>
 						)}
@@ -167,12 +180,14 @@
 						{OPTIC && dataLakes[id]?.[dataType]?.[obsDepth]?.raw[0].length > 0 && (
 							<StyledDivContainerObsTypes>
 								<StyledSpanObsColor style={bgOptic} />
+								<SpanBgWhite />
 								<StyledSpanLabel>optic</StyledSpanLabel>
 							</StyledDivContainerObsTypes>
 						)}
 						{RADAR && dataLakes[id]?.[dataType]?.[obsDepth]?.raw[1].length > 0 && (
 							<StyledDivContainerObsTypes>
 								<StyledSpanObsColor style={bgRadar} />
+								<SpanBgWhite />
 								<StyledSpanLabel>radar</StyledSpanLabel>
 							</StyledDivContainerObsTypes>
 						)}
@@ -180,6 +195,7 @@
 							dataLakes[id]?.[dataType]?.[obsDepth]?.raw[2].length > 0 && (
 								<StyledDivContainerObsTypes>
 									<StyledSpanObsColor style={bgReference} />
+									<SpanBgWhite />
 									<StyledSpanLabel>ref</StyledSpanLabel>
 								</StyledDivContainerObsTypes>
 							)}
@@ -190,18 +206,21 @@
 						{OPTIC && (
 							<StyledDivContainerObsTypes>
 								<StyledSpanObsColor style={bgOptic} />
+								<SpanBgWhite />
 								<StyledSpanLabel>optic</StyledSpanLabel>
 							</StyledDivContainerObsTypes>
 						)}
 						{RADAR && (
 							<StyledDivContainerObsTypes>
 								<StyledSpanObsColor style={bgRadar} />
+								<SpanBgWhite />
 								<StyledSpanLabel>radar</StyledSpanLabel>
 							</StyledDivContainerObsTypes>
 						)}
 						{REFERENCE && (
 							<StyledDivContainerObsTypes>
 								<StyledSpanObsColor style={bgReference} />
+								<SpanBgWhite />
 								<StyledSpanLabel>ref</StyledSpanLabel>
 							</StyledDivContainerObsTypes>
 						)}
