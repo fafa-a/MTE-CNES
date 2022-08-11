@@ -362,13 +362,13 @@ export function useAppHook() {
 		})
 		if (
 			dataType === DataTypes.FILLING_RATE &&
-			lakeDataWithReference.length > 0 &&
+			arrTmp[0].at(-1).length > 0 &&
 			JSON.stringify(arrTmp[0].at(-1)) ===
 				JSON.stringify(lakeDataWithReference[0].at(-1))
 		)
 			return
 		setLakeDataWithReference(arrTmp)
-	}, [surfaceReference, volumeReference, fillingRateReference])
+	}, [lakeData, surfaceReference, volumeReference, fillingRateReference])
 
 	const handleFetchData = useCallback(async () => {
 		const dataRaw = await fetchData()
@@ -573,7 +573,6 @@ export function useAppHook() {
 		//seriePath,
 		fullDataOfVolume,
 	])
-
 
 	return {
 		showLakeInfo,
