@@ -361,8 +361,11 @@ export function useAppHook() {
 			arrTmp.push(data)
 		})
 		if (
+			(arrTmp[0].at(-1).length === 0 &&
+				JSON.stringify(arrTmp[0][1]) !==
+					JSON.stringify(lakeDataWithReference[0]?.[1])) ||
 			JSON.stringify(arrTmp[0].at(-1)) !==
-			JSON.stringify(lakeDataWithReference[0]?.at(-1))
+				JSON.stringify(lakeDataWithReference[0]?.at(-1))
 		) {
 			setLakeDataWithReference(arrTmp)
 		}
