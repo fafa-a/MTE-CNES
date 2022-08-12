@@ -6,22 +6,23 @@ import { useSelector } from "react-redux"
 import ReactTooltip from "react-tooltip"
 import { useDispatch } from "react-redux"
 const SDiv = styled("div", {
-	"padding": "1.5rem",
-	"backgroundColor": "$background",
-	"position": "absolute",
-	"top": "83px",
-	"left": "14vw",
-	"marginLeft": "10px",
-	"zIndex": "1111",
-	"borderRadius": theme.borderRadius.sm,
-	"display": "flex",
-	"flexDirection": "column",
-	"fontFamily": "sans-serif",
+	padding: "1.5rem",
+	backgroundColor: "$background",
+	position: "absolute",
+	top: "83px",
+	left: "14vw",
+	marginLeft: "10px",
+	zIndex: "1111",
+	borderRadius: theme.borderRadius.sm,
+	display: "flex",
+	flexDirection: "column",
+	fontFamily: "sans-serif",
 
-	"color": "$text",
-	"& p > span": {
-		fontWeight: "bold",
-	},
+	color: "$text",
+})
+
+const SpanCoord = styled("span", {
+	fontWeight: "bold",
 })
 const SButtonContainer = styled("div", {
 	position: "absolute",
@@ -121,14 +122,14 @@ export const LakeCard = () => {
 				</SDivId>
 				<SDivCoord>
 					<p>
-						<span>Dam coordinates:</span>
+						<SpanCoord>Dam coordinates:</SpanCoord>
 					</p>
 					<ul>
 						<li>lat : {lake.damCoord[0]}</li>
 						<li>long : {lake.damCoord[1]}</li>
 					</ul>
 					<span>
-						<span>Reservoirs coordinates:</span>
+						<SpanCoord>Reservoirs coordinates:</SpanCoord>
 						<ul>
 							<li>lat : {lake.lakeCoord[0]}</li>
 							<li>long : {lake.lakeCoord[1]}</li>

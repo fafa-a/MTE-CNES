@@ -442,7 +442,7 @@ export default function useChartHook() {
 		setDataSets([...arr])
 
 		arr.length = 0
-	}, [YEAR, chartData])
+	}, [YEAR, chartData,charType])
 
 	useEffect(() => {
 		if (!YEAR) {
