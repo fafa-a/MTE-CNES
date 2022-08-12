@@ -28,7 +28,23 @@ export default function useLakeBoardHook() {
 			return
 		}
 		if (!YEAR && dataLakes[activeLakes.at(-1).id]?.[dataType]?.[obsDepth]) {
-			setDataSelection(activeLakes)
+			if (
+				dataSelection.length &&
+				!Object.values(dataSelection)
+					.map((lake) => lake.id)
+					.includes(activeLakes.at(-1).id)
+			) {
+				setDataSelection([...dataSelection, activeLakes.at(-1)])
+			}
+			if (dataSelection.length === 0) {
+				setDataSelection([activeLakes.at(-1)])
+			}
+		}
+		if (dataSelection.length > activeLakes.length) {
+			const dataSelectionFiltered = dataSelection.filter((lake) =>
+				activeLakes.map((lake) => lake.id).includes(lake.id)
+			)
+			setDataSelection(dataSelectionFiltered)
 		}
 		if (YEAR) {
 			setDataSelection(Object.values(activeYears))
@@ -37,6 +53,12 @@ export default function useLakeBoardHook() {
 			setDataSelection([])
 		}
 	}, [YEAR, activeLakes, activeYears, data, dataLakes, yearsVisible])
+
+	useEffect(() => {
+		console.log({ dataSelection })
+		const dataSelectionId = Object.values(dataSelection).map((lake) => lake.id)
+		console.log({ dataSelectionId })
+	}, [dataSelection])
 
 	const clearSelection = useCallback(() => {
 		if (!YEAR) {
