@@ -54,11 +54,6 @@ export default function useLakeBoardHook() {
 		}
 	}, [YEAR, activeLakes, activeYears, data, dataLakes, yearsVisible])
 
-	useEffect(() => {
-		console.log({ dataSelection })
-		const dataSelectionId = Object.values(dataSelection).map((lake) => lake.id)
-		console.log({ dataSelectionId })
-	}, [dataSelection])
 
 	const clearSelection = useCallback(() => {
 		if (!YEAR) {
