@@ -16,20 +16,24 @@ export default function useFormHook({ canvas }) {
 	const chartTypesValues = AppConfig.chartTypes
 	const modeTypesValues = AppConfig.modeTypes
 
-	const downloadChartImage = useCallback((e) => {
-		e.preventDefault()
-		const dataURL = canvas.toDataURL("image/png")
-		if (dataURL) {
-			try {
-				saveAs(
-					dataURL,
-					`${filenameLakes}_${form.dataType.toLowerCase()}_chart.png`
-				)
-			} catch (error) {
-				console.error(error)
+	const downloadChartImage = useCallback(
+		(e) => {
+			e.preventDefault()
+			if (!canvas) return
+			const dataURL = canvas.toDataURL("image/png")
+			if (dataURL) {
+				try {
+					saveAs(
+						dataURL,
+						`${filenameLakes}_${form.dataType.toLowerCase()}_chart.png`
+					)
+				} catch (error) {
+					console.error(error)
+				}
 			}
-		}
-	}, [])
+		},
+		[canvas]
+	)
 
 	const resetZoomChart = useCallback((e) => {
 		e.preventDefault()
