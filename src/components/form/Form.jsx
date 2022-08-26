@@ -70,7 +70,7 @@ const Tooltip = styled(ReactTooltip, {
 	padding: "4px 8px !important",
 	zIndex: "1111 !important",
 })
-export const Form = () => {
+export const Form = ({ canvas }) => {
 	const {
 		chartTypesValues,
 		dataTypesValues,
@@ -80,7 +80,7 @@ export const Form = () => {
 		modeTypesValues,
 		downloadChartImage,
 		resetZoomChart,
-	} = useFormHook()
+	} = useFormHook({ canvas })
 	return (
 		<StyledContainer>
 			<form action="">

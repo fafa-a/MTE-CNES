@@ -11,11 +11,11 @@ const SDiv = styled("div", {
 	padding: theme.space.sm,
 })
 
-export const Dashboard = () => {
+export const Dashboard = ({ canvas }) => {
 	return (
 		<SDiv>
 			<LakeBoard />
-			<Form />
+			<Form canvas={canvas} />
 		</SDiv>
 	)
 }

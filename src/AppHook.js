@@ -32,6 +32,7 @@ export function useAppHook() {
 	const [noDataLake, setNodataLake] = useState(false)
   const [obsDepth, setObsDepth] = useState(DurationTypes.PERIOD)
 	const [lastObsDepth, setLastObsDepth] = useState(DurationTypes.PERIOD)
+  const [canvas, setCanvas] = useState(null)
 	const form = useSelector((state) => state.form)
 	const { activeLakes, lakeIdToDesactivate, dataLakes } = useSelector(
 		(state) => state.lakes
@@ -41,7 +42,12 @@ export function useAppHook() {
 	const { getSeriePath, getTimeseriesPath } = SeriePathUtils
 	const dispatch = useDispatch()
 	const { unit } = AppConfig.attributes[dataType]
-	const toggleTheme = useCallback(() => {
+
+	const handleCanvas = useCallback((cvas) => {
+		setCanvas(cvas)
+	}, [])
+
+  const toggleTheme = useCallback(() => {
 		setTheme(theme === "dark" ? "light" : "dark")
 	})
 	useEffect(() => {
@@ -574,7 +580,6 @@ export function useAppHook() {
 		//seriePath,
 		fullDataOfVolume,
 	])
-
 	return {
 		showLakeInfo,
 		isOneLakeActive,
@@ -582,5 +587,7 @@ export function useAppHook() {
 		toggleTheme,
 		noDataLake,
 		handleSetNoDataLake,
+		handleCanvas,
+		canvas,
 	}
 }

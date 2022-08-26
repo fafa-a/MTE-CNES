@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { saveAs } from "file-saver"
 import { useCallback } from "react"
 import { handleResetZoom } from "../../stores/chartSlice"
-export default function useFormHook() {
+export default function useFormHook({ canvas }) {
 	const form = useSelector((state) => state.form)
 	const { activeLakes } = useSelector((state) => state.lakes)
 
@@ -18,7 +18,6 @@ export default function useFormHook() {
 
 	const downloadChartImage = useCallback((e) => {
 		e.preventDefault()
-		const canvas = document.getElementsByTagName("canvas")[1]
 		const dataURL = canvas.toDataURL("image/png")
 		if (dataURL) {
 			try {
