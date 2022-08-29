@@ -27,7 +27,7 @@
 	})
 
 	const Container = styled("div", {
-		bacbgroundColor: "$background",
+		backgroundColor: "$background",
 		color: "$text",
 	})
 	const themeMap = {
@@ -45,7 +45,6 @@
 			handleCanvas,
 			canvas,
 		} = useAppHook()
-
 		return (
 			<Container className={themeMap[theme]}>
 				<Header toggleTheme={toggleTheme} theme={theme} />
