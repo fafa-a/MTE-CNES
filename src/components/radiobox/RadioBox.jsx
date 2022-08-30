@@ -3,7 +3,7 @@ import { styled, theme } from "@/stitches.config"
 import { PropTypes } from "prop-types"
 
 const Label = styled("label", {
-	fontFamily: "sans-serif",
+	fontFamily: "arial",
 	fontSize: theme.fontSizes.base,
 	marginLeft: theme.space.sm,
 })

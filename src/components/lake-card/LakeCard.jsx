@@ -16,7 +16,7 @@ const SDiv = styled("div", {
 	borderRadius: theme.borderRadius.sm,
 	display: "flex",
 	flexDirection: "column",
-	fontFamily: "sans-serif",
+	fontFamily: "arial",
 
 	color: "$text",
 })
@@ -46,7 +46,7 @@ const SButton = styled("button", {
 })
 
 const SReactTooltip = styled(ReactTooltip, {
-	fontFamily: "sans-serif",
+	fontFamily: "arial",
 	fontSize: `${theme.fontSizes.xs}!important`,
 	marginTop: "0 !important",
 	padding: "4px 8px !important",
@@ -54,7 +54,7 @@ const SReactTooltip = styled(ReactTooltip, {
 })
 
 const SH2 = styled("h2", {
-	fontFamily: "montserrat",
+	fontFamily: "arial",
 	marginBottom: theme.space.base,
 })
 

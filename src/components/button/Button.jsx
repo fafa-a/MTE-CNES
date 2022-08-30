@@ -3,7 +3,7 @@ import { styled } from "@stitches/react"
 import { PropTypes } from "prop-types"
 
 const StyledButton = styled("button", {
-	fontFamily: "sans-serif",
+	fontFamily: "arial",
 	textTransform: "capitalize",
 	cursor: "pointer",
 })

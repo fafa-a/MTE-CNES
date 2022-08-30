@@ -15,7 +15,7 @@ const Div = styled("div", {
 	border: `1px solid ${theme.colors.disaster}`,
 	borderRadius: theme.borderRadius.xs,
 	padding: theme.space.sm,
-	fontFamily: "sans-serif",
+	fontFamily: "arial",
 })
 
 const ButtonContainer = styled("div", {
@@ -41,7 +41,7 @@ const Button = styled("button", {
 })
 
 const Tooltip = styled(ReactTooltip, {
-	fontFamily: "sans-serif",
+	fontFamily: "arial",
 	fontSize: `${theme.fontSizes.xs}!important`,
 	marginTop: "0 !important",
 	padding: "4px 8px !important",

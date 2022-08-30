@@ -12,7 +12,7 @@ const Input = styled("input", {
 })
 
 const Label = styled("label", {
-	fontFamily: "sans-serif",
+	fontFamily: "arial",
 	fontSize: theme.fontSizes.base,
 	marginLeft: theme.space.xs,
 })

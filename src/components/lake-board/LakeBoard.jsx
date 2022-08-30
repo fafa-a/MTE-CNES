@@ -15,7 +15,7 @@ const Container = styled("div", {
 	overflow: "auto",
 })
 const H3 = styled("h3", {
-	fontFamily: "sans-serif",
+	fontFamily: "arial",
 	marginBottom: theme.space.sm,
 })
 
@@ -39,7 +39,7 @@ const Button = styled("button", {
 	},
 })
 const Tooltip = styled(ReactTooltip, {
-	fontFamily: "sans-serif",
+	fontFamily: "arial",
 	fontSize: `${theme.fontSizes.xs}!important`,
 	marginTop: "0 !important",
 	padding: "4px 8px !important",

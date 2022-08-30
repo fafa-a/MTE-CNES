@@ -112,35 +112,37 @@ export const globalStyles = globalCss({
 	"@font-face": [
 		{
 			fontFamily: "montserrat",
-			src: "url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;700&display=swap')",
+			fontStyle: "normal",
+			fontWeight: 400,
+			src: "url('../../public/fonts/montserrat/montserrat-Regular.woff') format('woff')" /* Modern Browsers */,
 		},
 		{
 			fontDisplay: "swap",
 			fontFamily: "arial",
 			fontStyle: "normal",
 			fontWeight: "700",
-			src: "url('/fonts/arial_bold.woff)",
+			src: "url('../../public/fonts/arial_bold.woff) format('woff)",
 		},
 		{
 			fontDisplay: "swap",
 			fontFamily: "arial",
 			fontStyle: "italic",
 			fontWeight: "700",
-			src: "url('/fonts/arial/arial_bold_italic.woff)",
+			src: "url('../../public/fonts/arial/arial_bold_italic.woff) format('woff)",
 		},
 		{
 			fontDisplay: "swap",
 			fontFamily: "arial",
 			fontStyle: "italic",
 			fontWeight: "normal",
-			src: "url('/fonts/arial/arial_italic.woff)",
+			src: "url('../../public/fonts/arial/arial_italic.woff) format('woff)",
 		},
 		{
 			fontDisplay: "swap",
 			fontFamily: "arial",
 			fontStyle: "normal",
 			fontWeight: "normal",
-			src: "url('/fonts/arial/arial.woff)",
+			src: "url('../../public/fonts/arial/arial.woff) format('woff)",
 		},
 	],
 })

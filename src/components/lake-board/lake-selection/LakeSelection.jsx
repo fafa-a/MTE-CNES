@@ -54,7 +54,7 @@
 
 	const StyledParagraph = styled("p", {
 		cursor: "pointer",
-		fontFamily: "sans-serif",
+		fontFamily: "arial",
 		paddingLeft: theme.space.sm,
 		width: "100%",
 		height: "100%",
@@ -95,13 +95,13 @@
 	})
 
 	const StyledSpanLabel = styled("span", {
-		fontFamily: "sans-serif",
+		fontFamily: "arial",
 		marginLeft: theme.space.xs,
 		fontSize: theme.fontSizes.xs,
 	})
 
 	const StyledReactTooltip = styled(ReactTooltip, {
-		fontFamily: "sans-serif",
+		fontFamily: "arial",
 		fontSize: `${theme.fontSizes.xs}!important`,
 		marginTop: "0 !important",
 		padding: "4px 8px !important",
