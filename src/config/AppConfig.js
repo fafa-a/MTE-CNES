@@ -43,7 +43,7 @@ const config = {
 			],
 			borderWidth: 1.2,
 			tension: 0,
-			pointRadius: 0,
+			pointRadius: 1.4,
 			label: "Surface",
 			filePath: "surface_raw",
 			unit: "ha",
@@ -63,7 +63,7 @@ const config = {
 			],
 			borderWidth: 1.2,
 			tension: 0,
-			pointRadius: 0,
+			pointRadius: 1.4,
 			label: "Volume",
 			filePath: "volume_raw",
 			unit: "hm³",
@@ -101,13 +101,12 @@ const config = {
 		},
 	},
 	modeTypes: {
-    [MODE_TYPES.VOLUME]: {
-      label: "Volume",
-    },
+		[MODE_TYPES.VOLUME]: {
+			label: "Volume",
+		},
 		[MODE_TYPES.YEAR]: {
 			label: "Year",
 		},
-
 	},
 }
 export default config
