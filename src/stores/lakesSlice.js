@@ -27,7 +27,6 @@ const initialState = {
 			index: 2,
 		},
 	},
-	loadedLakes: [],
 	totalVolume: [],
 	lakeIdToDesactivate: "",
 	coordinatesLakeToCenter: [],
@@ -101,54 +100,52 @@ export const lakesSlice = createSlice({
 					if (byVolume.length === 2) {
 						state.totalVolume.length = 2
 					}
-          if (state.totalVolume.length === 2) {
+					if (state.totalVolume.length === 2) {
 						byVolume.length = 2
 					}
-					if (byVolume[0].length >= state.totalVolume[0]?.length) {
-						const firstDate = byVolume[0][0].date
-						const lastDate = byVolume[0].at(-1).date
-						const byVolumeDateFilter = byVolume.map((obs) => {
-							return obs.filter((el) => {
-								return el.date >= firstDate && el.date <= lastDate
-							})
-						})
-						state.totalVolume = state.totalVolume.map((obs, index) => {
-							return obs.map((el, i) => {
-								const { date, value } = byVolumeDateFilter[index][i]
-								if (el.date === date) {
-									return {
-										date: el.date,
-										value: el.value + value,
-									}
-								}
-							})
-						})
-					}
-					if (state.totalVolume[0]?.length > byVolume[0].length) {
-						const firstDate = byVolume[0][0].date
-						const lastDate = byVolume[0].at(-1).date
-						state.totalVolume = state.totalVolume.map((obs) => {
-							return obs.filter((el) => {
-								return el.date >= firstDate && el.date <= lastDate
-							})
-						})
-						state.totalVolume = state.totalVolume.map((obs, index) => {
-							return obs.map((el, i) => {
-								const { date, value } = byVolume[index][i]
-								if (el.date === date) {
-									return {
-										date: el.date,
-										value: el.value + value,
-									}
-								}
-							})
-						})
-					}
-				}
-			}
 
-			if (!state.loadedLakes.includes(lakeId)) {
-				state.loadedLakes.push(lakeId)
+					const totalVolumeFirstDate = state.totalVolume[0][0].date
+					const totalVolumeLastDate = state.totalVolume[0].at(-1).date
+					const byVolumeFirstDate = byVolume[0][0].date
+					const byVolumeLastDate = byVolume[0].at(-1).date
+					let firstDate
+					let lastDate
+					if (totalVolumeFirstDate >= byVolumeFirstDate) {
+						firstDate = totalVolumeFirstDate
+					} else {
+						firstDate = byVolumeFirstDate
+					}
+					if (totalVolumeLastDate <= byVolumeLastDate) {
+						lastDate = totalVolumeLastDate
+					} else {
+						lastDate = byVolumeLastDate
+					}
+
+					console.log({ firstDate, lastDate })
+					const byVolumeDateFilter = byVolume.map((obs) => {
+						return obs.filter((el) => {
+							return el.date >= firstDate && el.date <= lastDate
+						})
+					})
+					state.totalVolume = state.totalVolume.map((obs) => {
+						return obs.filter((el) => {
+							return el.date >= firstDate && el.date <= lastDate
+						})
+					})
+					state.totalVolume = state.totalVolume.map((obs, index) => {
+						return obs.map((el, i) => {
+							const { date, value } = byVolumeDateFilter[index][i]
+							if (el.date === date) {
+								return {
+									date: el.date,
+									value: el.value + value,
+								}
+							}
+						})
+					})
+					firstDate = ""
+					lastDate = ""
+				}
 			}
 		},
 		addLakeInfo: (state, action) => {
@@ -288,16 +285,78 @@ export const lakesSlice = createSlice({
 			}
 		},
 		clearActiveLakes: (state) => {
+			state.activeLakes = state.activeLakes.map((lake) => {
+				if (lake.selected) {
+					lake.selected = false
+				}
+				return lake
+			})
 			state.activeLakes = []
+			state.totalVolume = []
 		},
 		clearActiveYears: (state) => {
 			state.yearsVisible = false
+		},
+		updateTotalVolume: (state, action) => {
+			const { lakeId, obsDepth } = action.payload
+			console.log({ lakeId, obsDepth })
+			if (state.totalVolume.length === 0) {
+				state.totalVolume =
+					state.dataLakes[state.activeLakes.at(-1).id][DataTypes.VOLUME][
+						obsDepth
+					].byVolume
+			} else {
+				const lakeVolume =
+					state.dataLakes[state.activeLakes.at(-1).id][DataTypes.VOLUME][
+						obsDepth
+					].byVolume
+				const totalVolumeFirstDate = state.totalVolume[0][0].date
+				const totalVolumeLastDate = state.totalVolume[0].at(-1).date
+				const lakeFirstDate = lakeVolume[0][0].date
+				const lakeLastDate = lakeVolume[0].at(-1).date
+				let firstDate
+				let lastDate
+				if (totalVolumeFirstDate >= lakeFirstDate) {
+					firstDate = totalVolumeFirstDate
+				} else {
+					firstDate = lakeFirstDate
+				}
+				if (totalVolumeLastDate <= lakeLastDate) {
+					lastDate = totalVolumeLastDate
+				} else {
+					lastDate = lakeLastDate
+				}
+				const lakeDateFilter = lakeVolume.map((obs) => {
+					return obs.filter((el) => {
+						return el.date >= firstDate && el.date <= lastDate
+					})
+				})
+				state.totalVolume = state.totalVolume.map((obs) => {
+					return obs.filter((el) => {
+						return el.date >= firstDate && el.date <= lastDate
+					})
+				})
+				state.totalVolume = state.totalVolume.map((obs, index) => {
+					return obs.map((el, i) => {
+						const { date, value } = lakeDateFilter[index][i]
+						if (el.date === date) {
+							return {
+								date: el.date,
+								value: el.value + value,
+							}
+						}
+					})
+				})
+				firstDate = ""
+				lastDate = ""
+			}
 		},
 	},
 })
 
 export const {
 	updateActiveLakes,
+	updateTotalVolume,
 	updateLakeIdToDesactivate,
 	addLake,
 	desactiveLake,

@@ -9,6 +9,7 @@ import {
 	ObservationTypes,
 	DurationTypes,
 	DataTypes,
+	ChartTypes,
 } from "./config"
 import { csv } from "d3"
 import { extractDataByYear, groupDataByYear } from "./utils"
@@ -30,9 +31,9 @@ export function useAppHook() {
 	const [theme, setTheme] = useState("dark")
 	const [lastDataType, setLastDataType] = useState(DataTypes.FILLING_RATE)
 	const [noDataLake, setNodataLake] = useState(false)
-  const [obsDepth, setObsDepth] = useState(DurationTypes.PERIOD)
+	const [obsDepth, setObsDepth] = useState(DurationTypes.PERIOD)
 	const [lastObsDepth, setLastObsDepth] = useState(DurationTypes.PERIOD)
-  const [canvas, setCanvas] = useState(null)
+	const [canvas, setCanvas] = useState(null)
 	const form = useSelector((state) => state.form)
 	const { activeLakes, lakeIdToDesactivate, dataLakes } = useSelector(
 		(state) => state.lakes
@@ -47,7 +48,7 @@ export function useAppHook() {
 		setCanvas(cvas)
 	}, [])
 
-  const toggleTheme = useCallback(() => {
+	const toggleTheme = useCallback(() => {
 		setTheme(theme === "dark" ? "light" : "dark")
 	})
 	useEffect(() => {

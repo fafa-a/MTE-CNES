@@ -228,8 +228,7 @@ useEffect(() => {
 		setLastDataTypes(dataType)
 		setLastObstypes(obsTypes)
 	}
-}, [dataLakes, REFERENCE, YEAR, dataType, obsTypes, VOLUME])
-
+}, [dataLakes, REFERENCE, YEAR, dataType, obsTypes, VOLUME, totalVolume])
 const setDataLines = useCallback(
 	(item, obsType, index, lakeName, indexColor) => {
 		if (!item) return
@@ -567,7 +566,7 @@ const options = {
 						const { index } = context.dataset
 						const allId = activeLakes.map((lake) => lake.id)
 						const allValue = allId.map((id) => {
-							return dataLakes[id][DataTypes.VOLUME][obsDepth].byVolume[index]
+							return dataLakes[id][DataTypes.VOLUME]?.[obsDepth].byVolume[index]
 								.filter((item) => item.date === date)
 								.map((item) => item.value)
 						})
@@ -807,9 +806,10 @@ useEffect(() => {
 	obsTypes.length,
 ])
 
-	const data = {
-		datasets: dataSets,
-	}
+const data = {
+	datasets: dataSets,
+}
+
 
 	return {
 		data,

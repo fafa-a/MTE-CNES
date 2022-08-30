@@ -1,17 +1,23 @@
 import { useMap, useMapEvents } from "react-leaflet"
 import { useEffect, useState, useCallback } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { updateActiveLakes } from "@/stores/lakesSlice"
-import { addLakeInfo } from "../../stores/lakesSlice"
+import {
+	updateActiveLakes,
+	updateTotalVolume,
+	addLakeInfo,
+} from "@/stores/lakesSlice"
+import { DataTypes, DurationTypes } from "../../config"
 
 export default function usePolygonLayerHook() {
 	const [id, setId] = useState(null)
 	const [color, setColor] = useState("blue")
 	const [coordinates, setCoordinates] = useState([])
 	const [zoomLevel, setZoomLevel] = useState(null)
-	const { coordinatesLakeToCenter, activeLakes } = useSelector(
+	const [obsDepth, setObsDepth] = useState(null)
+	const { coordinatesLakeToCenter, activeLakes, dataLakes } = useSelector(
 		(state) => state.lakes
 	)
+	const { VOLUME, DAY, PERIOD } = useSelector((state) => state.form)
 	const map = useMap()
 	const dispatch = useDispatch()
 	const mapEvents = useMapEvents({
@@ -46,6 +52,15 @@ export default function usePolygonLayerHook() {
 		}
 	}, [id])
 
+	useEffect(() => {
+		if (DAY) {
+			setObsDepth(DurationTypes.DAY)
+		}
+		if (PERIOD) {
+			setObsDepth(DurationTypes.PERIOD)
+		}
+	}, [DAY, PERIOD])
+
 	const centerSelectedPolygon = useCallback(() => {
 		const { lakeId, coordinates } = coordinatesLakeToCenter
 		setId(lakeId)
@@ -61,6 +76,7 @@ export default function usePolygonLayerHook() {
 			dispatch(
 				updateActiveLakes({ lakeId: id, lakeName: name, lakeCoord: coordWW })
 			)
+
 			const info = {
 				id,
 				name,
@@ -74,10 +90,12 @@ export default function usePolygonLayerHook() {
 
 			setCoordinates(coordWW)
 			setId(id)
+			if (VOLUME && dataLakes[id]?.[DataTypes.VOLUME]) {
+				dispatch(updateTotalVolume({ lakeId: id, obsDepth }))
+			}
 		},
-		[dispatch]
+		[dispatch, dataLakes]
 	)
-
 	return {
 		activeLake,
 		centerPolygon,
