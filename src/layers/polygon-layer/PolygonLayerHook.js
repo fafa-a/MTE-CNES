@@ -12,9 +12,8 @@ export default function usePolygonLayerHook() {
 		coord: [],
 	})
 	const [obsDepth, setObsDepth] = useState(null)
-	const { coordinatesLakeToCenter, activeLakes, dataLakes } = useSelector(
-		(state) => state.lakes
-	)
+	const { coordinatesLakeToCenter, activeLakes, dataLakes, loadedLakes } =
+		useSelector((state) => state.lakes)
 	const { VOLUME, DAY, PERIOD } = useSelector((state) => state.form)
 	const map = useMap()
 	const dispatch = useDispatch()
@@ -23,6 +22,7 @@ export default function usePolygonLayerHook() {
 			setZoomLevel(mapEvents.getZoom())
 		},
 	})
+
 	const resizeMap = useCallback(() => {
 		const container = document.getElementsByClassName("leaflet-container")
 		if (container) {
@@ -75,6 +75,7 @@ export default function usePolygonLayerHook() {
 
 	const activeLake = useCallback(
 		(id, name, coordWW, mainUse, country, nearCity, coordDD) => {
+			if (activeLakes.map((lake) => lake.id).includes(id)) return
 			setCoordId({
 				id,
 				coord: coordWW,
@@ -93,16 +94,19 @@ export default function usePolygonLayerHook() {
 					info,
 				})
 			)
+			if (VOLUME && dataLakes[coordId.id]?.[DataTypes.VOLUME]) {
+				dispatch(updateTotalVolume({ lakeId: coordId.id, obsDepth }))
+			}
 		},
-		[dispatch]
+		[dispatch, dataLakes[coordId.id], activeLakes]
 	)
 
-	useEffect(() => {
-		if (!VOLUME) return
-		if (VOLUME && dataLakes[id]?.[DataTypes.VOLUME]) {
-			dispatch(updateTotalVolume({ lakeId: id, obsDepth }))
-		}
-	}, [dispatch, dataLakes[coordId.id]])
+	// useEffect(() => {
+	// 	if (!VOLUME) return
+	// 	if (VOLUME && dataLakes[coordId.id]?.[DataTypes.VOLUME]) {
+	// 		dispatch(updateTotalVolume({ lakeId: coordId.id, obsDepth }))
+	// 	}
+	// }, [dispatch, dataLakes[coordId.id]])
 
 	return {
 		activeLake,
