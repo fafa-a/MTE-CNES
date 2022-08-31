@@ -28,6 +28,7 @@ const initialState = {
 		},
 	},
 	totalVolume: [],
+	loadedLakes: [],
 	lakeIdToDesactivate: "",
 	coordinatesLakeToCenter: [],
 }
@@ -41,6 +42,7 @@ export const lakesSlice = createSlice({
 	initialState,
 	reducers: {
 		addLake: (state, action) => {
+			console.time("add lake")
 			const {
 				lakeId,
 				dataType,
@@ -121,7 +123,6 @@ export const lakesSlice = createSlice({
 						lastDate = byVolumeLastDate
 					}
 
-					console.log({ firstDate, lastDate })
 					const byVolumeDateFilter = byVolume.map((obs) => {
 						return obs.filter((el) => {
 							return el.date >= firstDate && el.date <= lastDate
@@ -147,6 +148,10 @@ export const lakesSlice = createSlice({
 					lastDate = ""
 				}
 			}
+			if (!state.loadedLakes.includes(lakeId)) {
+				state.loadedLakes.push(lakeId)
+			}
+			console.timeEnd("add lake")
 		},
 		addLakeInfo: (state, action) => {
 			const { lakeId, info } = action.payload
@@ -167,9 +172,10 @@ export const lakesSlice = createSlice({
 			}
 		},
 		updateActiveLakes: (state, action) => {
+			console.time("active lake")
 			const { info } = action.payload
 			const { id, name, lakeCoord } = info
-      
+
 			if (state.dataLakes[id]) {
 				state.dataLakes[id] = {
 					...state.dataLakes[id],
@@ -205,6 +211,7 @@ export const lakesSlice = createSlice({
 					selected: false,
 				}
 			})
+			console.timeEnd("active lake")
 		},
 		updateLakeIdToDesactivate: (state, action) => {
 			const { lakeId } = action.payload
@@ -317,6 +324,12 @@ export const lakesSlice = createSlice({
 		updateTotalVolume: (state, action) => {
 			const { lakeId, obsDepth } = action.payload
 			console.log({ lakeId, obsDepth })
+			if (
+				!state.dataLakes[state.activeLakes.at(-1).id][DataTypes.VOLUME]?.[
+					obsDepth
+				].byVolume
+			)
+				return
 			if (state.totalVolume.length === 0) {
 				state.totalVolume =
 					state.dataLakes[state.activeLakes.at(-1).id][DataTypes.VOLUME][
@@ -327,6 +340,7 @@ export const lakesSlice = createSlice({
 					state.dataLakes[state.activeLakes.at(-1).id][DataTypes.VOLUME][
 						obsDepth
 					].byVolume
+
 				const totalVolumeFirstDate = state.totalVolume[0][0].date
 				const totalVolumeLastDate = state.totalVolume[0].at(-1).date
 				const lakeFirstDate = lakeVolume[0][0].date
