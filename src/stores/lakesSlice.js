@@ -167,13 +167,30 @@ export const lakesSlice = createSlice({
 			}
 		},
 		updateActiveLakes: (state, action) => {
-			const { lakeId, lakeName, lakeCoord } = action.payload
-			if (!state.activeLakes.map((lake) => lake.id).includes(lakeId)) {
+			const { info } = action.payload
+			const { id, name, lakeCoord } = info
+      
+			if (state.dataLakes[id]) {
+				state.dataLakes[id] = {
+					...state.dataLakes[id],
+					info,
+				}
+			}
+
+			if (!state.dataLakes[id]) {
+				state.dataLakes[id] = {
+					info,
+				}
+			}
+			if (!state.yearsVisible) {
+				state.yearsVisible = true
+			}
+			if (!state.activeLakes.map((lake) => lake.id).includes(id)) {
 				state.activeLakes = [
 					...state.activeLakes,
 					{
-						id: lakeId,
-						name: lakeName,
+						id,
+						name,
 						coordinates: lakeCoord,
 						chartVisible: true,
 						showInfo: false,
