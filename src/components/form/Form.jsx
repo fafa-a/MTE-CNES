@@ -82,8 +82,8 @@ export const Form = ({ canvas }) => {
 		resetZoomChart,
 	} = useFormHook({ canvas })
 	return (
-		<StyledContainer>
-			<form action="">
+		<form action="">
+			<StyledContainer>
 				<Div>
 					<H3>Observation types</H3>
 					<DivFlexRow>
@@ -200,7 +200,7 @@ export const Form = ({ canvas }) => {
 						<span>Download chart image</span>
 					</Tooltip>
 				</ButtonIconContainer>
-			</form>
-		</StyledContainer>
+			</StyledContainer>
+		</form>
 	)
 }
