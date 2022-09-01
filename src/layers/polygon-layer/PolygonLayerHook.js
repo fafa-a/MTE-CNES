@@ -37,7 +37,7 @@ export default function usePolygonLayerHook() {
 	}, [coordId.coord])
 
 	useEffect(() => {
-		if (Object.values(activeLakes).length > 1) return
+		if (Object.values(activeLakes).length >= 2) return
 		if (Object.values(activeLakes).length === 1) {
 			resizeMap()
 		}
