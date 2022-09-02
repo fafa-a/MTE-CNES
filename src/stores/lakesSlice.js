@@ -42,7 +42,6 @@ export const lakesSlice = createSlice({
 	initialState,
 	reducers: {
 		addLake: (state, action) => {
-			console.time("add lake")
 			const {
 				lakeId,
 				dataType,
@@ -52,6 +51,7 @@ export const lakesSlice = createSlice({
 				seriePath,
 				obsDepth,
 			} = action.payload
+			console.log({ byYear })
 			if (
 				lakeId === lastId &&
 				dataType === lastDataTypes &&
@@ -151,7 +151,6 @@ export const lakesSlice = createSlice({
 			if (!state.loadedLakes.includes(lakeId)) {
 				state.loadedLakes.push(lakeId)
 			}
-			console.timeEnd("add lake")
 		},
 		addLakeInfo: (state, action) => {
 			const { lakeId, info } = action.payload
@@ -172,7 +171,6 @@ export const lakesSlice = createSlice({
 			}
 		},
 		updateActiveLakes: (state, action) => {
-			console.time("active lake")
 			const { info } = action.payload
 			const { id, name, lakeCoord } = info
 
@@ -211,7 +209,6 @@ export const lakesSlice = createSlice({
 					selected: false,
 				}
 			})
-			console.timeEnd("active lake")
 		},
 		updateLakeIdToDesactivate: (state, action) => {
 			const { lakeId } = action.payload
@@ -227,7 +224,10 @@ export const lakesSlice = createSlice({
 			if (state.activeLakes.length === 0) {
 				state.totalVolume = []
 			}
-			if (state.activeLakes.length > 0) {
+			if (
+				state.activeLakes.length > 0 &&
+				state.dataLakes[lakeId][DataTypes.VOLUME]
+			) {
 				state.totalVolume = state.totalVolume.map((obs, index) => {
 					return obs.map((el, i) => {
 						const { date, value } =
@@ -323,7 +323,6 @@ export const lakesSlice = createSlice({
 		},
 		updateTotalVolume: (state, action) => {
 			const { lakeId, obsDepth } = action.payload
-			console.log({ lakeId, obsDepth })
 			if (
 				!state.dataLakes[state.activeLakes.at(-1).id][DataTypes.VOLUME]?.[
 					obsDepth

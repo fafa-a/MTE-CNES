@@ -9,12 +9,11 @@ import {
 	ObservationTypes,
 	DurationTypes,
 	DataTypes,
-	ChartTypes,
 } from "./config"
 import { csv } from "d3"
 import { extractDataByYear, groupDataByYear } from "./utils"
 import { desactiveLake } from "@stores/lakesSlice"
-
+console.log(AppConfig.attributes.SURFACE.filePath)
 export function useAppHook() {
 	const [seriePath, setSeriePath] = useState([])
 	const [lakeData, setLakeData] = useState([])
@@ -33,6 +32,7 @@ export function useAppHook() {
 	const [noDataLake, setNodataLake] = useState(false)
 	const [obsDepth, setObsDepth] = useState(DurationTypes.PERIOD)
 	const [lastObsDepth, setLastObsDepth] = useState(DurationTypes.PERIOD)
+	const [lastLakeDataByYear, setLastLakeDataByYear] = useState([])
 	const [canvas, setCanvas] = useState(null)
 	const form = useSelector((state) => state.form)
 	const { activeLakes, lakeIdToDesactivate, dataLakes } = useSelector(
@@ -91,7 +91,7 @@ export function useAppHook() {
 			setLakeDataByYear([])
 		}
 		setLastDataType(dataType)
-	}, [dataType])
+	}, [dataType, YEAR])
 
 	useEffect(() => {
 		if (!lakeIdToDesactivate) return
@@ -237,7 +237,10 @@ export function useAppHook() {
 
 			lakeDataTmp.push(dataByYear)
 		})
-		setLakeDataByYear(lakeDataTmp)
+		if (JSON.stringify(lakeDataTmp) !== JSON.stringify(lakeDataByYear)) {
+			setLakeDataByYear(lakeDataTmp)
+		}
+		lakeDataTmp = []
 	}, [lakeDataWithReference])
 
 	const fetchData = useCallback(async () => {
@@ -326,6 +329,7 @@ export function useAppHook() {
 
 	useEffect(() => {
 		if (!lakeData.length) return
+
 		if (
 			dataType === DataTypes.SURFACE &&
 			surfaceReference.length !== lakeData.length
@@ -341,6 +345,13 @@ export function useAppHook() {
 			fillingRateReference.length !== lakeData.length
 		)
 			return
+		if (
+			dataType === DataTypes.SURFACE &&
+			lakeData[0][2] &&
+			surfaceReference[0]?.length === 0
+		)
+			return
+		console.log("?????", surfaceReference[0]?.length)
 		const arrTmp = []
 
 		lakeData.forEach((lake, index) => {
@@ -367,6 +378,7 @@ export function useAppHook() {
 			}
 			arrTmp.push(data)
 		})
+
 		if (
 			(arrTmp[0].at(-1).length === 0 &&
 				JSON.stringify(arrTmp[0][1]) !==
@@ -374,7 +386,9 @@ export function useAppHook() {
 			JSON.stringify(arrTmp[0].at(-1)) !==
 				JSON.stringify(lakeDataWithReference[0]?.at(-1))
 		) {
+			console.log({ arrTmp })
 			setLakeDataWithReference(arrTmp)
+			console.log("lake with ref", lakeDataWithReference)
 		}
 	}, [lakeData, surfaceReference, volumeReference, fillingRateReference])
 
@@ -557,6 +571,9 @@ export function useAppHook() {
 			lakeDataWithReference.length !== fullDataOfVolume.length
 		)
 			return
+		if (JSON.stringify(lakeDataByYear) === JSON.stringify(lastLakeDataByYear))
+			return
+
 		lakeDataWithReference.forEach((data, index) => {
 			dispatch(
 				addLake({
@@ -573,6 +590,8 @@ export function useAppHook() {
 				})
 			)
 		})
+
+		setLastLakeDataByYear(lakeDataByYear)
 	}, [
 		lakeDataWithReference,
 		lakeDataByYear,
@@ -581,6 +600,13 @@ export function useAppHook() {
 		//seriePath,
 		fullDataOfVolume,
 	])
+
+	useEffect(() => {
+		console.log({ lakeDataByYear })
+	}, [lakeDataByYear])
+	useEffect(() => {
+		console.log("!!! surface", surfaceReference, surfaceReference[0]?.length)
+	}, [surfaceReference])
 	return {
 		showLakeInfo,
 		isOneLakeActive,

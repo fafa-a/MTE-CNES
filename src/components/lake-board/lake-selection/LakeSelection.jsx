@@ -147,7 +147,6 @@
 			obsDepth,
 			totalVolume,
 		} = useLakeSelectionHook({ id, name, coordinates, index })
-
 		return (
 			<StyledDiv css={isSelected && backgroundBorderColored}>
 				{VOLUME && id === "total" && (
