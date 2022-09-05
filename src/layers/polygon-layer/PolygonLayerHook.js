@@ -32,7 +32,7 @@ export default function usePolygonLayerHook() {
 	}, [map])
 
 	const centerPolygon = useCallback(() => {
-		map.flyTo(coordId.coord)
+		// map.flyTo(coordId.coord)
 		map.setView(coordId.coord, 11)
 	}, [coordId.coord])
 
