@@ -189,7 +189,6 @@ export default function useChartHook() {
 
 			if (!dataLakes[id][dataType]?.[obsDepth].byYear) return
 			const dataByYear = Object.values(dataLakes[id][dataType][obsDepth].byYear)
-			// console.log({ chart: dataByYear })
 			if (OPTIC && RADAR && REFERENCE) {
 				dataTmp.push(dataByYear)
 			}
@@ -227,7 +226,6 @@ export default function useChartHook() {
 			}
 		}
 		if (JSON.stringify(dataTmp) !== JSON.stringify(chartData)) {
-			// console.log({ dataTmp })
 			setChartData(dataTmp)
 			setLastDataTypes(dataType)
 			setLastObstypes(obsTypes)
@@ -388,8 +386,6 @@ export default function useChartHook() {
 		const arr = []
 		const allDates = []
 		let allDatesSorted = []
-		// console.log({ chartdata: chartData.length })
-		// console.log({ datalakes: Object.values(dataLakes).length })
 		if (chartData.length === 0) return
 		if (!Object.values(dataLakes).length && chartData[0].length === 0) return
 		if (!YEAR) {
@@ -417,19 +413,15 @@ export default function useChartHook() {
 			const lastDateGraph = getChartFirstDateNextMonth(allDatesSorted.at(-1))
 			setDateMax(lastDateGraph)
 		}
-		// console.log(
-		// 	Object.entries(
-  // 		dataLakes[activeLakes.at(-1).id][dataType]?.[obsDepth].byYear
-		// 	).length
-		// )
-		// console.log(chartData[0].length)
+
+
 		if (
 			YEAR &&
 			Object.entries(
 				dataLakes[activeLakes.at(-1).id][dataType]?.[obsDepth].byYear
 			).length === chartData[0].length
 		) {
-			// console.log("set dataSets")
+
 			chartData.forEach((year) => {
 				Object.values(year).forEach((obs, index) => {
 					obs.forEach((itm, idx) => {
@@ -826,13 +818,6 @@ export default function useChartHook() {
 		datasets: dataSets,
 	}
 
-	// useEffect(() => {
-	// 	console.log({ dataSets })
-	// }, [dataSets])
-
-	// useEffect(() => {
-	// 	console.log({ chartData })
-	// }, [chartData])
 
 	return {
 		data,

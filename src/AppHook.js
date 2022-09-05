@@ -13,7 +13,6 @@ import {
 import { csv } from "d3"
 import { extractDataByYear, groupDataByYear } from "./utils"
 import { desactiveLake } from "@stores/lakesSlice"
-console.log(AppConfig.attributes.SURFACE.filePath)
 export function useAppHook() {
 	const [seriePath, setSeriePath] = useState([])
 	const [lakeData, setLakeData] = useState([])
@@ -351,7 +350,6 @@ export function useAppHook() {
 			surfaceReference[0]?.length === 0
 		)
 			return
-		console.log("?????", surfaceReference[0]?.length)
 		const arrTmp = []
 
 		lakeData.forEach((lake, index) => {
@@ -386,9 +384,7 @@ export function useAppHook() {
 			JSON.stringify(arrTmp[0].at(-1)) !==
 				JSON.stringify(lakeDataWithReference[0]?.at(-1))
 		) {
-			console.log({ arrTmp })
 			setLakeDataWithReference(arrTmp)
-			console.log("lake with ref", lakeDataWithReference)
 		}
 	}, [lakeData, surfaceReference, volumeReference, fillingRateReference])
 
@@ -601,12 +597,6 @@ export function useAppHook() {
 		fullDataOfVolume,
 	])
 
-	useEffect(() => {
-		console.log({ lakeDataByYear })
-	}, [lakeDataByYear])
-	useEffect(() => {
-		console.log("!!! surface", surfaceReference, surfaceReference[0]?.length)
-	}, [surfaceReference])
 	return {
 		showLakeInfo,
 		isOneLakeActive,

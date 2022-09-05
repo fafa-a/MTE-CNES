@@ -14,11 +14,10 @@ import {
 	setChartType,
 	setAttributeValue,
 	toggleReference,
-	toggleYear,
 	toggleVolume,
+	toggleYear,
 } from "../../stores/formSlice"
 import { Radiobox } from "../radiobox/RadioBox"
-
 const StyledContainer = styled("div", {
 	fontFamily: "arial",
 	color: "$text",
@@ -80,6 +79,7 @@ export const Form = ({ canvas }) => {
 		modeTypesValues,
 		downloadChartImage,
 		resetZoomChart,
+		handleYearMode,
 	} = useFormHook({ canvas })
 	return (
 		<form action="">

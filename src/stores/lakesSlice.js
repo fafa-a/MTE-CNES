@@ -3,7 +3,7 @@ import { DataTypes } from "../config"
 const initialState = {
 	dataLakes: {},
 	activeLakes: [],
-	yearsVisible: true,
+	yearsVisible: false,
 	activeYears: {
 		2018: {
 			id: "2018",
@@ -51,7 +51,6 @@ export const lakesSlice = createSlice({
 				seriePath,
 				obsDepth,
 			} = action.payload
-			console.log({ byYear })
 			if (
 				lakeId === lastId &&
 				dataType === lastDataTypes &&
@@ -318,8 +317,8 @@ export const lakesSlice = createSlice({
 			state.activeLakes = []
 			state.totalVolume = []
 		},
-		clearActiveYears: (state) => {
-			state.yearsVisible = false
+		toggleActiveYears: (state) => {
+			state.yearsVisible = !state.yearsVisible
 		},
 		updateTotalVolume: (state, action) => {
 			const { lakeId, obsDepth } = action.payload
@@ -398,7 +397,7 @@ export const {
 	addLakeInfo,
 	toggleLakeShowInfo,
 	clearActiveLakes,
-	clearActiveYears,
+	toggleActiveYears,
 } = lakesSlice.actions
 
 export default lakesSlice.reducer
