@@ -11,7 +11,14 @@ import {
 	DataTypes,
 } from "./config"
 import { csv } from "d3"
-import { extractDataByYear, groupDataByYear } from "./utils"
+import {
+	fillEmptyDataOfDate,
+	getDataByYear,
+	getFirstDateOfArrays,
+	getLastDateOfArrays,
+} from "./utils/date"
+import { extractField, formatCSVValue, normalizeValue } from "./utils/value"
+import { returnHighestValue } from "./utils/math"
 import { desactiveLake } from "@stores/lakesSlice"
 export function useAppHook() {
 	const [seriePath, setSeriePath] = useState([])
@@ -75,7 +82,6 @@ export function useAppHook() {
 
 	useEffect(() => {
 		if (!Object.values(activeLakes)) return
-
 		const showInfo = Object.values(activeLakes)
 			.filter((lake) => lake.showInfo === true)
 			.map((lake) => lake.showInfo)[0]
@@ -181,7 +187,7 @@ export function useAppHook() {
 
 	useEffect(() => {
 		if (activeLakes.length === 0) return
-
+		console.time("make serie path")
 		const seriePathTmp = []
 		const allActiveLakes = activeLakes.map((lake) => {
 			return { id: lake.id, name: lake.name }
@@ -202,44 +208,41 @@ export function useAppHook() {
 		}
 		if (JSON.stringify(seriePathTmp) === JSON.stringify(seriePath)) return
 		setSeriePath(seriePathTmp)
+		console.timeEnd("make serie path")
 	}, [dataType, obsDepth, REFERENCE, activeLakes])
 
-	useEffect(() => {
-		if (lakeData[0]?.length === 0) return
+	const handleDateOfDataReference = useCallback(() => {
 		const dataRefDateFiltered = []
 		lakeData.forEach((lake) => {
+			const firstDate = getFirstDateOfArrays(lake)
+			const lastDate = getLastDateOfArrays(lake)
 			dataRefDateFiltered.push(
 				lake
 					.at(-1)
-					.filter(
-						(data) =>
-							data.hour === "00:00:00" &&
-							data.date >= "2018-01-01" &&
-							data.date <= "2020-12-31"
-					)
+					.filter((data) => data.date >= firstDate && data.date <= lastDate)
 			)
 		})
-		setDataReference(dataRefDateFiltered)
+		return dataRefDateFiltered
 	}, [lakeData])
 
 	useEffect(() => {
-		let lakeDataTmp = []
+		if (lakeData.length === 0) return
+		console.time("handle date of data reference")
+		const dateFiltered = handleDateOfDataReference()
+		setDataReference(dateFiltered)
+		console.timeEnd("handle date of data reference")
+	}, [lakeData])
+
+	useEffect(() => {
+		if (lakeDataWithReference.length === 0) return
 		if (YEAR && dataLakes[activeLakes.at(-1).id][dataType]?.[obsDepth].byYear)
 			return
-
-		lakeDataWithReference.forEach((obs) => {
-			let dataYear = []
-			obs.forEach((data) => {
-				dataYear.push(extractDataByYear(data))
-			})
-			const dataByYear = groupDataByYear(dataYear)
-
-			lakeDataTmp.push(dataByYear)
-		})
-		if (JSON.stringify(lakeDataTmp) !== JSON.stringify(lakeDataByYear)) {
-			setLakeDataByYear(lakeDataTmp)
+		console.time("get data by year")
+		const dataByYear = getDataByYear(lakeDataWithReference)
+		if (JSON.stringify(dataByYear) !== JSON.stringify(lakeDataByYear)) {
+			setLakeDataByYear(dataByYear)
 		}
-		lakeDataTmp = []
+		console.timeEnd("get data by year")
 	}, [lakeDataWithReference])
 
 	const fetchData = useCallback(async () => {
@@ -274,61 +277,62 @@ export function useAppHook() {
 
 	useEffect(() => {
 		if (!dataReference.length) return
+		console.time("extract field ZSV")
 		if (dataType === DataTypes.SURFACE) {
-			const surfaceRef = dataReference.map((lake) => {
-				return lake.map((data) => {
-					return {
-						date: data.date,
-						value: data.area,
-					}
-				})
-			})
-			setSurfaceReference(surfaceRef)
+			const surfaceValues = extractField(dataReference, "area")
+			setSurfaceReference(surfaceValues)
 		}
 		if (dataType === DataTypes.VOLUME || dataType === DataTypes.FILLING_RATE) {
-			const volumeRef = dataReference.map((lake) => {
-				return lake.map((data) => {
-					return {
-						date: data.date,
-						value: data.volume,
-					}
-				})
-			})
-			setVolumeReference(volumeRef)
-			setTmpFillingRateReference(volumeRef)
+			const volumeValues = extractField(dataReference, "volume")
+			setVolumeReference(volumeValues)
+			setTmpFillingRateReference(volumeValues)
 		}
+		console.timeEnd("extract field ZSV")
 	}, [dataReference, dataType])
-
-	const calculateFillingRate = useCallback(() => {
-		const rateRef = tmpFillingRateReference.map((days) => {
-			const max = days.reduce((acc, curr) => {
-				return acc.value > curr.value ? acc : curr
-			}, 0)
-			return max.value
-		})
-		return rateRef
-	}, [tmpFillingRateReference])
 
 	useEffect(() => {
 		if (!tmpFillingRateReference.length) return
-		const rateRef = calculateFillingRate()
-		const fillingRateTmp = []
-		tmpFillingRateReference.map((lake, index) => {
-			fillingRateTmp.push(
-				lake.map((data) => {
-					return {
-						date: data.date,
-						value: (data.value / rateRef[index]) * 100,
-					}
-				})
-			)
-		})
-		setFillingRateReference(fillingRateTmp)
-	}, [calculateFillingRate, tmpFillingRateReference])
+		console.time("set filling rate reference")
+		const rateRef = returnHighestValue(tmpFillingRateReference)
+		const values = normalizeValue(tmpFillingRateReference, rateRef)
+		setFillingRateReference(values)
+		console.timeEnd("set filling rate reference")
+	}, [tmpFillingRateReference])
+
+	const addDataReference = useCallback(
+		(arr) => {
+			const arrTmp = []
+			arr.forEach((lake, index) => {
+				let data = []
+
+				if (!OPTIC || !RADAR) {
+					data = [lake[0]]
+				}
+
+				if (OPTIC && RADAR) {
+					data = [lake[0], lake[1]]
+				}
+				if (!OPTIC && !RADAR && REFERENCE) {
+					data = []
+				}
+				if (dataType === DataTypes.FILLING_RATE && REFERENCE) {
+					data = [...data, fillingRateReference[index]]
+				}
+				if (dataType === DataTypes.SURFACE && REFERENCE) {
+					data = [...data, surfaceReference[index]]
+				}
+				if (dataType === DataTypes.VOLUME && REFERENCE) {
+					data = [...data, volumeReference[index]]
+				}
+				arrTmp.push(data)
+			})
+			return arrTmp
+		},
+		[fillingRateReference, volumeReference, surfaceReference, dataType]
+	)
 
 	useEffect(() => {
 		if (!lakeData.length) return
-
 		if (
 			dataType === DataTypes.SURFACE &&
 			surfaceReference.length !== lakeData.length
@@ -350,47 +354,23 @@ export function useAppHook() {
 			surfaceReference[0]?.length === 0
 		)
 			return
-		const arrTmp = []
-
-		lakeData.forEach((lake, index) => {
-			let data = []
-
-			if (!OPTIC || !RADAR) {
-				data = [lake[0]]
-			}
-
-			if (OPTIC && RADAR) {
-				data = [lake[0], lake[1]]
-			}
-			if (!OPTIC && !RADAR && REFERENCE) {
-				data = []
-			}
-			if (dataType === DataTypes.FILLING_RATE && REFERENCE) {
-				data = [...data, fillingRateReference[index]]
-			}
-			if (dataType === DataTypes.SURFACE && REFERENCE) {
-				data = [...data, surfaceReference[index]]
-			}
-			if (dataType === DataTypes.VOLUME && REFERENCE) {
-				data = [...data, volumeReference[index]]
-			}
-			arrTmp.push(data)
-		})
-
+		console.time("add refereence date to data")
+		const data = addDataReference(lakeData)
 		if (
-			(arrTmp[0].at(-1).length === 0 &&
-				JSON.stringify(arrTmp[0][1]) !==
+			(data[0].at(-1).length === 0 &&
+				JSON.stringify(data[0][1]) !==
 					JSON.stringify(lakeDataWithReference[0]?.[1])) ||
-			JSON.stringify(arrTmp[0].at(-1)) !==
+			JSON.stringify(data[0].at(-1)) !==
 				JSON.stringify(lakeDataWithReference[0]?.at(-1))
 		) {
-			setLakeDataWithReference(arrTmp)
+			setLakeDataWithReference(data)
 		}
+		console.timeEnd("add refereence date to data")
 	}, [lakeData, surfaceReference, volumeReference, fillingRateReference])
 
 	const handleFetchData = useCallback(async () => {
 		const dataRaw = await fetchData()
-		const data = await formatValue(dataRaw)
+		const data = await formatCSVValue(dataRaw, unit)
 		if (dataType === DataTypes.VOLUME) {
 			if (seriePath.length > 1) {
 				let dataTmp = []
@@ -407,119 +387,6 @@ export function useAppHook() {
 		setLakeData(data)
 	}, [fetchData])
 
-	const handleValue = useCallback(
-		(value, unit) => {
-			if (unit === "hm³") {
-				return (1 * value) / 1_000_000
-			}
-			if (unit === "ha") {
-				return (1 * value) / 10_000
-			}
-		},
-		[unit]
-	)
-
-	const getStartDate = useCallback((arr) => {
-		const firstDate = arr[0]
-			?.map((el) => {
-				return el[0].date
-			})
-			.sort((a, b) => (new Date(a) < new Date(b) ? -1 : 1))
-		return firstDate
-	}, [])
-
-	const getLastDate = useCallback((arr) => {
-		const lastDate = arr[0]
-			?.map((el) => {
-				return el.at(-1).date
-			})
-			.sort((a, b) => (new Date(a) < new Date(b) ? -1 : 1))[0]
-		return lastDate
-	}, [])
-
-	const fillEmptyDataOfDate = useCallback(
-		(arr) => {
-			const arrOfDates = []
-			const newData = []
-			const startingDate = getStartDate(arr)
-			const endingDate = new Date(getLastDate(arr))
-			for (
-				let d = new Date(startingDate[0]);
-				d <= endingDate;
-				d.setDate(d.getDate() + 1)
-			) {
-				arrOfDates.push(new Date(d).toISOString().slice(0, 10))
-			}
-			let value = ""
-			let arrTmp = []
-			const obsTypes = arr[0]?.map((obs) => obs)
-			const obsTypesDateFiltered = obsTypes.map((obs, index) => {
-				return obs.filter((el) => {
-					if (index === 2) {
-						return (
-							el.date >= new Date(startingDate[0]).toISOString().slice(0, 10) &&
-							el.date <= endingDate.toISOString().slice(0, 10) &&
-							el.hour === "00:00:00"
-						)
-					}
-					return (
-						el.date >= new Date(startingDate[0]).toISOString().slice(0, 10) &&
-						el.date <= endingDate.toISOString().slice(0, 10)
-					)
-				})
-			})
-
-			obsTypesDateFiltered.forEach((obs, index) => {
-				arrOfDates.forEach((date) => {
-					if (obs.map((el) => el.date).includes(date)) {
-						value = obs
-							.filter((el) => el.date === date)
-							.map((el) => (index === 2 ? el.volume : el.value))[0]
-					}
-					arrTmp.push({
-						date,
-						value,
-					})
-				})
-
-				newData.push(
-					arrTmp.filter((el) => {
-						return (
-							el.date >=
-								new Date(startingDate.at(-1)).toISOString().slice(0, 10) &&
-							el.date <= endingDate.toISOString().slice(0, 10)
-						)
-					})
-				)
-				arrTmp = []
-			})
-			return [newData]
-		},
-		[getStartDate, getLastDate]
-	)
-	const formatValue = useCallback(
-		(data) => {
-			return data.map((obs) => {
-				return obs[0].map((data, index) => {
-					// index 2 = ZSV
-					return data.map((el) => {
-						return index === 2
-							? {
-									date: el.date,
-									hour: el.hour,
-									volume: handleValue(el.volume, "hm³"),
-									area: handleValue(el.area, "ha"),
-							  }
-							: {
-									date: el.date,
-									value: unit === "%" ? el.value : handleValue(el.value, unit),
-							  }
-					})
-				})
-			})
-		},
-		[handleValue, unit]
-	)
 	const addChartColor = useCallback(() => {
 		const randomColor = `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(
 			Math.random() * 255
@@ -556,7 +423,10 @@ export function useAppHook() {
 	}, [activeLakes, addChartColor])
 
 	useEffect(() => {
+		if (seriePath.length === 0) return
+		console.time("handleFetchData")
 		handleFetchData()
+		console.timeEnd("handleFetchData")
 	}, [fetchData, handleFetchData])
 
 	useEffect(() => {
@@ -569,7 +439,7 @@ export function useAppHook() {
 			return
 		if (JSON.stringify(lakeDataByYear) === JSON.stringify(lastLakeDataByYear))
 			return
-
+		console.time("set data to store")
 		lakeDataWithReference.forEach((data, index) => {
 			dispatch(
 				addLake({
@@ -586,8 +456,8 @@ export function useAppHook() {
 				})
 			)
 		})
-
 		setLastLakeDataByYear(lakeDataByYear)
+		console.timeEnd("set data to store")
 	}, [
 		lakeDataWithReference,
 		lakeDataByYear,
@@ -596,7 +466,9 @@ export function useAppHook() {
 		//seriePath,
 		fullDataOfVolume,
 	])
-
+	useEffect(() => {
+		console.log({ lakeData })
+	}, [lakeData])
 	return {
 		showLakeInfo,
 		isOneLakeActive,
