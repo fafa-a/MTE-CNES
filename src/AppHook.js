@@ -57,6 +57,7 @@ export function useAppHook() {
 	const toggleTheme = useCallback(() => {
 		setTheme(theme === "dark" ? "light" : "dark")
 	})
+
 	useEffect(() => {
 		if (DAY) {
 			setObsDepth(DurationTypes.DAY)
@@ -67,27 +68,38 @@ export function useAppHook() {
 		setLastObsDepth(obsDepth)
 	}, [DAY, PERIOD])
 
+	const resetAllData = useCallback(() => {
+		setLakeData([])
+		setLakeDataWithReference([])
+		setLakeDataByYear([])
+		setFullDataOfVolume([])
+		setTmpFillingRateReference([])
+		setFillingRateReference([])
+		setSurfaceReference([])
+		setVolumeReference([])
+	}, [])
+
 	useEffect(() => {
 		if (lastObsDepth !== obsDepth) {
-			setLakeData([])
-			setLakeDataWithReference([])
-			setLakeDataByYear([])
-			setFullDataOfVolume([])
-			setTmpFillingRateReference([])
-			setFillingRateReference([])
-			setSurfaceReference([])
-			setVolumeReference([])
+			resetAllData()
 		}
 	}, [lastObsDepth, obsDepth])
 
 	useEffect(() => {
-		if (!Object.values(activeLakes)) return
-		const showInfo = Object.values(activeLakes)
+		if (activeLakes.length === 0) return
+		const isInfoclicked = Object.values(activeLakes)
 			.filter((lake) => lake.showInfo === true)
 			.map((lake) => lake.showInfo)[0]
-		if (showInfo) setShowLakeInfo(showInfo)
-		else setShowLakeInfo(false)
-		if (Object.values(activeLakes).length > 0) setIsOneLakeActive(true)
+
+		if (isInfoclicked) {
+			setShowLakeInfo(true)
+		} else {
+			setShowLakeInfo(false)
+		}
+
+		if (Object.values(activeLakes).length > 0) {
+			setIsOneLakeActive(true)
+		}
 	}, [activeLakes])
 
 	useEffect(() => {
@@ -98,17 +110,22 @@ export function useAppHook() {
 		setLastDataType(dataType)
 	}, [dataType, YEAR])
 
-	useEffect(() => {
-		if (!lakeIdToDesactivate) return
+	const removeLakefromActiveLakes = useCallback(() => {
 		const index = activeLakes
 			.filter((lake) => lake.id === lakeIdToDesactivate)
 			.map((lake) => lake.index)[0]
+
 		setLakeDataWithReference([
 			...lakeDataWithReference.slice(0, index),
 			...lakeDataWithReference.slice(index + 1),
 		])
 		dispatch(desactiveLake({ lakeId: lakeIdToDesactivate }))
-	}, [dispatch, lakeIdToDesactivate])
+	}, [dispatch, activeLakes, lakeIdToDesactivate, lakeDataWithReference])
+
+	useEffect(() => {
+		if (!lakeIdToDesactivate) return
+		removeLakefromActiveLakes()
+	}, [lakeIdToDesactivate])
 
 	const handleSeriePath = useCallback(
 		(id, name, dataType, obs, duration) => {
@@ -187,7 +204,6 @@ export function useAppHook() {
 
 	useEffect(() => {
 		if (activeLakes.length === 0) return
-		console.time("make serie path")
 		const seriePathTmp = []
 		const allActiveLakes = activeLakes.map((lake) => {
 			return { id: lake.id, name: lake.name }
@@ -206,9 +222,10 @@ export function useAppHook() {
 				])
 			}
 		}
-		if (JSON.stringify(seriePathTmp) === JSON.stringify(seriePath)) return
+		const isAlreadyInSeriePath =
+			JSON.stringify(seriePathTmp) === JSON.stringify(seriePath)
+		if (isAlreadyInSeriePath) return
 		setSeriePath(seriePathTmp)
-		console.timeEnd("make serie path")
 	}, [dataType, obsDepth, REFERENCE, activeLakes])
 
 	const handleDateOfDataReference = useCallback(() => {
@@ -227,22 +244,21 @@ export function useAppHook() {
 
 	useEffect(() => {
 		if (lakeData.length === 0) return
-		console.time("handle date of data reference")
 		const dateFiltered = handleDateOfDataReference()
 		setDataReference(dateFiltered)
-		console.timeEnd("handle date of data reference")
 	}, [lakeData])
 
 	useEffect(() => {
 		if (lakeDataWithReference.length === 0) return
-		if (YEAR && dataLakes[activeLakes.at(-1).id][dataType]?.[obsDepth].byYear)
-			return
-		console.time("get data by year")
+		const dataByYearIsAlreadyInStore =
+			dataLakes[activeLakes.at(-1).id][dataType]?.[obsDepth].byYear
+		if (YEAR && dataByYearIsAlreadyInStore) return
 		const dataByYear = getDataByYear(lakeDataWithReference)
-		if (JSON.stringify(dataByYear) !== JSON.stringify(lakeDataByYear)) {
+		const isNotInLakeDataByYear =
+			JSON.stringify(dataByYear) !== JSON.stringify(lakeDataByYear)
+		if (isNotInLakeDataByYear) {
 			setLakeDataByYear(dataByYear)
 		}
-		console.timeEnd("get data by year")
 	}, [lakeDataWithReference])
 
 	const fetchData = useCallback(async () => {
@@ -277,7 +293,6 @@ export function useAppHook() {
 
 	useEffect(() => {
 		if (!dataReference.length) return
-		console.time("extract field ZSV")
 		if (dataType === DataTypes.SURFACE) {
 			const surfaceValues = extractField(dataReference, "area")
 			setSurfaceReference(surfaceValues)
@@ -287,16 +302,13 @@ export function useAppHook() {
 			setVolumeReference(volumeValues)
 			setTmpFillingRateReference(volumeValues)
 		}
-		console.timeEnd("extract field ZSV")
 	}, [dataReference, dataType])
 
 	useEffect(() => {
 		if (!tmpFillingRateReference.length) return
-		console.time("set filling rate reference")
 		const rateRef = returnHighestValue(tmpFillingRateReference)
 		const values = normalizeValue(tmpFillingRateReference, rateRef)
 		setFillingRateReference(values)
-		console.timeEnd("set filling rate reference")
 	}, [tmpFillingRateReference])
 
 	const addDataReference = useCallback(
@@ -354,18 +366,19 @@ export function useAppHook() {
 			surfaceReference[0]?.length === 0
 		)
 			return
-		console.time("add refereence date to data")
+
 		const data = addDataReference(lakeData)
-		if (
+
+		const isDataWithReferenceDefineOrDifferent =
 			(data[0].at(-1).length === 0 &&
 				JSON.stringify(data[0][1]) !==
 					JSON.stringify(lakeDataWithReference[0]?.[1])) ||
 			JSON.stringify(data[0].at(-1)) !==
 				JSON.stringify(lakeDataWithReference[0]?.at(-1))
-		) {
+
+		if (isDataWithReferenceDefineOrDifferent) {
 			setLakeDataWithReference(data)
 		}
-		console.timeEnd("add refereence date to data")
 	}, [lakeData, surfaceReference, volumeReference, fillingRateReference])
 
 	const handleFetchData = useCallback(async () => {
@@ -424,22 +437,23 @@ export function useAppHook() {
 
 	useEffect(() => {
 		if (seriePath.length === 0) return
-		console.time("handleFetchData")
 		handleFetchData()
-		console.timeEnd("handleFetchData")
 	}, [fetchData, handleFetchData])
 
 	useEffect(() => {
-		if (lakeDataWithReference.length === 0) return
-		if (lakeDataWithReference.length !== lakeDataByYear.length) return
-		if (
+		const isDataIsNotdefine =
+			lakeDataWithReference.length === 0 &&
+			lakeDataWithReference.length !== lakeDataByYear.length
+		const isVolumeDataIsNotdefine =
 			dataType === DataTypes.VOLUME &&
 			lakeDataWithReference.length !== fullDataOfVolume.length
-		)
-			return
-		if (JSON.stringify(lakeDataByYear) === JSON.stringify(lastLakeDataByYear))
-			return
-		console.time("set data to store")
+		const isDataByYearIsNotDifferent =
+			JSON.stringify(lakeDataByYear) === JSON.stringify(lastLakeDataByYear)
+
+		if (isDataIsNotdefine) return
+		if (isVolumeDataIsNotdefine) return
+		if (isDataByYearIsNotDifferent) return
+
 		lakeDataWithReference.forEach((data, index) => {
 			dispatch(
 				addLake({
@@ -457,7 +471,6 @@ export function useAppHook() {
 			)
 		})
 		setLastLakeDataByYear(lakeDataByYear)
-		console.timeEnd("set data to store")
 	}, [
 		lakeDataWithReference,
 		lakeDataByYear,
@@ -466,9 +479,7 @@ export function useAppHook() {
 		//seriePath,
 		fullDataOfVolume,
 	])
-	useEffect(() => {
-		console.log({ lakeData })
-	}, [lakeData])
+
 	return {
 		showLakeInfo,
 		isOneLakeActive,
