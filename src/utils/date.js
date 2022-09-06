@@ -160,3 +160,22 @@ export const fillEmptyDataOfDate = (arr) => {
 	})
 	return [newData]
 }
+export const getChartStartDateCurrentMonth = (date) => {
+	const minDatevalue = new Date(date)
+	const firstDayMonth = new Date(
+		minDatevalue.getFullYear(),
+		minDatevalue.getMonth(),
+		1
+	)
+	return firstDayMonth
+}
+
+export const getChartFirstDateNextMonth = (date) => {
+	const maxDateValue = new Date(date)
+	const nextMonth = new Date(
+		maxDateValue.getFullYear(),
+		maxDateValue.getMonth() + 1,
+		1
+	)
+	return nextMonth
+}

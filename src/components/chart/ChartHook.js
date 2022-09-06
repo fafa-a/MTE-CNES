@@ -4,6 +4,12 @@ import { useSelector, useDispatch } from "react-redux"
 import { DataTypes, DurationTypes, ObservationTypes } from "../../config"
 import { useEffect, useState, useCallback, useRef } from "react"
 import { handleResetZoom } from "../../stores/chartSlice"
+import {
+	getChartStartDateCurrentMonth,
+	getChartFirstDateNextMonth,
+} from "../../utils/date"
+import { handleDataSetsOptions } from "../../utils/chart"
+
 export default function useChartHook() {
 	const [chartData, setChartData] = useState([])
 	const [dataSets, setDataSets] = useState([])
@@ -14,6 +20,7 @@ export default function useChartHook() {
 	const [lastObstypes, setLastObstypes] = useState([])
 	const [obsDepth, setObsDepth] = useState()
 	const [scales, setScales] = useState()
+	const [options, setOptions] = useState()
 	const [lastChartData, setLastChartData] = useState([])
 	const form = useSelector((state) => state.form)
 	const { activeLakes, activeYears, dataLakes, totalVolume, yearsVisible } =
@@ -141,18 +148,16 @@ export default function useChartHook() {
 				}
 			}
 			if (!VOLUME) {
+				let i = 0
 				for (const lake of activeLakes) {
 					const { id } = lake
 					if (!dataLakes[id][dataType]?.[obsDepth]) return
 					if (!dataLakes[id][dataType]?.[obsDepth].raw) continue
-
-					const dataRaw = VOLUME
-						? dataLakes[id][dataType][obsDepth].byVolume
-						: dataLakes[id][dataType][obsDepth].raw
+					console.log({ id })
+					const dataRaw = dataLakes[id][dataType][obsDepth].raw
 					if (OPTIC && RADAR && REFERENCE) {
 						dataTmp.push([dataRaw])
 					}
-
 					if (OPTIC && !RADAR && !REFERENCE) {
 						dataTmp.push([dataRaw.slice(0, 1)])
 					}
@@ -173,6 +178,7 @@ export default function useChartHook() {
 					}
 
 					if (OPTIC && RADAR && !REFERENCE) {
+						console.log("in")
 						dataTmp.push([dataRaw.slice(0, 2)])
 					}
 
@@ -184,7 +190,6 @@ export default function useChartHook() {
 			}
 		}
 		if (YEAR && yearsVisible) {
-			if (activeLakes.length === 0) return
 			const { id } = Object.values(activeLakes).at(-1)
 
 			if (!dataLakes[id][dataType]?.[obsDepth].byYear) return
@@ -225,12 +230,16 @@ export default function useChartHook() {
 				dataTmp.push(dataByYear.map((obs) => obs.at(-1)))
 			}
 		}
-		if (JSON.stringify(dataTmp) !== JSON.stringify(chartData)) {
+		if (
+			dataTmp.length > 0 &&
+			JSON.stringify(dataTmp) !== JSON.stringify(chartData)
+		) {
+			console.log("set chartData", dataTmp)
 			setChartData(dataTmp)
 			setLastDataTypes(dataType)
 			setLastObstypes(obsTypes)
 		}
-	}, [dataLakes, REFERENCE, YEAR, dataType, obsTypes, VOLUME, totalVolume])
+	}, [dataLakes, YEAR, dataType, obsTypes, VOLUME, totalVolume])
 
 	const setDataLines = useCallback(
 		(item, obsType, index, lakeName, indexColor) => {
@@ -310,85 +319,15 @@ export default function useChartHook() {
 		},
 		[chart, charType, dataType, obsTypes, unit, YEAR]
 	)
-	useEffect(() => {
-		if (!dataSets.length) return
-		const newData = [...dataSets]
-		const activeLakesIndex = activeLakes.map((lake) => {
-			return {
-				visible: lake.chartVisible,
-				index: lake.index,
-			}
-		})
-
-		for (const lake of activeLakesIndex) {
-			const { index, visible } = lake
-			if (obsTypes.length === 1) {
-				if (dataSets.length !== activeLakesIndex.length) return
-				if (visible) {
-					newData[index].hidden = false
-				}
-				if (!visible) {
-					newData[index].hidden = true
-				}
-				setDataSets(newData)
-			}
-
-			if (obsTypes.length === 2) {
-				if (dataSets.length !== activeLakesIndex.length * 2) return
-				if (visible) {
-					newData[index === 0 ? 0 : index * 2].hidden = false
-					newData[index === 0 ? 1 : index * 2 + 1].hidden = false
-				}
-				if (!visible) {
-					newData[index === 0 ? 0 : index * 2].hidden = true
-					newData[index === 0 ? 1 : index * 2 + 1].hidden = true
-				}
-				setDataSets(newData)
-			}
-			if (obsTypes.length === 3) {
-				if (dataSets.length !== activeLakesIndex.length * 3) return
-				if (visible) {
-					newData[index === 0 ? 0 : index * 3].hidden = false
-					newData[index === 0 ? 1 : index * 3 + 1].hidden = false
-					newData[index === 0 ? 2 : index * 3 + 2].hidden = false
-				}
-				if (!visible) {
-					newData[index === 0 ? 0 : index * 3].hidden = true
-					newData[index === 0 ? 1 : index * 3 + 1].hidden = true
-					newData[index === 0 ? 2 : index * 3 + 2].hidden = true
-				}
-				setDataSets(newData)
-			}
-		}
-	}, [activeLakes])
-
-	const getChartStartDate = useCallback((date) => {
-		const minDatevalue = new Date(date)
-		const firstDayMonth = new Date(
-			minDatevalue.getFullYear(),
-			minDatevalue.getMonth(),
-			1
-		)
-		return firstDayMonth
-	}, [])
-
-	const getChartFirstDateNextMonth = useCallback((date) => {
-		const maxDateValue = new Date(date)
-		const nextMonth = new Date(
-			maxDateValue.getFullYear(),
-			maxDateValue.getMonth() + 1,
-			1
-		)
-		return nextMonth
-	}, [])
 
 	useEffect(() => {
+		if (chartData.length === 0) return
+		if (!Object.values(dataLakes).length && chartData[0].length === 0) return
 		const arr = []
 		const allDates = []
 		let allDatesSorted = []
-		if (chartData.length === 0) return
-		if (!Object.values(dataLakes).length && chartData[0].length === 0) return
 		if (!YEAR) {
+			console.log("in set data sets")
 			chartData.forEach((key, index) => {
 				key.forEach((item) => {
 					item.forEach((itm, idx) => {
@@ -408,12 +347,11 @@ export default function useChartHook() {
 				})
 			})
 			allDatesSorted = allDates.sort((a, b) => new Date(a) - new Date(b))
-			const firstDateGraph = getChartStartDate(allDatesSorted[0])
+			const firstDateGraph = getChartStartDateCurrentMonth(allDatesSorted[0])
 			setDateMin(firstDateGraph)
 			const lastDateGraph = getChartFirstDateNextMonth(allDatesSorted.at(-1))
 			setDateMax(lastDateGraph)
 		}
-
 
 		if (
 			YEAR &&
@@ -421,7 +359,6 @@ export default function useChartHook() {
 				dataLakes[activeLakes.at(-1).id][dataType]?.[obsDepth].byYear
 			).length === chartData[0].length
 		) {
-
 			chartData.forEach((year) => {
 				Object.values(year).forEach((obs, index) => {
 					obs.forEach((itm, idx) => {
@@ -444,9 +381,9 @@ export default function useChartHook() {
 			})
 		}
 		if (JSON.stringify([...arr]) !== JSON.stringify(dataSets)) {
+			console.log("in set")
 			setDataSets([...arr])
 		}
-
 		arr.length = 0
 	}, [YEAR, chartData, charType])
 
@@ -521,116 +458,179 @@ export default function useChartHook() {
 		}
 	}, [YEAR, dateMin, dateMax])
 
-	const options = {
-		responsive: true,
-		maintainAspectRatio: false,
-		interaction: {
-			intersect: false,
-			mode: "nearest",
-		},
-		plugins: {
-			title: {
-				display: true,
-				text: `${label}  ${unit}`,
-				position: "top",
-				font: {
-					size: 16,
-				},
-				padding: {
-					top: 10,
-					bottom: 10,
-				},
+	useEffect(() => {
+		const chartOptions = {
+			responsive: true,
+			maintainAspectRatio: false,
+			interaction: {
+				intersect: false,
+				mode: "nearest",
 			},
-			tooltip: {
-				callbacks: {
-					title(context) {
-						const { label } = context[0]
-						return label
+			plugins: {
+				title: {
+					display: true,
+					text: `${label}  ${unit}`,
+					position: "top",
+					font: {
+						size: 16,
 					},
-					afterTitle(context) {
-						if (VOLUME) return
-						const { lakeName } = context[0].dataset
-						return `${lakeName}`
-					},
-					beforeBody(context) {
-						const { label } = context[0].dataset
-						return `Observation: ${label}`
-					},
-					label(context) {
-						const { formattedValue } = context
-						if (!VOLUME) {
-							return ` ${label}: ${formattedValue} ${unit}`
-						}
-						if (VOLUME) {
-							return ` Total ${label}: ${formattedValue} ${unit}`
-						}
-					},
-					afterLabel(context) {
-						if (!VOLUME) return
-						if (VOLUME) {
-							const { date } = context.raw
-							const { index } = context.dataset
-							const allId = activeLakes.map((lake) => lake.id)
-							const allValue = allId.map((id) => {
-								return dataLakes[id][DataTypes.VOLUME]?.[obsDepth].byVolume[
-									index
-								]
-									.filter((item) => item.date === date)
-									.map((item) => item.value)
-							})
-							return allValue.map((val, index) => {
-								const { name } = Object.values(activeLakes)[index]
-								const value = val[0].toFixed(3)
-								return ` ${name}: ${value} ${unit}`
-							})
-						}
+					padding: {
+						top: 10,
+						bottom: 10,
 					},
 				},
-			},
-			legend: {
-				display: false,
-				// position: "top",
-				// labels: { font: { size: 14 } },
-			},
-			zoom: {
-				pan: {
-					enabled: true,
-					modifierKey: "ctrl",
-					// onPanStart: chart => {
-					//   chart.event.changedPointers[0].target.style.cursor = "grab"
-					// },
+				tooltip: {
+					callbacks: {
+						title(context) {
+							const { label } = context[0]
+							return label
+						},
+						afterTitle(context) {
+							if (VOLUME) return
+							const { lakeName } = context[0].dataset
+							return `${lakeName}`
+						},
+						beforeBody(context) {
+							const { label } = context[0].dataset
+							return `Observation: ${label}`
+						},
+						label(context) {
+							const { formattedValue } = context
+							if (!VOLUME) {
+								return ` ${label}: ${formattedValue} ${unit}`
+							}
+							if (VOLUME) {
+								return ` Total ${label}: ${formattedValue} ${unit}`
+							}
+						},
+						afterLabel(context) {
+							if (!VOLUME) return
+							if (VOLUME) {
+								const { date } = context.raw
+								const { index } = context.dataset
+								const allId = activeLakes.map((lake) => lake.id)
+								const allValue = allId.map((id) => {
+									return dataLakes[id][DataTypes.VOLUME]?.[obsDepth].byVolume[
+										index
+									]
+										.filter((item) => item.date === date)
+										.map((item) => item.value)
+								})
+								return allValue.map((val, index) => {
+									const { name } = Object.values(activeLakes)[index]
+									const value = val[0].toFixed(3)
+									return ` ${name}: ${value} ${unit}`
+								})
+							}
+						},
+					},
+				},
+				legend: {
+					display: false,
+					// position: "top",
+					// labels: { font: { size: 14 } },
 				},
 				zoom: {
-					wheel: {
+					pan: {
 						enabled: true,
+						modifierKey: "ctrl",
+						// onPanStart: chart => {
+						//   chart.event.changedPointers[0].target.style.cursor = "grab"
+						// },
 					},
-					drag: {
-						enabled: true,
-						backgroundColor: "rgba(0,204,255,0.15)",
-						borderColor: "rgba(0,204,255,1.00)",
-						borderWidth: 1,
+					zoom: {
+						wheel: {
+							enabled: true,
+						},
+						drag: {
+							enabled: true,
+							backgroundColor: "rgba(0,204,255,0.15)",
+							borderColor: "rgba(0,204,255,1.00)",
+							borderWidth: 1,
+						},
+						pinch: {
+							enabled: true,
+						},
+						mode: "xy",
 					},
-					pinch: {
-						enabled: true,
+					limits: {
+						y: { min: 0, max: "original" },
+						x: { min: "original", max: "original" },
 					},
-					mode: "xy",
-				},
-				limits: {
-					y: { min: 0, max: "original" },
-					x: { min: "original", max: "original" },
 				},
 			},
-		},
-		scales,
-		y: {
-			beginAtZero: true,
-		},
-		parsing: {
-			xAxisKey: "date",
-			yAxisKey: "value",
-		},
-		animation: false,
-	}
+			scales,
+			y: {
+				beginAtZero: true,
+			},
+			parsing: {
+				xAxisKey: "date",
+				yAxisKey: "value",
+			},
+			animation: false,
+		}
+		setOptions(chartOptions)
+	}, [scales, label, unit, VOLUME])
+
+	useEffect(() => {
+		if (!dataSets.length) return
+		const newDataSetsWithOption = handleDataSetsOptions(
+			dataSets,
+			activeLakes,
+			"chartVisible",
+			"hidden",
+			obsTypes
+		)
+		setDataSets(newDataSetsWithOption)
+		// const newData = [...dataSets]
+		// const activeLakesIndex = activeLakes.map((lake) => {
+		// 	return {
+		// 		visible: lake.chartVisible,
+		// 		index: lake.index,
+		// 	}
+		// })
+
+		// for (const lake of activeLakesIndex) {
+		// 	const { index, visible } = lake
+		// 	if (obsTypes.length === 1) {
+		// 		if (dataSets.length !== activeLakesIndex.length) return
+		// 		if (visible) {
+		// 			newData[index].hidden = false
+		// 		}
+		// 		if (!visible) {
+		// 			newData[index].hidden = true
+		// 		}
+		// 		setDataSets(newData)
+		// 	}
+
+		// 	if (obsTypes.length === 2) {
+		// 		if (dataSets.length !== activeLakesIndex.length * 2) return
+		// 		if (visible) {
+		// 			newData[index === 0 ? 0 : index * 2].hidden = false
+		// 			newData[index === 0 ? 1 : index * 2 + 1].hidden = false
+		// 		}
+		// 		if (!visible) {
+		// 			newData[index === 0 ? 0 : index * 2].hidden = true
+		// 			newData[index === 0 ? 1 : index * 2 + 1].hidden = true
+		// 		}
+		// 		setDataSets(newData)
+		// 	}
+		// 	if (obsTypes.length === 3) {
+		// 		if (dataSets.length !== activeLakesIndex.length * 3) return
+		// 		if (visible) {
+		// 			newData[index === 0 ? 0 : index * 3].hidden = false
+		// 			newData[index === 0 ? 1 : index * 3 + 1].hidden = false
+		// 			newData[index === 0 ? 2 : index * 3 + 2].hidden = false
+		// 		}
+		// 		if (!visible) {
+		// 			newData[index === 0 ? 0 : index * 3].hidden = true
+		// 			newData[index === 0 ? 1 : index * 3 + 1].hidden = true
+		// 			newData[index === 0 ? 2 : index * 3 + 2].hidden = true
+		// 		}
+		// 		setDataSets(newData)
+		// 	}
+		// }
+	}, [activeLakes])
 
 	useEffect(() => {
 		if (![activeLakes].length) return
@@ -817,8 +817,12 @@ export default function useChartHook() {
 	const data = {
 		datasets: dataSets,
 	}
-
-
+	useEffect(() => {
+		console.log("chart data =>", chartData)
+	}, [chartData])
+	useEffect(() => {
+		console.log("dataSets =>", dataSets)
+	}, [dataSets])
 	return {
 		data,
 		options,
