@@ -85,7 +85,7 @@ export const getFirstDateOfArrays = (arr) => {
 		.map((el) => el.date)
 		.sort((a, b) => (new Date(a) < new Date(b) ? -1 : 1))[0]
 	const firstDate02 = arr[1]
-		.map((el) => el.date)
+		?.map((el) => el.date)
 		.sort((a, b) => (new Date(a) < new Date(b) ? -1 : 1))[0]
 	dateTmp.push(firstDate01, firstDate02)
 	dateTmp.sort((a, b) => (a < b ? -1 : 1))
@@ -97,7 +97,7 @@ export const getLastDateOfArrays = (arr) => {
 		.map((el) => el.date)
 		.sort((a, b) => (new Date(a) > new Date(b) ? -1 : 1))[0]
 	const lastDate02 = arr[1]
-		.map((el) => el.date)
+		?.map((el) => el.date)
 		.sort((a, b) => (new Date(a) > new Date(b) ? -1 : 1))[0]
 	dateTmp.push(lastDate01, lastDate02)
 	dateTmp.sort((a, b) => (a < b ? -1 : 1))
