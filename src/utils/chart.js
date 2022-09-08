@@ -1,4 +1,4 @@
-export const handleDataSetsBooleanOptions = (
+export const handleDataSetsBooleanOption = (
 	arrDataSets,
 	activeData,
 	dataOption,
@@ -39,18 +39,22 @@ export const handleDataSetsBooleanOptions = (
 			if (dataOptionValue) {
 				newData[index === 0 ? 0 : index * 3][dataSetOption] = false
 				newData[index === 0 ? 1 : index * 3 + 1][dataSetOption] = false
-				newData[index === 0 ? 2 : index * 3 + 2][dataSetOption] = false
+				if (newData[index === 0 ? 2 : index * 3 + 2]?.[dataSetOption]) {
+					newData[index === 0 ? 2 : index * 3 + 2][dataSetOption] = false
+				}
 			}
 			if (!dataOptionValue) {
 				newData[index === 0 ? 0 : index * 3][dataSetOption] = true
 				newData[index === 0 ? 1 : index * 3 + 1][dataSetOption] = true
-				newData[index === 0 ? 2 : index * 3 + 2][dataSetOption] = true
+				if (newData[index === 0 ? 2 : index * 3 + 2]?.[dataSetOption]) {
+					newData[index === 0 ? 2 : index * 3 + 2][dataSetOption] = true
+				}
 			}
 		}
 	}
 	return newData
 }
-export const handleDataSetsBorderWidthOptions = (
+export const handleDataSetsBorderWidthOption = (
 	arrDataSets,
 	activeData,
 	dataOption,
@@ -101,17 +105,20 @@ export const handleDataSetsBorderWidthOptions = (
 
 				newData[index === 0 ? 1 : index * 3 + 1][dataSetOption] =
 					config.style.selected[dataSetOption]
-
-				newData[index === 0 ? 2 : index * 3 + 2][dataSetOption] =
-					config.style.selected[dataSetOption]
+				if (newData[index === 0 ? 2 : index * 3 + 2]) {
+					newData[index === 0 ? 2 : index * 3 + 2][dataSetOption] =
+						config.style.selected[dataSetOption]
+				}
 			}
 			if (!dataOptionValue) {
 				newData[index === 0 ? 0 : index * 3][dataSetOption] =
 					config.style.default[dataSetOption]
 				newData[index === 0 ? 1 : index * 3 + 1][dataSetOption] =
 					config.style.default[dataSetOption]
-				newData[index === 0 ? 2 : index * 3 + 2][dataSetOption] =
-					config.style.default[dataSetOption]
+				if (newData[index === 0 ? 2 : index * 3 + 2]) {
+					newData[index === 0 ? 2 : index * 3 + 2][dataSetOption] =
+						config.style.default[dataSetOption]
+				}
 			}
 		}
 	}

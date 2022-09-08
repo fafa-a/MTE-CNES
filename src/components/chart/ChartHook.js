@@ -9,8 +9,8 @@ import {
 	getChartFirstDateNextMonth,
 } from "../../utils/date"
 import {
-	handleDataSetsBooleanOptions,
-	handleDataSetsBorderWidthOptions,
+	handleDataSetsBooleanOption,
+	handleDataSetsBorderWidthOption,
 } from "../../utils/chart"
 
 export default function useChartHook() {
@@ -115,8 +115,6 @@ export default function useChartHook() {
 			dispatch(handleResetZoom({ zoom: false }))
 		}
 	}, [zoomReset])
-
-
 
 	useEffect(() => {
 		if (activeLakes.length === 0) return
@@ -579,7 +577,7 @@ export default function useChartHook() {
 
 	useEffect(() => {
 		if (YEAR || dataSets.length !== activeLakes.length * obsTypes.length) return
-		const toggleChartVisibilty = handleDataSetsBooleanOptions(
+		const toggleChartVisibilty = handleDataSetsBooleanOption(
 			dataSets,
 			activeLakes,
 			"chartVisible",
@@ -591,7 +589,7 @@ export default function useChartHook() {
 
 	useEffect(() => {
 		if (YEAR || dataSets.length !== activeLakes.length * obsTypes.length) return
-		const toggleBoldGraph = handleDataSetsBorderWidthOptions(
+		const toggleBoldGraph = handleDataSetsBorderWidthOption(
 			dataSets,
 			activeLakes,
 			"selected",
@@ -603,131 +601,36 @@ export default function useChartHook() {
 	}, [activeLakes])
 
 	useEffect(() => {
-		if (!YEAR && ![activeLakes].length) return
-		const newData = [...dataSets]
-		const activeYearsChartVisible = Object.values(activeYears).map((year) => {
-			return {
-				visible: year.chartVisible,
-				index: year.index,
-			}
-		})
+		if (!YEAR && activeLakes.length === 0) return
+		const arrActiveYears = Object.values(activeYears)
 
-		for (const lake of activeYearsChartVisible) {
-			const { index, visible } = lake
-			if (obsTypes.length === 1) {
-				if (dataSets.length !== activeYearsChartVisible.length) return
-				if (visible) {
-					newData[index].hidden = false
-				}
-				if (!visible) {
-					newData[index].hidden = true
-				}
-				setDataSets(newData)
-			}
-
-			if (obsTypes.length === 2) {
-				if (dataSets.length !== activeYearsChartVisible.length * 2) return
-				if (visible) {
-					newData[index === 0 ? 0 : index * 2].hidden = false
-					newData[index === 0 ? 1 : index * 2 + 1].hidden = false
-				}
-				if (!visible) {
-					newData[index === 0 ? 0 : index * 2].hidden = true
-					newData[index === 0 ? 1 : index * 2 + 1].hidden = true
-				}
-				setDataSets(newData)
-			}
-			if (obsTypes.length === 3) {
-				if (dataSets.length !== activeYearsChartVisible.length * 3) return
-				if (visible) {
-					newData[index === 0 ? 0 : index * 3].hidden = false
-					newData[index === 0 ? 1 : index * 3 + 1].hidden = false
-					newData[index === 0 ? 2 : index * 3 + 2].hidden = false
-				}
-				if (!visible) {
-					newData[index === 0 ? 0 : index * 3].hidden = true
-					newData[index === 0 ? 1 : index * 3 + 1].hidden = true
-					newData[index === 0 ? 2 : index * 3 + 2].hidden = true
-				}
-				setDataSets(newData)
-			}
-		}
-	}, [activeYears, obsTypes.length])
+		const toggleYearChartVisibilty = handleDataSetsBooleanOption(
+			dataSets,
+			arrActiveYears,
+			"chartVisible",
+			"hidden",
+			obsTypes
+		)
+		setDataSets(toggleYearChartVisibilty)
+	}, [activeYears])
 
 	useEffect(() => {
-		if (!YEAR && ![activeLakes].length) return
-		const newData = [...dataSets]
-		const activeYearsSelected = Object.values(activeYears).map((year) => {
-			return {
-				selected: year.selected,
-				index: year.index,
-			}
-		})
-		for (const year of activeYearsSelected) {
-			const { index, selected } = year
-			if (obsTypes.length === 1) {
-				if (dataSets.length !== activeYearsSelected.length) return
-				if (selected) {
-					newData[index].borderWidth = chart.style.selected.borderWidth
-				}
-				if (!selected) {
-					newData[index].borderWidth = chart.style.default.borderWidth
-				}
-				setDataSets(newData)
-			}
-			if (obsTypes.length === 2) {
-				if (dataSets.length !== activeYearsSelected.length * 2) return
-				if (selected) {
-					newData[index === 0 ? 0 : index * 2].borderWidth =
-						chart.style.selected.borderWidth
-					newData[index === 0 ? 1 : index * 2 + 1].borderWidth =
-						chart.style.selected.borderWidth
-				}
-				if (!selected) {
-					newData[index === 0 ? 0 : index * 2].borderWidth =
-						chart.style.default.borderWidth
-					newData[index === 0 ? 1 : index * 2 + 1].borderWidth =
-						chart.style.default.borderWidth
-				}
-				setDataSets(newData)
-			}
-			if (obsTypes.length === 3) {
-				if (dataSets.length !== activeYearsSelected.length * 3) return
-				if (selected) {
-					newData[index === 0 ? 0 : index * 3].borderWidth =
-						chart.style.selected.borderWidth
-					newData[index === 0 ? 1 : index * 3 + 1].borderWidth =
-						chart.style.selected.borderWidth
-					newData[index === 0 ? 2 : index * 3 + 2].borderWidth =
-						chart.style.selected.borderWidth
-				}
-				if (!selected) {
-					newData[index === 0 ? 0 : index * 3].borderWidth =
-						chart.style.default.borderWidth
-					newData[index === 0 ? 1 : index * 3 + 1].borderWidth =
-						chart.style.default.borderWidth
-					newData[index === 0 ? 2 : index * 3 + 2].borderWidth =
-						chart.style.default.borderWidth
-				}
-				setDataSets(newData)
-			}
-		}
-	}, [
-		activeYears,
-		chart.style.default.borderWidth,
-		chart.style.selected.borderWidth,
-		obsTypes.length,
-	])
+		if (!YEAR && dataSets.length === 0) return
+		const arrActiveYears = Object.values(activeYears)
+		const toggleYearBoldGraph = handleDataSetsBorderWidthOption(
+			dataSets,
+			arrActiveYears,
+			"selected",
+			"borderWidth",
+			obsTypes,
+			chart
+		)
+		setDataSets(toggleYearBoldGraph)
+	}, [activeYears])
 
 	const data = {
 		datasets: dataSets,
 	}
-	useEffect(() => {
-		console.log("chart data =>", chartData)
-	}, [chartData])
-	useEffect(() => {
-		console.log("dataSets =>", dataSets)
-	}, [dataSets])
 
 	return {
 		data,
