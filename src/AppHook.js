@@ -251,7 +251,7 @@ export function useAppHook() {
 	useEffect(() => {
 		if (lakeDataWithReference.length === 0) return
 		const dataByYearIsAlreadyInStore =
-			dataLakes[activeLakes.at(-1).id][dataType]?.[obsDepth].byYear
+			dataLakes[activeLakes.at(-1).id][dataType]?.[obsDepth]?.byYear
 		if (YEAR && dataByYearIsAlreadyInStore) return
 		const dataByYear = getDataByYear(lakeDataWithReference)
 		const isNotInLakeDataByYear =

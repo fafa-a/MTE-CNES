@@ -48,8 +48,7 @@ const StyledDiv = styled("div", {
 })
 
 export const Chart = ({ handleCanvas }) => {
-	const { data, options, charType } = useChartHook()
-	const chartRef = useRef()
+	const { data, options, charType, chartRef } = useChartHook()
 	useEffect(() => {
 		if (!chartRef.current) return
 		const { canvas } = chartRef.current
