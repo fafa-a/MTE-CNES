@@ -12,7 +12,7 @@ export default function usePolygonLayerHook() {
 		coord: [],
 	})
 	const [obsDepth, setObsDepth] = useState(null)
-	const { coordinatesLakeToCenter, activeLakes, dataLakes, loadedLakes } =
+	const { coordinatesLakeToCenter, activeLakes, dataLakes } =
 		useSelector((state) => state.lakes)
 	const { VOLUME, DAY, PERIOD } = useSelector((state) => state.form)
 	const map = useMap()

@@ -8,7 +8,10 @@ import {
 	getChartStartDateCurrentMonth,
 	getChartFirstDateNextMonth,
 } from "../../utils/date"
-import { handleDataSetsOptions } from "../../utils/chart"
+import {
+	handleDataSetsBooleanOptions,
+	handleDataSetsBorderWidthOptions,
+} from "../../utils/chart"
 
 export default function useChartHook() {
 	const [chartData, setChartData] = useState([])
@@ -112,6 +115,8 @@ export default function useChartHook() {
 			dispatch(handleResetZoom({ zoom: false }))
 		}
 	}, [zoomReset])
+
+
 
 	useEffect(() => {
 		if (activeLakes.length === 0) return
@@ -573,129 +578,29 @@ export default function useChartHook() {
 	}, [scales, label, unit, VOLUME])
 
 	useEffect(() => {
-		if (!dataSets.length) return
-		const newDataSetsWithOption = handleDataSetsOptions(
+		if (YEAR || dataSets.length !== activeLakes.length * obsTypes.length) return
+		const toggleChartVisibilty = handleDataSetsBooleanOptions(
 			dataSets,
 			activeLakes,
 			"chartVisible",
 			"hidden",
 			obsTypes
 		)
-		setDataSets(newDataSetsWithOption)
-		// const newData = [...dataSets]
-		// const activeLakesIndex = activeLakes.map((lake) => {
-		// 	return {
-		// 		visible: lake.chartVisible,
-		// 		index: lake.index,
-		// 	}
-		// })
-
-		// for (const lake of activeLakesIndex) {
-		// 	const { index, visible } = lake
-		// 	if (obsTypes.length === 1) {
-		// 		if (dataSets.length !== activeLakesIndex.length) return
-		// 		if (visible) {
-		// 			newData[index].hidden = false
-		// 		}
-		// 		if (!visible) {
-		// 			newData[index].hidden = true
-		// 		}
-		// 		setDataSets(newData)
-		// 	}
-
-		// 	if (obsTypes.length === 2) {
-		// 		if (dataSets.length !== activeLakesIndex.length * 2) return
-		// 		if (visible) {
-		// 			newData[index === 0 ? 0 : index * 2].hidden = false
-		// 			newData[index === 0 ? 1 : index * 2 + 1].hidden = false
-		// 		}
-		// 		if (!visible) {
-		// 			newData[index === 0 ? 0 : index * 2].hidden = true
-		// 			newData[index === 0 ? 1 : index * 2 + 1].hidden = true
-		// 		}
-		// 		setDataSets(newData)
-		// 	}
-		// 	if (obsTypes.length === 3) {
-		// 		if (dataSets.length !== activeLakesIndex.length * 3) return
-		// 		if (visible) {
-		// 			newData[index === 0 ? 0 : index * 3].hidden = false
-		// 			newData[index === 0 ? 1 : index * 3 + 1].hidden = false
-		// 			newData[index === 0 ? 2 : index * 3 + 2].hidden = false
-		// 		}
-		// 		if (!visible) {
-		// 			newData[index === 0 ? 0 : index * 3].hidden = true
-		// 			newData[index === 0 ? 1 : index * 3 + 1].hidden = true
-		// 			newData[index === 0 ? 2 : index * 3 + 2].hidden = true
-		// 		}
-		// 		setDataSets(newData)
-		// 	}
-		// }
+		setDataSets(toggleChartVisibilty)
 	}, [activeLakes])
 
 	useEffect(() => {
-		if (![activeLakes].length) return
-		const newData = [...dataSets]
-		const selectedLakes = activeLakes.map((lake) => {
-			return {
-				selected: lake.selected,
-				index: lake.index,
-			}
-		})
-		for (const lake of selectedLakes) {
-			const { index, selected } = lake
-			if (obsTypes.length === 1) {
-				if (dataSets.length !== selectedLakes.length) return
-				if (selected) {
-					newData[index].borderWidth = chart.style.selected.borderWidth
-				}
-				if (!selected) {
-					newData[index].borderWidth = chart.style.default.borderWidth
-				}
-				setDataSets(newData)
-			}
-			if (obsTypes.length === 2) {
-				if (dataSets.length !== selectedLakes.length * 2) return
-				if (selected) {
-					newData[index === 0 ? 0 : index * 2].borderWidth =
-						chart.style.selected.borderWidth
-					newData[index === 0 ? 1 : index * 2 + 1].borderWidth =
-						chart.style.selected.borderWidth
-				}
-				if (!selected) {
-					newData[index === 0 ? 0 : index * 2].borderWidth =
-						chart.style.default.borderWidth
-					newData[index === 0 ? 1 : index * 2 + 1].borderWidth =
-						chart.style.default.borderWidth
-				}
-				setDataSets(newData)
-			}
-			if (obsTypes.length === 3) {
-				if (dataSets.length !== selectedLakes.length * 3) return
-				if (selected) {
-					newData[index === 0 ? 0 : index * 3].borderWidth =
-						chart.style.selected.borderWidth
-					newData[index === 0 ? 1 : index * 3 + 1].borderWidth =
-						chart.style.selected.borderWidth
-					newData[index === 0 ? 2 : index * 3 + 2].borderWidth =
-						chart.style.selected.borderWidth
-				}
-				if (!selected) {
-					newData[index === 0 ? 0 : index * 3].borderWidth =
-						chart.style.default.borderWidth
-					newData[index === 0 ? 1 : index * 3 + 1].borderWidth =
-						chart.style.default.borderWidth
-					newData[index === 0 ? 2 : index * 3 + 2].borderWidth =
-						chart.style.default.borderWidth
-				}
-				setDataSets(newData)
-			}
-		}
-	}, [
-		activeLakes,
-		chart.style.default.borderWidth,
-		chart.style.selected.borderWidth,
-		obsTypes.length,
-	])
+		if (YEAR || dataSets.length !== activeLakes.length * obsTypes.length) return
+		const toggleBoldGraph = handleDataSetsBorderWidthOptions(
+			dataSets,
+			activeLakes,
+			"selected",
+			"borderWidth",
+			obsTypes,
+			chart
+		)
+		setDataSets(toggleBoldGraph)
+	}, [activeLakes])
 
 	useEffect(() => {
 		if (!YEAR && ![activeLakes].length) return
@@ -823,6 +728,7 @@ export default function useChartHook() {
 	useEffect(() => {
 		console.log("dataSets =>", dataSets)
 	}, [dataSets])
+
 	return {
 		data,
 		options,
