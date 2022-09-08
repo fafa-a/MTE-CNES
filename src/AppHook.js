@@ -441,17 +441,17 @@ export function useAppHook() {
 	}, [fetchData, handleFetchData])
 
 	useEffect(() => {
-		const isDataIsNotdefine =
+		const isDataIsNotDefine =
 			lakeDataWithReference.length === 0 &&
 			lakeDataWithReference.length !== lakeDataByYear.length
-		const isVolumeDataIsNotdefine =
+		const isVolumeDataIsNotDefine =
 			dataType === DataTypes.VOLUME &&
 			lakeDataWithReference.length !== fullDataOfVolume.length
 		const isDataByYearIsNotDifferent =
 			JSON.stringify(lakeDataByYear) === JSON.stringify(lastLakeDataByYear)
 
-		if (isDataIsNotdefine) return
-		if (isVolumeDataIsNotdefine) return
+		if (isDataIsNotDefine) return
+		if (isVolumeDataIsNotDefine) return
 		if (isDataByYearIsNotDifferent) return
 
 		lakeDataWithReference.forEach((data, index) => {
