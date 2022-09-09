@@ -5,26 +5,40 @@ const initialState = {
 	activeLakes: [],
 	yearsVisible: false,
 	activeYears: {
-		2018: {
+		x0: {
 			id: "2018",
 			name: "2018",
 			selected: false,
 			chartVisible: true,
 			index: 0,
 		},
-		2019: {
+		x1: {
 			id: "2019",
 			name: "2019",
 			selected: false,
 			chartVisible: true,
 			index: 1,
 		},
-		2020: {
+		x2: {
 			id: "2020",
 			name: "2020",
 			selected: false,
 			chartVisible: true,
 			index: 2,
+		},
+		x3: {
+			id: "2021",
+			name: "2021",
+			selected: false,
+			chartVisible: true,
+			index: 3,
+		},
+		x4: {
+			id: "2022",
+			name: "2022",
+			selected: false,
+			chartVisible: true,
+			index: 4,
 		},
 	},
 	totalVolume: [],

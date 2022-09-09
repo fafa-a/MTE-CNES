@@ -78,7 +78,7 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 	useEffect(() => {
 		if (!YEAR) return
 		if (!Object.keys(dataLakes).length) return
-		const yearData = Object.keys(activeYears).map((year) => `x${year}`)
+		const yearData = Object.keys(activeYears).map((year) => year)
 		setYear(yearData)
 	}, [YEAR, activeYears, dataLakes])
 
@@ -159,6 +159,6 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 		dataLakes,
 		dataType,
 		obsDepth,
-    totalVolume
+		totalVolume,
 	}
 }

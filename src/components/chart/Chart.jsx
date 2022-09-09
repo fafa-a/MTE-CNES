@@ -52,7 +52,6 @@ export const Chart = ({ handleCanvas }) => {
 	useEffect(() => {
 		if (!chartRef.current) return
 		const { canvas } = chartRef.current
-		console.log({ canvas })
 		handleCanvas(canvas)
 	}, [])
 
