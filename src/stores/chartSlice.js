@@ -20,7 +20,7 @@ const initialState = {
 	},
 	[ModeTypes.YEAR]: {
 		style: {
-			x2018: {
+			x0: {
 				[ObservationTypes.OPTIC]: {
 					backgroundColor: "rgba(255, 0, 0)",
 					borderColor: "rgba(255, 0, 0)",
@@ -37,7 +37,7 @@ const initialState = {
 					pointBackgroundColor: "rgb(255, 0, 0,.13)",
 				},
 			},
-			x2019: {
+			x1: {
 				[ObservationTypes.OPTIC]: {
 					backgroundColor: "rgba(255, 125,0)",
 					borderColor: "rgba(255, 125,0)",
@@ -54,7 +54,7 @@ const initialState = {
 					pointBackgroundColor: "rgb(255, 125, 0,.33)",
 				},
 			},
-			x2020: {
+			x2: {
 				[ObservationTypes.OPTIC]: {
 					backgroundColor: "rgba(0, 0, 255)",
 					borderColor: "rgba(0, 0, 255)",
@@ -69,6 +69,40 @@ const initialState = {
 					backgroundColor: "rgba(0, 0, 250,0.33)",
 					borderColor: "rgb(0, 0, 255,0.33)",
 					pointBackgroundColor: "rgb(0, 0, 255,0.33)",
+				},
+			},
+			x3: {
+				[ObservationTypes.OPTIC]: {
+					backgroundColor: "rgba(0, 255, 0)",
+					borderColor: "rgba(0, 255, 0)",
+					pointBackgroundColor: "rgba(0, 255, 0)",
+				},
+				[ObservationTypes.RADAR]: {
+					backgroundColor: "rgb(0, 255, 0,0.56)",
+					borderColor: "rgb(0, 255, 0,0.56)",
+					pointBackgroundColor: "rgb(0, 255, 0,0.56)",
+				},
+				[ObservationTypes.REFERENCE]: {
+					backgroundColor: "rgba(0, 255, 0,0.33)",
+					borderColor: "rgb(0, 255, 0,0.33)",
+					pointBackgroundColor: "rgb(0, 255, 0,0.33)",
+				},
+			},
+			x4: {
+				[ObservationTypes.OPTIC]: {
+					backgroundColor: "rgba(255, 0, 255)",
+					borderColor: "rgba(255, 0, 255)",
+					pointBackgroundColor: "rgba(255, 0, 255)",
+				},
+				[ObservationTypes.RADAR]: {
+					backgroundColor: "rgb(255, 0, 255,0.56)",
+					borderColor: "rgb(255, 0, 255,0.56)",
+					pointBackgroundColor: "rgb(255, 0, 255,0.56)",
+				},
+				[ObservationTypes.REFERENCE]: {
+					backgroundColor: "rgba(255, 0, 255,0.33)",
+					borderColor: "rgb(255, 0, 255,0.33)",
+					pointBackgroundColor: "rgb(255, 0, 255,0.33)",
 				},
 			},
 		},

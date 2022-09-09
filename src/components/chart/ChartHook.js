@@ -24,7 +24,7 @@ export default function useChartHook() {
 	const [obsDepth, setObsDepth] = useState()
 	const [scales, setScales] = useState()
 	const [options, setOptions] = useState()
-	const [lastChartData, setLastChartData] = useState([])
+	const [datesOfYear, setDatesOfYear] = useState({})
 	const form = useSelector((state) => state.form)
 	const { activeLakes, activeYears, dataLakes, totalVolume, yearsVisible } =
 		useSelector((state) => state.lakes)
@@ -156,7 +156,6 @@ export default function useChartHook() {
 					const { id } = lake
 					if (!dataLakes[id][dataType]?.[obsDepth]) return
 					if (!dataLakes[id][dataType]?.[obsDepth].raw) continue
-					console.log({ id })
 					const dataRaw = dataLakes[id][dataType][obsDepth].raw
 					if (OPTIC && RADAR && REFERENCE) {
 						dataTmp.push([dataRaw])
@@ -181,7 +180,6 @@ export default function useChartHook() {
 					}
 
 					if (OPTIC && RADAR && !REFERENCE) {
-						console.log("in")
 						dataTmp.push([dataRaw.slice(0, 2)])
 					}
 
@@ -237,7 +235,6 @@ export default function useChartHook() {
 			dataTmp.length > 0 &&
 			JSON.stringify(dataTmp) !== JSON.stringify(chartData)
 		) {
-			console.log("set chartData", dataTmp)
 			setChartData(dataTmp)
 			setLastDataTypes(dataType)
 			setLastObstypes(obsTypes)
@@ -265,9 +262,7 @@ export default function useChartHook() {
 			}
 			let xAxisID
 			if (YEAR) {
-				if (index === 0) xAxisID = "x2018"
-				if (index === 1) xAxisID = "x2019"
-				if (index === 2) xAxisID = "x2020"
+				xAxisID = `x${index}`
 			}
 			if (YEAR && obsType === "OPTIC") {
 				backgroundColor = chart.YEAR.style[xAxisID].OPTIC.backgroundColor
@@ -330,7 +325,6 @@ export default function useChartHook() {
 		const allDates = []
 		let allDatesSorted = []
 		if (!YEAR) {
-			console.log("in set data sets")
 			chartData.forEach((key, index) => {
 				key.forEach((item) => {
 					item.forEach((itm, idx) => {
@@ -362,6 +356,9 @@ export default function useChartHook() {
 				dataLakes[activeLakes.at(-1).id][dataType]?.[obsDepth].byYear
 			).length === chartData[0].length
 		) {
+			const arrFistDate = []
+			const arrLastDate = []
+			const arrDate = []
 			chartData.forEach((year) => {
 				Object.values(year).forEach((obs, index) => {
 					obs.forEach((itm, idx) => {
@@ -373,22 +370,92 @@ export default function useChartHook() {
 							index
 						)
 
-						// const firstDateGraph = getChartStartDate(itm[0].date)
-						// setDateMin(firstDateGraph)
-
-						// const lastDateGraph = getChartFirstDateNextMonth(itm.at(-1).date)
-						// setDateMax(lastDateGraph)
+						arrFistDate.push(itm[0][0].date)
+						arrLastDate.push(itm[0].at(-1).date)
+						const dateBegin = itm[0][0].date
+						const dateEnd = itm[0].at(-1).date
+						arrDate.push({ dateBegin, dateEnd })
 						arr.push(data)
 					})
 				})
 			})
+			const firstDate = arrFistDate.sort((a, b) => new Date(a) - new Date(b))[0]
+
+			const allYears = arrFistDate.map((date) => new Date(date).getFullYear())
+			const allYearsDates = allYears.map((year) =>
+				arrDate.filter(
+					(date) => new Date(date.dateBegin).getFullYear() === year
+				)
+			)
+			const allFirstDates = allYearsDates
+				.map((year) => {
+					return year.map((el) => el.dateBegin)
+				})
+				.map((year) => year.sort((a, b) => new Date(a) - new Date(b))[0])
+			const uniqueFirstDate = Array.from(new Set(allFirstDates))
+			const years = uniqueFirstDate.map((date) => new Date(date).getFullYear())
+			const allLastDates = allYearsDates
+				.map((year) => {
+					return year.map((el) => el.dateEnd)
+				})
+				.map((year) => year.sort((a, b) => new Date(a) - new Date(b)).at(-1))
+			const uniqueLastDate = Array.from(new Set(allLastDates))
+
+			const obj = {}
+			const objAllDatesByYear = () => {
+				years.map((year, index) => {
+					return (obj[year] = {
+						start: uniqueFirstDate[index],
+						end: uniqueLastDate[index],
+					})
+				})
+			}
+			objAllDatesByYear()
+
+			setDatesOfYear(obj)
 		}
 		if (JSON.stringify([...arr]) !== JSON.stringify(dataSets)) {
-			console.log("in set")
 			setDataSets([...arr])
 		}
+
 		arr.length = 0
 	}, [YEAR, chartData, charType])
+
+	const makesScalesForyear = useCallback((isDisplay, startDate, endDate) => {
+		const obj = {
+			type: "time",
+			parsing: false,
+			display: isDisplay,
+			min: startDate,
+			max: endDate,
+			time: {
+				displayFormats: {
+					month: "MMM yyyy",
+					day: "dd MMM",
+				},
+				tooltipFormat: "dd MMM yyyy",
+			},
+		}
+		return obj
+	}, [])
+
+	useEffect(() => {
+		if (Object.entries(datesOfYear).length === 0) return
+		const scalesYearsTmp = {}
+		Object.entries(datesOfYear).forEach((year, index) => {
+			const yearScales = makesScalesForyear(
+				index === 0 ? true : false,
+				getChartStartDateCurrentMonth(year[1].start),
+				getChartFirstDateNextMonth(year[1].end)
+			)
+			scalesYearsTmp[`x${index}`] = yearScales
+		})
+
+		const y = { beginAtZero: true }
+		scalesYearsTmp.y = y
+		setScales(scalesYearsTmp)
+	}, [datesOfYear])
+
 
 	useEffect(() => {
 		if (!YEAR) {
@@ -411,55 +478,7 @@ export default function useChartHook() {
 				},
 			})
 		}
-		if (YEAR) {
-			setScales({
-				x2018: {
-					type: "time",
-					parsing: false,
-					min: new Date("2018-01-01"),
-					max: new Date("2019-01-01"),
-					time: {
-						displayFormats: {
-							month: "MMM yyyy",
-							day: "dd MMM",
-						},
-						tooltipFormat: "dd MMM yyyy",
-					},
-				},
-				x2019: {
-					type: "time",
-					parsing: false,
-					display: false,
-					min: new Date("2019-01-01"),
-					max: new Date("2020-01-01"),
-					time: {
-						displayFormats: {
-							month: "MMM yyyy",
-							day: "dd MMM",
-						},
-						tooltipFormat: "dd MMM yyyy",
-					},
-				},
-				x2020: {
-					type: "time",
-					parsing: false,
-					display: false,
-					min: new Date("2020-01-01"),
-					max: new Date("2021-01-01"),
-					time: {
-						displayFormats: {
-							month: "MMM yyyy",
-							day: "dd MMM",
-						},
-						tooltipFormat: "dd MMM yyyy",
-					},
-				},
-				y: {
-					beginAtZero: true,
-				},
-			})
-		}
-	}, [YEAR, dateMin, dateMax])
+	}, [dateMin, dateMax])
 
 	useEffect(() => {
 		const chartOptions = {
