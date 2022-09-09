@@ -10,7 +10,6 @@ export default function useMapHook({dataGeojson}) {
 
     for(const data of dataGeojson){
       const { features } = data
-    
       features.forEach(({ properties }) => {
         const { ID_SWOT: id,
 					DAM_NAME: name,
