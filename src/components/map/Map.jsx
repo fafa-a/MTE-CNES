@@ -13,7 +13,7 @@ const StyledMapContainer = styled(MapContainer, {
 	height: "100%",
 })
 export const Map = () => {
-	const { coordinates } = useMapHook()
+	const { coordinates } = useMapHook({ dataGeojson })
 
 	return (
 		<StyledMapContainer center={coordinates} zoom={2.5} scrollWheelZoom={true}>
