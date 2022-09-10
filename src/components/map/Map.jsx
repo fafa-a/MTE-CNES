@@ -1,8 +1,8 @@
 import useMapHook from "./MapHook"
 import { LayersControl, MapContainer, TileLayer } from "react-leaflet"
 import { styled } from "@stitches/react"
-import { MarkerLayerCluster } from "@layers/marker-layer-cluster/MarkerLayerCluster"
-import { PolygonLayer } from "@layers/polygon-layer/PolygonLayer"
+import { MarkerLayerCluster } from "./layers/marker-layer-cluster/MarkerLayerCluster"
+import { PolygonLayer } from "./layers/polygon-layer/PolygonLayer"
 import { PropTypes } from "prop-types"
 
 const files = import.meta.glob("/src/data/geojson/*.geojson", { eager: true })
