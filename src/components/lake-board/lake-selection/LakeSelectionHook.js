@@ -8,6 +8,7 @@ import {
 	toggleYearSelection,
 	toggleLakeShowInfo,
 } from "@stores/lakesSlice"
+import { removeLake } from "@stores/stateLakeSlice"
 import { saveAs } from "file-saver"
 import { useDispatch, useSelector } from "react-redux"
 import JSZip from "jszip"
@@ -99,6 +100,7 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 	}, [year, index, chartOptions.YEAR.style])
 
 	const handleClickDesactiveLake = useCallback(() => {
+    dispatch(removeLake({ id }))
 		dispatch(updateLakeIdToDesactivate({ lakeId: id }))
 	}, [dispatch, id])
 
