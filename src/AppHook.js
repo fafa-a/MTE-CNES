@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react"
 import { useSelector } from "react-redux"
 import { useDispatch } from "react-redux"
 import { addLake } from "./stores/lakesSlice"
+import { addData } from "./stores/dataSlice"
 import { addColor } from "./stores/chartSlice"
 import {
 	AppConfig,
@@ -44,13 +45,44 @@ export function useAppHook() {
 	const { activeLakes, lakeIdToDesactivate, dataLakes } = useSelector(
 		(state) => state.lakes
 	)
-	const { lakes } = useSelector((state) => state)
+	const { active } = useSelector((state) => state.stateLake)
+  const { seriePath:serPath } = useSelector((state) => state.information)
 	const { OPTIC, RADAR, DAY, PERIOD, REFERENCE, YEAR, dataType } = form
 	const { getSeriePath, getTimeseriesPath } = SeriePathUtils
 	const dispatch = useDispatch()
 	const { unit } = AppConfig.attributes[dataType]
 
+  useEffect(() => {
+   if(active.length > 0){
+      const id = active[0]
+      const allSeriesPath = serPath[id]
+      const fillingRate = {
+        day:["day"],
+        dayByYear: ["dayByYear"],
+        period:["period"],
+        periodByYear:["periodByYear"] 
+      }
+      const surface = {
+        day:["day"],
+        dayByYear: ["dayByYear"],
+        period:["period"],
+        periodByYear:["periodByYear"] 
+      }
+      const volume = {
+        day:["day"],
+        dayByYear: ["dayByYear"],
+        dayFull: ["dayFull"],
+        period:["period"],
+        periodByYear:["periodByYear"], 
+        periodFull:["periodFull"]
+      }
+      dispatch(addData({ id, fillingRate,surface, volume }))
+    }
+
+  },[active])
+
 	const handleCanvas = useCallback((cvas) => {
+
 		setCanvas(cvas)
 	}, [])
 
