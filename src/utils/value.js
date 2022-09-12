@@ -48,3 +48,25 @@ export const extractField = (arr, column) => {
 		})
 	})
 }
+
+export const formatValue = (data, unit) => {
+	const {
+		columns: { length },
+	} = data
+	console.log(length)
+	return data.map((el) => {
+		// length > 2 = ZSV series
+		if (length > 2) {
+			return {
+				date: el.date,
+				volume: handleValue(el.volume, "hm³"),
+				area: handleValue(el.area, "ha"),
+			}
+		} else {
+			return {
+				date: el.date,
+				value: unit === "%" ? el.value : handleValue(el.value, unit),
+			}
+		}
+	})
+}

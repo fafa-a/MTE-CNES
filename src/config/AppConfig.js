@@ -79,6 +79,7 @@ const config = {
 			label: "Radar",
 		},
 		[OBSERVATION_TYPES.REFERENCE]: {
+			abbr: "ZSV_timeseries",
 			label: "Reference",
 		},
 	},
