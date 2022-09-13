@@ -39,7 +39,7 @@ export const dataSlice = createSlice({
 						[DurationTypes.DAY]: {
 							raw: volume.DAY.day,
 							year: volume.DAY.dayByYear,
-							full: volume.DAY.dayfull,
+							full: volume.DAY.dayFull,
 						},
 						[DurationTypes.PERIOD]: {
 							raw: volume.PERIOD.period,

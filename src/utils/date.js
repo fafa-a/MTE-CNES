@@ -1,3 +1,5 @@
+import { element } from "prop-types"
+
 export const extractDataByYear = (data) => {
 	const dataByYear = {}
 	data
@@ -61,10 +63,10 @@ export const getDataByYear = (arr) => {
 }
 
 const getStartDate = (arr) => {
-	console.log({ arr })
 	const firstDate = arr[0]
+		.filter((el) => el.length > 0)
 		?.map((el) => {
-			return el[0].date
+			return el[0]?.date
 		})
 		.sort((a, b) => (new Date(a) < new Date(b) ? -1 : 1))
 	return firstDate
@@ -72,8 +74,9 @@ const getStartDate = (arr) => {
 
 const getLastDate = (arr) => {
 	const lastDate = arr[0]
+		.filter((el) => el.length > 0)
 		?.map((el) => {
-			return el.at(-1).date
+			return el.at(-1)?.date
 		})
 		.sort((a, b) => (new Date(a) < new Date(b) ? -1 : 1))[0]
 	return lastDate
@@ -147,7 +150,6 @@ export const fillEmptyDataOfDate = (arr) => {
 				value,
 			})
 		})
-
 		newData.push(
 			arrTmp.filter((el) => {
 				return (
