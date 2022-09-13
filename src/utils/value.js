@@ -53,7 +53,6 @@ export const formatValue = (data, unit) => {
 	const {
 		columns: { length },
 	} = data
-	console.log(length)
 	return data.map((el) => {
 		// length > 2 = ZSV series
 		if (length > 2) {

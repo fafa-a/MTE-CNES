@@ -19,9 +19,10 @@ export default function useChartHook() {
 	const [dateMin, setDateMin] = useState()
 	const [dateMax, setDateMax] = useState()
 	const [obsTypes, setObsTypes] = useState([])
-	const [lastDataTypes, setLastDataTypes] = useState([])
+	const [lastDataType, setLastDataType] = useState("")
 	const [lastObstypes, setLastObstypes] = useState([])
 	const [obsDepth, setObsDepth] = useState()
+	const [lastObsDepth, setLastObsDepth] = useState("")
 	const [scales, setScales] = useState()
 	const [options, setOptions] = useState()
 	const [datesOfYear, setDatesOfYear] = useState({})
@@ -41,7 +42,11 @@ export default function useChartHook() {
 		VOLUME,
 		charType,
 	} = form
+
 	const { label, unit } = AppConfig.attributes[dataType]
+	const { active } = useSelector((state) => state.stateLake)
+	const { data } = useSelector((state) => state.data)
+
 	const chartRef = useRef()
 	const dispatch = useDispatch()
 	useEffect(() => {
@@ -100,14 +105,14 @@ export default function useChartHook() {
 	}, [DAY, OPTIC, PERIOD, RADAR, REFERENCE, YEAR, activeLakes, yearsVisible])
 
 	useEffect(() => {
-		if (dataType === lastDataTypes) return
+		if (dataType === lastDataType) return
 		if (
-			dataType !== lastDataTypes ||
+			dataType !== lastDataType ||
 			JSON.stringify(obsTypes) !== JSON.stringify(lastObstypes)
 		) {
 			setChartData([])
 		}
-	}, [dataType, lastDataTypes])
+	}, [dataType, lastDataType, obsTypes, lastObstypes])
 
 	useEffect(() => {
 		if (zoomReset) {
@@ -117,129 +122,293 @@ export default function useChartHook() {
 	}, [zoomReset])
 
 	useEffect(() => {
-		if (activeLakes.length === 0) return
-		if (!Object.values(dataLakes).length) return
-		const dataTmp = []
-		if (!YEAR) {
-			if (VOLUME) {
-				if (OPTIC && RADAR && REFERENCE) {
-					dataTmp.push([totalVolume])
-				}
-
-				if (OPTIC && !RADAR && !REFERENCE) {
-					dataTmp.push([totalVolume.slice(0, 1)])
-				}
-
-				if (OPTIC && !RADAR && REFERENCE) {
-					dataTmp.push([totalVolume.slice(0, -1)])
-				}
-
-				if (!OPTIC && RADAR && !REFERENCE) {
-					dataTmp.push([totalVolume.slice(1, 2)])
-				}
-
-				if (!OPTIC && RADAR && REFERENCE) {
-					dataTmp.push([totalVolume.slice(1, totalVolume.length)])
-				}
-
-				if (OPTIC && RADAR && !REFERENCE) {
-					dataTmp.push([totalVolume.slice(0, 2)])
-				}
-
-				if (!OPTIC && !RADAR && REFERENCE) {
-					dataTmp.push([[totalVolume.at(-1)]])
-				}
-			}
-			if (!VOLUME) {
-				let i = 0
-				for (const lake of activeLakes) {
-					const { id } = lake
-					if (!dataLakes[id][dataType]?.[obsDepth]) return
-					if (!dataLakes[id][dataType]?.[obsDepth].raw) continue
-					const dataRaw = dataLakes[id][dataType][obsDepth].raw
-					if (OPTIC && RADAR && REFERENCE) {
-						dataTmp.push([dataRaw])
+		if (active.length > 0 && data[active.at(-1)]) {
+			let dataTmp = []
+			if (
+				(lastDataType && lastObsDepth && dataType !== lastDataType) ||
+				obsTypes !== lastObstypes
+			) {
+				console.log({ lastDataType, lastObsDepth, dataType, obsDepth })
+				for (const id of active) {
+					if (!YEAR) {
+						console.log("old", dataLakes[id][dataType][obsDepth].raw)
+						console.log("new", data[id][dataType][obsDepth].raw)
+						const dataActualized = handleObsType(
+							data[id][dataType][obsDepth].raw,
+							OPTIC,
+							RADAR,
+							REFERENCE
+						)
+						dataTmp.push([dataActualized[0]])
 					}
-					if (OPTIC && !RADAR && !REFERENCE) {
-						dataTmp.push([dataRaw.slice(0, 1)])
-					}
-
-					if (OPTIC && !RADAR && REFERENCE) {
-						if (dataRaw[2].length === 0) {
-							dataTmp.push([dataRaw.slice(0, 1)])
-						}
-						dataTmp.push([dataRaw.slice(0, -1)])
-					}
-
-					if (!OPTIC && RADAR && !REFERENCE) {
-						dataTmp.push([dataRaw.slice(1, 2)])
-					}
-
-					if (!OPTIC && RADAR && REFERENCE) {
-						dataTmp.push([dataRaw.slice(1, dataRaw.length)])
-					}
-
-					if (OPTIC && RADAR && !REFERENCE) {
-						dataTmp.push([dataRaw.slice(0, 2)])
-					}
-
-					if (!OPTIC && !RADAR && REFERENCE) {
-						if (dataRaw.length < 3) return
-						dataTmp.push([[dataRaw.at(-1)]])
+					if (YEAR) {
+						const dataYear = Object.values(data[id][dataType][obsDepth].year)
+						const dataYearActualized = handleObsTypeYearMode(
+							dataYear,
+							OPTIC,
+							RADAR,
+							REFERENCE
+						)
+						dataTmp.push(dataYearActualized)
 					}
 				}
-			}
-		}
-		if (YEAR && yearsVisible) {
-			const { id } = Object.values(activeLakes).at(-1)
 
-			if (!dataLakes[id][dataType]?.[obsDepth].byYear) return
-			const dataByYear = Object.values(dataLakes[id][dataType][obsDepth].byYear)
-			if (OPTIC && RADAR && REFERENCE) {
-				dataTmp.push(dataByYear)
-			}
-
-			if (OPTIC && !RADAR && !REFERENCE) {
-				dataTmp.push(dataByYear.map((obs) => obs.slice(0, 1)))
-			}
-
-			if (OPTIC && !RADAR && REFERENCE) {
-				if (dataByYear[0].length === 2) {
-					dataTmp.push(dataByYear.map((obs) => obs.slice(0, 1)))
-				}
-				if (dataByYear[0].length === 3) {
-					dataTmp.push(
-						dataByYear.map((obs) => [obs.slice(0, 1)[0], obs.at(-1)])
+				setChartData(dataTmp)
+			} else {
+				const id = active.at(-1)
+				if (!YEAR) {
+					const dataActualized = handleObsType(
+						data[id][dataType][obsDepth].raw,
+						OPTIC,
+						RADAR,
+						REFERENCE
 					)
+					dataTmp.push([dataActualized[0]])
 				}
-			}
-
-			if (!OPTIC && RADAR && !REFERENCE) {
-				dataTmp.push(dataByYear.map((obs) => obs.slice(1, 2)))
-			}
-
-			if (!OPTIC && RADAR && REFERENCE) {
-				dataTmp.push(dataByYear.map((obs) => obs.slice(1, 3)))
-			}
-
-			if (OPTIC && RADAR && !REFERENCE) {
-				dataTmp.push(dataByYear.map((obs) => obs.slice(0, 2)))
-			}
-
-			if (!OPTIC && !RADAR && REFERENCE) {
-				if (dataByYear[0].length === 2) return
-				dataTmp.push(dataByYear.map((obs) => obs.at(-1)))
-			}
-		}
-		if (
-			dataTmp.length > 0 &&
-			JSON.stringify(dataTmp) !== JSON.stringify(chartData)
-		) {
-			setChartData(dataTmp)
-			setLastDataTypes(dataType)
+				if (YEAR) {
+					const dataYear = Object.values(data[id][dataType][obsDepth].year)
+					console.log(
+						"old data",
+						Object.values(dataLakes[id][dataType][obsDepth].byYear)
+					)
+					console.log("year 1", dataYear)
+					const dataYearActualized = handleObsTypeYearMode(
+						dataYear,
+						OPTIC,
+						RADAR,
+						REFERENCE
+					)
+					console.log("year 2", dataYearActualized)
+					dataTmp.push(dataYearActualized)
+				}
+        if (JSON.stringify(dataTmp) !== JSON.stringify(chartData)) {
+          if (YEAR || chartData.length === 1) {
+            setChartData(dataTmp)
+            console.log("solo")
+          } else {
+            setChartData([...chartData, ...dataTmp])
+            console.log("last set chart data")
+          }
+        }
+      }
+			setLastDataType(dataType)
 			setLastObstypes(obsTypes)
+			setLastObsDepth(obsDepth)
 		}
-	}, [dataLakes, YEAR, dataType, obsTypes, VOLUME, totalVolume])
+	}, [
+		active,
+		data,
+		dataType,
+		obsDepth,
+		obsTypes,
+		YEAR,
+		OPTIC,
+		RADAR,
+		REFERENCE,
+	])
+
+	const handleObsType = (data, optic, radar, reference) => {
+		let dataTmp = []
+		if (optic && radar && reference) {
+			dataTmp.push([data])
+		}
+		if (optic && !radar && !reference) {
+			dataTmp.push([data.slice(0, 1)])
+		}
+
+		if (optic && !radar && reference) {
+			if (data[2].length === 0) {
+				dataTmp.push([data.slice(0, 1)])
+			}
+			dataTmp.push([data.slice(0, -1)])
+		}
+
+		if (!optic && radar && !reference) {
+			dataTmp.push([data.slice(1, 2)])
+		}
+
+		if (!optic && radar && reference) {
+			dataTmp.push([data.slice(1, data.length)])
+		}
+
+		if (optic && radar && !reference) {
+			dataTmp.push([data.slice(0, 2)])
+		}
+
+		if (!optic && !radar && reference) {
+			if (data.length < 3) return
+			dataTmp.push([[data.at(-1)]])
+		}
+		return dataTmp[0]
+	}
+
+	const handleObsTypeYearMode = (data, optic, radar, reference) => {
+		let dataTmp = []
+		if (optic && radar && reference) {
+			dataTmp.push(data)
+		}
+
+		if (optic && !radar && !reference) {
+			dataTmp.push(data.map((obs) => obs.slice(0, 1)))
+		}
+
+		if (optic && !radar && reference) {
+			if (data[0].length === 2) {
+				dataTmp.push(data.map((obs) => obs.slice(0, 1)))
+			}
+			if (data[0].length === 3) {
+				dataTmp.push(data.map((obs) => [obs.slice(0, 1)[0], obs.at(-1)]))
+			}
+		}
+
+		if (!optic && radar && !reference) {
+			dataTmp.push(data.map((obs) => obs.slice(1, 2)))
+		}
+
+		if (!optic && radar && reference) {
+			dataTmp.push(data.map((obs) => obs.slice(1, 3)))
+		}
+
+		if (optic && radar && !reference) {
+			dataTmp.push(data.map((obs) => obs.slice(0, 2)))
+		}
+
+		if (!optic && !radar && reference) {
+			if (data[0].length === 2) return
+			dataTmp.push(data.map((obs) => obs.at(-1)))
+		}
+		return dataTmp[0]
+	}
+
+	useEffect(() => {
+		console.log("chartData", chartData)
+	}, [chartData])
+
+	// useEffect(() => {
+	// 	if (activeLakes.length === 0) return
+	// 	if (!Object.values(dataLakes).length) return
+	// 	const dataTmp = []
+	// 	if (!YEAR) {
+	// 		if (VOLUME) {
+	// 			if (OPTIC && RADAR && REFERENCE) {
+	// 				dataTmp.push([totalVolume])
+	// 			}
+
+	// 			if (OPTIC && !RADAR && !REFERENCE) {
+	// 				dataTmp.push([totalVolume.slice(0, 1)])
+	// 			}
+
+	// 			if (OPTIC && !RADAR && REFERENCE) {
+	// 				dataTmp.push([totalVolume.slice(0, -1)])
+	// 			}
+
+	// 			if (!OPTIC && RADAR && !REFERENCE) {
+	// 				dataTmp.push([totalVolume.slice(1, 2)])
+	// 			}
+
+	// 			if (!OPTIC && RADAR && REFERENCE) {
+	// 				dataTmp.push([totalVolume.slice(1, totalVolume.length)])
+	// 			}
+
+	// 			if (OPTIC && RADAR && !REFERENCE) {
+	// 				dataTmp.push([totalVolume.slice(0, 2)])
+	// 			}
+
+	// 			if (!OPTIC && !RADAR && REFERENCE) {
+	// 				dataTmp.push([[totalVolume.at(-1)]])
+	// 			}
+	// 		}
+	// 		if (!VOLUME) {
+	// 			let i = 0
+	// 			for (const lake of activeLakes) {
+	// 				const { id } = lake
+	// 				if (!dataLakes[id][dataType]?.[obsDepth]) return
+	// 				if (!dataLakes[id][dataType]?.[obsDepth].raw) continue
+	// 				const dataRaw = dataLakes[id][dataType][obsDepth].raw
+	// 				if (OPTIC && RADAR && REFERENCE) {
+	// 					dataTmp.push([dataRaw])
+	// 				}
+	// 				if (OPTIC && !RADAR && !REFERENCE) {
+	// 					dataTmp.push([dataRaw.slice(0, 1)])
+	// 				}
+
+	// 				if (OPTIC && !RADAR && REFERENCE) {
+	// 					if (dataRaw[2].length === 0) {
+	// 						dataTmp.push([dataRaw.slice(0, 1)])
+	// 					}
+	// 					dataTmp.push([dataRaw.slice(0, -1)])
+	// 				}
+
+	// 				if (!OPTIC && RADAR && !REFERENCE) {
+	// 					dataTmp.push([dataRaw.slice(1, 2)])
+	// 				}
+
+	// 				if (!OPTIC && RADAR && REFERENCE) {
+	// 					dataTmp.push([dataRaw.slice(1, dataRaw.length)])
+	// 				}
+
+	// 				if (OPTIC && RADAR && !REFERENCE) {
+	// 					dataTmp.push([dataRaw.slice(0, 2)])
+	// 				}
+
+	// 				if (!OPTIC && !RADAR && REFERENCE) {
+	// 					if (dataRaw.length < 3) return
+	// 					dataTmp.push([[dataRaw.at(-1)]])
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// 	if (YEAR && yearsVisible) {
+	// 		const { id } = Object.values(activeLakes).at(-1)
+
+	// 		if (!dataLakes[id][dataType]?.[obsDepth].byYear) return
+	// 		const dataByYear = Object.values(dataLakes[id][dataType][obsDepth].byYear)
+	// 		if (OPTIC && RADAR && REFERENCE) {
+	// 			dataTmp.push(dataByYear)
+	// 		}
+
+	// 		if (OPTIC && !RADAR && !REFERENCE) {
+	// 			dataTmp.push(dataByYear.map((obs) => obs.slice(0, 1)))
+	// 		}
+
+	// 		if (OPTIC && !RADAR && REFERENCE) {
+	// 			if (dataByYear[0].length === 2) {
+	// 				dataTmp.push(dataByYear.map((obs) => obs.slice(0, 1)))
+	// 			}
+	// 			if (dataByYear[0].length === 3) {
+	// 				dataTmp.push(
+	// 					dataByYear.map((obs) => [obs.slice(0, 1)[0], obs.at(-1)])
+	// 				)
+	// 			}
+	// 		}
+
+	// 		if (!OPTIC && RADAR && !REFERENCE) {
+	// 			dataTmp.push(dataByYear.map((obs) => obs.slice(1, 2)))
+	// 		}
+
+	// 		if (!OPTIC && RADAR && REFERENCE) {
+	// 			dataTmp.push(dataByYear.map((obs) => obs.slice(1, 3)))
+	// 		}
+
+	// 		if (OPTIC && RADAR && !REFERENCE) {
+	// 			dataTmp.push(dataByYear.map((obs) => obs.slice(0, 2)))
+	// 		}
+
+	// 		if (!OPTIC && !RADAR && REFERENCE) {
+	// 			if (dataByYear[0].length === 2) return
+	// 			dataTmp.push(dataByYear.map((obs) => obs.at(-1)))
+	// 		}
+	// 	}
+	// 	if (
+	// 		dataTmp.length > 0 &&
+	// 		JSON.stringify(dataTmp) !== JSON.stringify(chartData)
+	// 	) {
+	// 		console.log("dataTmp", dataTmp)
+	// 		setChartData(dataTmp)
+	// 		setLastDataTypes(dataType)
+	// 		setLastObstypes(obsTypes)
+	// 	}
+	// }, [dataLakes, YEAR, dataType, obsTypes, VOLUME, totalVolume])
 
 	const setDataLines = useCallback(
 		(item, obsType, index, lakeName, indexColor) => {
@@ -456,7 +625,6 @@ export default function useChartHook() {
 		setScales(scalesYearsTmp)
 	}, [datesOfYear])
 
-
 	useEffect(() => {
 		if (!YEAR) {
 			setScales({
@@ -647,12 +815,12 @@ export default function useChartHook() {
 		setDataSets(toggleYearBoldGraph)
 	}, [activeYears])
 
-	const data = {
+	const dataChart = {
 		datasets: dataSets,
 	}
 
 	return {
-		data,
+		dataChart,
 		options,
 		form,
 		charType,

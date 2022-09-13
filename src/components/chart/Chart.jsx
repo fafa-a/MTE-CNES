@@ -48,7 +48,7 @@ const StyledDiv = styled("div", {
 })
 
 export const Chart = ({ handleCanvas }) => {
-	const { data, options, charType, chartRef } = useChartHook()
+	const { dataChart, options, charType, chartRef } = useChartHook()
 	useEffect(() => {
 		if (!chartRef.current) return
 		const { canvas } = chartRef.current
@@ -58,10 +58,10 @@ export const Chart = ({ handleCanvas }) => {
 	return (
 		<StyledDiv>
 			{charType === "LINE" && (
-				<Line options={options} data={data} ref={chartRef} />
+				<Line options={options} data={dataChart} ref={chartRef} />
 			)}
 			{charType === "SCATTER" && (
-				<Scatter options={options} data={data} ref={chartRef} />
+				<Scatter options={options} data={dataChart} ref={chartRef} />
 			)}
 		</StyledDiv>
 	)

@@ -31,13 +31,13 @@ export default function useMapHook({dataGeojson}) {
 				nearCity,
 				damCoord: [LAT_DD,LONG_DD],
 			 }
-      
-      dispatch(addInformation({id,info}))
-  
+
+      dispatch(addInformation({ id, info }))
+
       })
     }
   },[])
-  
+
 
   return { coordinates }
 }
