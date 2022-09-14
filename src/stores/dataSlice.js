@@ -1,8 +1,12 @@
+import { current } from "@reduxjs/toolkit"
 import { createSlice } from "@reduxjs/toolkit"
 import { DataTypes, DurationTypes, ObservationTypes } from "./../config"
 
 const initialState = {
 	data: {},
+	mode: {
+		volume: {},
+	},
 }
 
 export const dataSlice = createSlice({
@@ -11,6 +15,7 @@ export const dataSlice = createSlice({
 	reducers: {
 		addData: (state, action) => {
 			const { id, fillingRate, surface, volume } = action.payload
+      console.log({ volume })
 
 			if (!state.data[id]) {
 				state.data[id] = {
@@ -46,6 +51,100 @@ export const dataSlice = createSlice({
 							full: volume.PERIOD.periodFull,
 						},
 					},
+				}
+				if (Object.keys(state.mode.volume).length === 0) {
+					state.mode.volume = {
+						[DurationTypes.DAY]: {
+							raw: volume.DAY.dayFull,
+						},
+						[DurationTypes.PERIOD]: {
+							raw: volume.PERIOD.periodFull,
+						},
+					}
+				} else {
+					const modeVolumeDayFirstDate = state.mode.volume.DAY.raw[0][0].date
+					const modeVolumeDayLastDate = state.mode.volume.DAY.raw[0].at(-1).date
+					const modeVolumePeriodFirstDate =
+						state.mode.volume.PERIOD.raw[0][0].date
+					const modeVolumePeriodLastDate =
+						state.mode.volume.PERIOD.raw[0].at(-1).date
+
+					const volumeDayFirstDate = volume.DAY.dayFull[0][0].date
+					const volumeDayLastDate = volume.DAY.dayFull[0].at(-1).date
+					const volumePeriodFirstDate = volume.PERIOD.periodFull[0][0].date
+					const volumePeriodLastDate = volume.PERIOD.periodFull[0].at(-1).date
+
+					let dayFirstDate = modeVolumeDayFirstDate
+					let dayLastDate = modeVolumeDayLastDate
+					let periodFirstDate = modeVolumePeriodFirstDate
+					let periodLastDate = modeVolumePeriodLastDate
+
+					if (volumeDayFirstDate >= modeVolumeDayFirstDate) {
+						dayFirstDate = volumeDayFirstDate
+					}
+					if (volumeDayLastDate <= modeVolumeDayLastDate) {
+						dayLastDate = volumeDayLastDate
+					}
+					if (volumePeriodFirstDate >= modeVolumePeriodFirstDate) {
+						periodFirstDate = volumePeriodFirstDate
+					}
+					if (volumePeriodLastDate <= modeVolumePeriodLastDate) {
+						periodLastDate = volumePeriodLastDate
+					}
+
+					const volumeDayFilter = volume.DAY.dayFull.map((obs) => {
+						return obs.filter((o) => {
+							return o.date >= dayFirstDate && o.date <= dayLastDate
+						})
+					})
+
+					const volumePeriodFilter = volume.PERIOD.periodFull.map((obs) => {
+						return obs.filter((o) => {
+							return o.date >= periodFirstDate && o.date <= periodLastDate
+						})
+					})
+
+					state.mode.volume.DAY.raw = state.mode.volume.DAY.raw.map((obs) => {
+						return obs.filter((o) => {
+							return o.date >= dayFirstDate && o.date <= dayLastDate
+						})
+					})
+
+					state.mode.volume.PERIOD.raw = state.mode.volume.PERIOD.raw.map(
+						(obs) => {
+							return obs.filter((o) => {
+								return o.date >= periodFirstDate && o.date <= periodLastDate
+							})
+						}
+					)
+
+					state.mode.volume.DAY.raw = state.mode.volume.DAY.raw.map(
+						(obs, index) => {
+							return obs.map((el, i) => {
+								const { date, value } = volumeDayFilter[index][i]
+								if (el.date === date) {
+									return {
+										date: el.date,
+										value: el.value + value,
+									}
+								}
+							})
+						}
+					)
+
+					state.mode.volume.PERIOD.raw = state.mode.volume.PERIOD.raw.map(
+						(obs, index) => {
+							return obs.map((el, i) => {
+								const { date, value } = volumePeriodFilter[index][i]
+								if (el.date === date) {
+									return {
+										date: el.date,
+										value: el.value + value,
+									}
+								}
+							})
+						}
+					)
 				}
 			}
 		},

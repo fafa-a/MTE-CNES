@@ -45,7 +45,7 @@ export default function useChartHook() {
 
 	const { label, unit } = AppConfig.attributes[dataType]
 	const { active } = useSelector((state) => state.stateLake)
-	const { data } = useSelector((state) => state.data)
+	const { data, mode } = useSelector((state) => state.data)
 
 	const chartRef = useRef()
 	const dispatch = useDispatch()
@@ -128,11 +128,8 @@ export default function useChartHook() {
 				(lastDataType && lastObsDepth && dataType !== lastDataType) ||
 				obsTypes !== lastObstypes
 			) {
-				console.log({ lastDataType, lastObsDepth, dataType, obsDepth })
 				for (const id of active) {
-					if (!YEAR) {
-						console.log("old", dataLakes[id][dataType][obsDepth].raw)
-						console.log("new", data[id][dataType][obsDepth].raw)
+					if (!YEAR && !VOLUME) {
 						const dataActualized = handleObsType(
 							data[id][dataType][obsDepth].raw,
 							OPTIC,
@@ -151,12 +148,25 @@ export default function useChartHook() {
 						)
 						dataTmp.push(dataYearActualized)
 					}
+					if (VOLUME) {
+						console.log(obsDepth, mode)
+						const dataVolume = mode.volume[obsDepth].raw
+						console.log("dataVolume", dataVolume)
+						const dataVolumeActualized = handleObsTypeVolumeMode(
+							dataVolume,
+							OPTIC,
+							RADAR,
+							REFERENCE
+						)
+						console.log("dataVolumeActualized", dataVolumeActualized)
+						dataTmp.push(dataVolumeActualized)
+					}
 				}
 
 				setChartData(dataTmp)
 			} else {
 				const id = active.at(-1)
-				if (!YEAR) {
+				if (!YEAR && !VOLUME) {
 					const dataActualized = handleObsType(
 						data[id][dataType][obsDepth].raw,
 						OPTIC,
@@ -167,30 +177,37 @@ export default function useChartHook() {
 				}
 				if (YEAR) {
 					const dataYear = Object.values(data[id][dataType][obsDepth].year)
-					console.log(
-						"old data",
-						Object.values(dataLakes[id][dataType][obsDepth].byYear)
-					)
-					console.log("year 1", dataYear)
 					const dataYearActualized = handleObsTypeYearMode(
 						dataYear,
 						OPTIC,
 						RADAR,
 						REFERENCE
 					)
-					console.log("year 2", dataYearActualized)
 					dataTmp.push(dataYearActualized)
 				}
-        if (JSON.stringify(dataTmp) !== JSON.stringify(chartData)) {
-          if (YEAR || chartData.length === 1) {
-            setChartData(dataTmp)
-            console.log("solo")
-          } else {
-            setChartData([...chartData, ...dataTmp])
-            console.log("last set chart data")
-          }
-        }
-      }
+				if (VOLUME) {
+					console.log(obsDepth, mode)
+					const dataVolume = mode.volume[obsDepth].raw
+					console.log("dataVolume", dataVolume)
+					const dataVolumeActualized = handleObsTypeVolumeMode(
+						dataVolume,
+						OPTIC,
+						RADAR,
+						REFERENCE
+					)
+					console.log("dataVolumeActualized", dataVolumeActualized)
+					dataTmp.push(dataVolumeActualized)
+				}
+				if (JSON.stringify(dataTmp) !== JSON.stringify(chartData)) {
+					if (YEAR || chartData.length === 1) {
+						setChartData(dataTmp)
+						console.log("solo")
+					} else {
+						setChartData([...chartData, ...dataTmp])
+						console.log("last set chart data")
+					}
+				}
+			}
 			setLastDataType(dataType)
 			setLastObstypes(obsTypes)
 			setLastObsDepth(obsDepth)
@@ -280,6 +297,38 @@ export default function useChartHook() {
 		return dataTmp[0]
 	}
 
+	const handleObsTypeVolumeMode = (data, optic, radar, reference) => {
+		const dataTmp = []
+		if (optic && radar && reference) {
+			dataTmp.push([data])
+		}
+
+		if (optic && !radar && !reference) {
+			dataTmp.push([data.slice(0, 1)])
+		}
+
+		if (optic && !radar && reference) {
+			dataTmp.push([data.slice(0, -1)])
+		}
+
+		if (!optic && radar && !reference) {
+			dataTmp.push([data.slice(1, 2)])
+		}
+
+		if (!optic && radar && reference) {
+			dataTmp.push([data.slice(1, data.length)])
+		}
+
+		if (optic && radar && !reference) {
+			dataTmp.push([data.slice(0, 2)])
+		}
+
+		if (!optic && !radar && reference) {
+			dataTmp.push([[data.at(-1)]])
+		}
+
+		return dataTmp[0]
+	}
 	useEffect(() => {
 		console.log("chartData", chartData)
 	}, [chartData])

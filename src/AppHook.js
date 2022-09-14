@@ -142,8 +142,15 @@ export function useAppHook() {
 			radar,
 			period
 		)
+
 		const referenceSeries = getSeriePathByAttribute(allSeriesPath, reference)
 		const referenceSeriesRaw = await csv(referenceSeries).catch((err) => {})
+		const volumeCSV = [
+			await getDataFormalized(volumeOpticDay, "hm³"),
+			await getDataFormalized(volumeRadarDay, "hm³"),
+		]
+		const firstDate = getFirstDateOfArrays(volumeCSV)
+		const lastDate = getLastDateOfArrays(volumeCSV)
 		const referenceSeriesFormalized =
 			referenceSeriesRaw && formatValue(referenceSeriesRaw)
 		const surfaceZSV =
@@ -208,6 +215,7 @@ export function useAppHook() {
 			let volumePeriodByYear = []
 			let volumeDayFull = []
 			let volumePeriodFull = []
+
 			if (volumeDayRaw[0].length > 0 && volumePeriodRaw[0].length > 0) {
 				volumeDayByYear = getDataByYear([volumeDayRaw])
 				volumeDayFull = fillEmptyDataOfDate([volumeDayRaw])
@@ -215,6 +223,7 @@ export function useAppHook() {
 				volumePeriodFull = fillEmptyDataOfDate([volumePeriodRaw])
 			}
 
+      console.log("volumeDayFull", volumeDayFull)
 			const fillingRate = {
 				[DurationTypes.DAY]: {
 					day: fillingRateDayRaw,
@@ -248,6 +257,7 @@ export function useAppHook() {
 					periodFull: volumePeriodFull[0],
 				},
 			}
+
 			if (
 				fillingRatePeriodRaw.length > 0 &&
 				surfacePeriodRaw.length > 0 &&
