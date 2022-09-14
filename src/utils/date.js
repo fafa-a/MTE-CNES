@@ -1,5 +1,3 @@
-import { element } from "prop-types"
-
 export const extractDataByYear = (data) => {
 	const dataByYear = {}
 	data
@@ -122,28 +120,19 @@ export const fillEmptyDataOfDate = (arr) => {
 	let value = ""
 	let arrTmp = []
 	const obsTypes = arr[0]?.map((obs) => obs)
-	const obsTypesDateFiltered = obsTypes.map((obs, index) => {
+	const obsTypesDateFiltered = obsTypes.map((obs) => {
 		return obs.filter((el) => {
-			if (index === 2) {
-				return (
-					el.date >= new Date(startingDate[0]).toISOString().slice(0, 10) &&
-					el.date <= endingDate.toISOString().slice(0, 10) &&
-					el.hour === "00:00:00"
-				)
-			}
 			return (
 				el.date >= new Date(startingDate[0]).toISOString().slice(0, 10) &&
 				el.date <= endingDate.toISOString().slice(0, 10)
 			)
 		})
 	})
-
-	obsTypesDateFiltered.forEach((obs, index) => {
+	obsTypesDateFiltered.forEach((obs) => {
+		console.log({ obs })
 		arrOfDates.forEach((date) => {
 			if (obs.map((el) => el.date).includes(date)) {
-				value = obs
-					.filter((el) => el.date === date)
-					.map((el) => (index === 2 ? el.volume : el.value))[0]
+				value = obs.filter((el) => el.date === date).map((el) => el.value)[0]
 			}
 			arrTmp.push({
 				date,
