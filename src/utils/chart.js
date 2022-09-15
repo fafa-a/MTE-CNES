@@ -5,10 +5,11 @@ export const handleDataSetsBooleanOption = (
 	dataSetOption,
 	obsTypes
 ) => {
+	console.log("in")
 	const newData = [...arrDataSets]
-	const activeDataIndex = activeData.map((el) => {
+	const activeDataIndex = activeData.map((el, index) => {
 		return {
-			index: el.index,
+			index: index,
 			[dataOption]: el[dataOption],
 		}
 	})
@@ -39,14 +40,20 @@ export const handleDataSetsBooleanOption = (
 			if (dataOptionValue) {
 				newData[index === 0 ? 0 : index * 3][dataSetOption] = false
 				newData[index === 0 ? 1 : index * 3 + 1][dataSetOption] = false
-				if (newData[index === 0 ? 2 : index * 3 + 2]?.[dataSetOption]) {
+				if (
+					newData[index === 0 ? 2 : index * 3 + 2]?.[dataSetOption] !==
+					undefined
+				) {
 					newData[index === 0 ? 2 : index * 3 + 2][dataSetOption] = false
 				}
 			}
 			if (!dataOptionValue) {
 				newData[index === 0 ? 0 : index * 3][dataSetOption] = true
 				newData[index === 0 ? 1 : index * 3 + 1][dataSetOption] = true
-				if (newData[index === 0 ? 2 : index * 3 + 2]?.[dataSetOption]) {
+				if (
+					newData[index === 0 ? 2 : index * 3 + 2]?.[dataSetOption] !==
+					undefined
+				) {
 					newData[index === 0 ? 2 : index * 3 + 2][dataSetOption] = true
 				}
 			}
@@ -63,9 +70,9 @@ export const handleDataSetsBorderWidthOption = (
 	config
 ) => {
 	const newData = [...arrDataSets]
-	const activeDataIndex = activeData.map((el) => {
+	const activeDataIndex = activeData.map((el, index) => {
 		return {
-			index: el.index,
+			index: index,
 			[dataOption]: el[dataOption],
 		}
 	})

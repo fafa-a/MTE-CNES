@@ -2,13 +2,17 @@ import { useEffect, useCallback, useState } from "react"
 import {
 	updateLakeIdToDesactivate,
 	setCoordinatesLakeToCenter,
-	toggleLakeChartVisibility,
+	// toggleLakeChartVisibility,
 	setSelectedLake,
 	toggleYearsChartVisibility,
 	toggleYearSelection,
 	toggleLakeShowInfo,
 } from "@stores/lakesSlice"
 import { removeLake } from "@stores/stateLakeSlice"
+import {
+	toggleLakeChartSelection,
+	toggleLakeChartVisibility,
+} from "@stores/lakesChartOptionsSlice"
 import { saveAs } from "file-saver"
 import { useDispatch, useSelector } from "react-redux"
 import JSZip from "jszip"
@@ -30,14 +34,25 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 	const { activeLakes, dataLakes, activeYears, totalVolume } = useSelector(
 		(state) => state.lakes
 	)
+	const { lakesChartOptions } = useSelector((state) => state)
 	const setlakeIconsOptions = useCallback(() => {
 		if (!YEAR) {
-			activeLakes
-				.filter((lake) => lake.id === id)
-				.map((lake) => {
-					setIsVisible(lake.chartVisible)
-					setIsSelected(lake.selected)
+			if (lakesChartOptions[id]) {
+				Object.entries(lakesChartOptions[id]).forEach(([key, value]) => {
+					if (key === "visible") {
+						setIsVisible(value)
+					}
+					if (key === "selected") {
+						setIsSelected(value)
+					}
 				})
+			}
+			// activeLakes
+			// 	.filter((lake) => lake.id === id)
+			// 	.map((lake) => {
+			// 		setIsVisible(lake.chartVisible)
+			// 		setIsSelected(lake.selected)
+			// 	})
 		}
 		if (YEAR) {
 			Object.values(activeYears).map((year) => {
@@ -47,7 +62,7 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 				}
 			})
 		}
-	}, [YEAR, activeLakes, activeYears, id])
+	}, [YEAR, activeLakes, activeYears, id, lakesChartOptions])
 	useEffect(() => {
 		if (DAY) {
 			setObsDepth(DurationTypes.DAY)
@@ -100,14 +115,15 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 	}, [year, index, chartOptions.YEAR.style])
 
 	const handleClickDesactiveLake = useCallback(() => {
-    dispatch(removeLake({ id }))
+		dispatch(removeLake({ id }))
 		dispatch(updateLakeIdToDesactivate({ lakeId: id }))
 	}, [dispatch, id])
 
 	const toggleSelectedLake = useCallback(() => {
 		if (!YEAR) {
 			dispatch(setCoordinatesLakeToCenter({ lakeId: id, coordinates }))
-			dispatch(setSelectedLake({ lakeId: id }))
+			dispatch(toggleLakeChartSelection({ id }))
+			console.log("toggleSelectedLake")
 		}
 		if (YEAR) {
 			dispatch(toggleYearSelection({ yearId: id }))
@@ -116,7 +132,7 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 
 	const toggleChartVisibilty = useCallback(() => {
 		if (!YEAR) {
-			dispatch(toggleLakeChartVisibility({ lakeId: id }))
+			dispatch(toggleLakeChartVisibility({ id }))
 		}
 
 		if (YEAR) {

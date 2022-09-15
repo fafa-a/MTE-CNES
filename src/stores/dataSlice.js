@@ -15,7 +15,6 @@ export const dataSlice = createSlice({
 	reducers: {
 		addData: (state, action) => {
 			const { id, fillingRate, surface, volume } = action.payload
-      console.log({ volume })
 
 			if (!state.data[id]) {
 				state.data[id] = {
@@ -51,7 +50,8 @@ export const dataSlice = createSlice({
 							full: volume.PERIOD.periodFull,
 						},
 					},
-				}
+        }
+
 				if (Object.keys(state.mode.volume).length === 0) {
 					state.mode.volume = {
 						[DurationTypes.DAY]: {

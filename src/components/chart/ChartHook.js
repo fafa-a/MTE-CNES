@@ -27,9 +27,11 @@ export default function useChartHook() {
 	const [options, setOptions] = useState()
 	const [datesOfYear, setDatesOfYear] = useState({})
 	const form = useSelector((state) => state.form)
-	const { activeLakes, activeYears, dataLakes, totalVolume, yearsVisible } =
-		useSelector((state) => state.lakes)
+	const { activeLakes, activeYears, yearsVisible } = useSelector(
+		(state) => state.lakes
+	)
 	const chart = useSelector((state) => state.chart)
+	const { lakesChartOptions } = useSelector((state) => state)
 	const { zoomReset } = chart
 	const {
 		dataType,
@@ -45,12 +47,13 @@ export default function useChartHook() {
 
 	const { label, unit } = AppConfig.attributes[dataType]
 	const { active } = useSelector((state) => state.stateLake)
+	const { information } = useSelector((state) => state)
 	const { data, mode } = useSelector((state) => state.data)
 
 	const chartRef = useRef()
 	const dispatch = useDispatch()
 	useEffect(() => {
-		if (dataLakes.length === 0) return
+		if (data.length === 0) return
 		if (OPTIC) {
 			setObsTypes([ObservationTypes.OPTIC])
 		}
@@ -95,14 +98,14 @@ export default function useChartHook() {
 		if (YEAR && !yearsVisible) {
 			setDataSets([])
 		}
-		if (activeLakes.length === 0) {
+		if (active.length === 0) {
 			setChartData([])
 			setDataSets([])
 		}
-		if (VOLUME && activeLakes.length === 0) {
+		if (VOLUME && active.length === 0) {
 			setDataSets([])
 		}
-	}, [DAY, OPTIC, PERIOD, RADAR, REFERENCE, YEAR, activeLakes, yearsVisible])
+	}, [DAY, OPTIC, PERIOD, RADAR, REFERENCE, YEAR, active, yearsVisible])
 
 	useEffect(() => {
 		if (dataType === lastDataType) return
@@ -137,7 +140,6 @@ export default function useChartHook() {
 							RADAR,
 							REFERENCE
 						)
-						console.log("data", dataActualized)
 						dataTmp.push(dataActualized)
 					}
 					if (YEAR) {
@@ -152,7 +154,6 @@ export default function useChartHook() {
 					}
 					if (VOLUME) {
 						const dataVolume = mode.volume[obsDepth].raw
-						console.log("dataVolume", dataVolume)
 						const dataVolumeActualized = handleObsType(
 							dataVolume,
 							OPTIC,
@@ -162,13 +163,11 @@ export default function useChartHook() {
 						dataTmp.push(dataVolumeActualized)
 					}
 				}
-				console.log("dataTmp 01", dataTmp)
 				setChartData(dataTmp)
 			} else {
 				const id = active.at(-1)
 				if (!YEAR && !VOLUME) {
 					const dataRaw = data[id][dataType][obsDepth].raw
-					console.log("data", dataRaw)
 					const dataActualized = handleObsType(dataRaw, OPTIC, RADAR, REFERENCE)
 					dataTmp.push(dataActualized)
 				}
@@ -184,7 +183,6 @@ export default function useChartHook() {
 				}
 				if (VOLUME) {
 					const dataVolume = mode.volume[obsDepth].raw
-					console.log("dataVolume", dataVolume)
 					const dataVolumeActualized = handleObsType(
 						dataVolume,
 						OPTIC,
@@ -194,7 +192,6 @@ export default function useChartHook() {
 					dataTmp.push(dataVolumeActualized)
 				}
 				if (JSON.stringify(dataTmp) !== JSON.stringify(chartData)) {
-					console.log("dataTmp 02", dataTmp)
 					if (YEAR || chartData.length === 1) {
 						setChartData(dataTmp)
 					} else {
@@ -240,7 +237,6 @@ export default function useChartHook() {
 			if (data.length < 3) return
 			dataTmp.push([[data.at(-1)]])
 		}
-		console.log("handle obstype", dataTmp)
 		return dataTmp[0]
 	}
 
@@ -281,133 +277,6 @@ export default function useChartHook() {
 		}
 		return dataTmp[0]
 	}
-
-
-	// useEffect(() => {
-	// 	if (activeLakes.length === 0) return
-	// 	if (!Object.values(dataLakes).length) return
-	// 	const dataTmp = []
-	// 	if (!YEAR) {
-	// 		if (VOLUME) {
-	// 			if (OPTIC && RADAR && REFERENCE) {
-	// 				dataTmp.push([totalVolume])
-	// 			}
-
-	// 			if (OPTIC && !RADAR && !REFERENCE) {
-	// 				dataTmp.push([totalVolume.slice(0, 1)])
-	// 			}
-
-	// 			if (OPTIC && !RADAR && REFERENCE) {
-	// 				dataTmp.push([totalVolume.slice(0, -1)])
-	// 			}
-
-	// 			if (!OPTIC && RADAR && !REFERENCE) {
-	// 				dataTmp.push([totalVolume.slice(1, 2)])
-	// 			}
-
-	// 			if (!OPTIC && RADAR && REFERENCE) {
-	// 				dataTmp.push([totalVolume.slice(1, totalVolume.length)])
-	// 			}
-
-	// 			if (OPTIC && RADAR && !REFERENCE) {
-	// 				dataTmp.push([totalVolume.slice(0, 2)])
-	// 			}
-
-	// 			if (!OPTIC && !RADAR && REFERENCE) {
-	// 				dataTmp.push([[totalVolume.at(-1)]])
-	// 			}
-	// 		}
-	// 		if (!VOLUME) {
-	// 			let i = 0
-	// 			for (const lake of activeLakes) {
-	// 				const { id } = lake
-	// 				if (!dataLakes[id][dataType]?.[obsDepth]) return
-	// 				if (!dataLakes[id][dataType]?.[obsDepth].raw) continue
-	// 				const dataRaw = dataLakes[id][dataType][obsDepth].raw
-	// 				if (OPTIC && RADAR && REFERENCE) {
-	// 					dataTmp.push([dataRaw])
-	// 				}
-	// 				if (OPTIC && !RADAR && !REFERENCE) {
-	// 					dataTmp.push([dataRaw.slice(0, 1)])
-	// 				}
-
-	// 				if (OPTIC && !RADAR && REFERENCE) {
-	// 					if (dataRaw[2].length === 0) {
-	// 						dataTmp.push([dataRaw.slice(0, 1)])
-	// 					}
-	// 					dataTmp.push([dataRaw.slice(0, -1)])
-	// 				}
-
-	// 				if (!OPTIC && RADAR && !REFERENCE) {
-	// 					dataTmp.push([dataRaw.slice(1, 2)])
-	// 				}
-
-	// 				if (!OPTIC && RADAR && REFERENCE) {
-	// 					dataTmp.push([dataRaw.slice(1, dataRaw.length)])
-	// 				}
-
-	// 				if (OPTIC && RADAR && !REFERENCE) {
-	// 					dataTmp.push([dataRaw.slice(0, 2)])
-	// 				}
-
-	// 				if (!OPTIC && !RADAR && REFERENCE) {
-	// 					if (dataRaw.length < 3) return
-	// 					dataTmp.push([[dataRaw.at(-1)]])
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	// 	if (YEAR && yearsVisible) {
-	// 		const { id } = Object.values(activeLakes).at(-1)
-
-	// 		if (!dataLakes[id][dataType]?.[obsDepth].byYear) return
-	// 		const dataByYear = Object.values(dataLakes[id][dataType][obsDepth].byYear)
-	// 		if (OPTIC && RADAR && REFERENCE) {
-	// 			dataTmp.push(dataByYear)
-	// 		}
-
-	// 		if (OPTIC && !RADAR && !REFERENCE) {
-	// 			dataTmp.push(dataByYear.map((obs) => obs.slice(0, 1)))
-	// 		}
-
-	// 		if (OPTIC && !RADAR && REFERENCE) {
-	// 			if (dataByYear[0].length === 2) {
-	// 				dataTmp.push(dataByYear.map((obs) => obs.slice(0, 1)))
-	// 			}
-	// 			if (dataByYear[0].length === 3) {
-	// 				dataTmp.push(
-	// 					dataByYear.map((obs) => [obs.slice(0, 1)[0], obs.at(-1)])
-	// 				)
-	// 			}
-	// 		}
-
-	// 		if (!OPTIC && RADAR && !REFERENCE) {
-	// 			dataTmp.push(dataByYear.map((obs) => obs.slice(1, 2)))
-	// 		}
-
-	// 		if (!OPTIC && RADAR && REFERENCE) {
-	// 			dataTmp.push(dataByYear.map((obs) => obs.slice(1, 3)))
-	// 		}
-
-	// 		if (OPTIC && RADAR && !REFERENCE) {
-	// 			dataTmp.push(dataByYear.map((obs) => obs.slice(0, 2)))
-	// 		}
-
-	// 		if (!OPTIC && !RADAR && REFERENCE) {
-	// 			if (dataByYear[0].length === 2) return
-	// 			dataTmp.push(dataByYear.map((obs) => obs.at(-1)))
-	// 		}
-	// 	}
-	// 	if (
-	// 		dataTmp.length > 0 &&
-	// 		JSON.stringify(dataTmp) !== JSON.stringify(chartData)
-	// 	) {
-	// 		console.log("dataTmp", dataTmp)
-	// 		setChartData(dataTmp)
-	// 		setLastDataTypes(dataType)
-	// 		setLastObstypes(obsTypes)
-	// 	}
-	// }, [dataLakes, YEAR, dataType, obsTypes, VOLUME, totalVolume])
 
 	const setDataLines = useCallback(
 		(item, obsType, index, lakeName, indexColor) => {
@@ -462,7 +331,7 @@ export default function useChartHook() {
 					return false
 				}
 				if (!YEAR && !VOLUME) {
-					return !Object.values(activeLakes)[indexColor]?.chartVisible
+					return !Object.values(lakesChartOptions)[indexColor]?.visible
 				}
 				if (YEAR && !VOLUME) {
 					return !Object.values(activeYears)[indexColor].chartVisible
@@ -483,12 +352,11 @@ export default function useChartHook() {
 				hidden: isHidden(),
 			}
 		},
-		[chart, charType, dataType, obsTypes, unit, YEAR]
+		[chart, charType, dataType, obsTypes, unit, YEAR, lakesChartOptions]
 	)
 
 	useEffect(() => {
-		if (chartData.length === 0) return
-		if (!Object.values(dataLakes).length && chartData[0].length === 0) return
+		if (!Object.values(data).length && chartData.length === 0) return
 		const arr = []
 		const allDates = []
 		let allDatesSorted = []
@@ -501,8 +369,10 @@ export default function useChartHook() {
 							obsTypes[idx],
 							idx,
 							VOLUME
-								? activeLakes.map((lake) => lake.name)[index - 1]
-								: activeLakes.map((lake) => lake.name)[index],
+								? active.map((id) => information.information[id].name)[
+										index - 1
+								  ]
+								: active.map((id) => information.information[id].name)[index],
 							index
 						)
 						const itemDates = itm.map((el) => el.date)
@@ -520,9 +390,8 @@ export default function useChartHook() {
 
 		if (
 			YEAR &&
-			Object.entries(
-				dataLakes[activeLakes.at(-1).id][dataType]?.[obsDepth].byYear
-			).length === chartData[0].length
+			Object.entries(data[active.at(-1)][dataType]?.[obsDepth].year).length ===
+				chartData[0].length
 		) {
 			const arrFistDate = []
 			const arrLastDate = []
@@ -534,7 +403,7 @@ export default function useChartHook() {
 							itm[0],
 							obsTypes[idx],
 							index,
-							activeLakes.at(-1).name,
+							information.information[active.at(-1)].name,
 							index
 						)
 
@@ -547,8 +416,6 @@ export default function useChartHook() {
 					})
 				})
 			})
-			const firstDate = arrFistDate.sort((a, b) => new Date(a) - new Date(b))[0]
-
 			const allYears = arrFistDate.map((date) => new Date(date).getFullYear())
 			const allYearsDates = allYears.map((year) =>
 				arrDate.filter(
@@ -697,16 +564,16 @@ export default function useChartHook() {
 							if (VOLUME) {
 								const { date } = context.raw
 								const { index } = context.dataset
-								const allId = activeLakes.map((lake) => lake.id)
-								const allValue = allId.map((id) => {
-									return dataLakes[id][DataTypes.VOLUME]?.[obsDepth].byVolume[
-										index
-									]
+								const allValue = active.map((id) => {
+									return data[id][DataTypes.VOLUME]?.[obsDepth].full[index]
 										.filter((item) => item.date === date)
 										.map((item) => item.value)
 								})
+								const allActiveLakesName = active.map((id) => {
+									return information.information[id].name
+								})
 								return allValue.map((val, index) => {
-									const { name } = Object.values(activeLakes)[index]
+									const name = allActiveLakesName[index]
 									const value = val[0].toFixed(3)
 									return ` ${name}: ${value} ${unit}`
 								})
@@ -762,19 +629,31 @@ export default function useChartHook() {
 	}, [scales, label, unit, VOLUME])
 
 	useEffect(() => {
-		if (YEAR || dataSets.length !== activeLakes.length * obsTypes.length) return
+		if (!lakesChartOptions[active.at(-1)]) return
+		if (YEAR || dataSets.length !== active.length * obsTypes.length) return
+		const activeLakes = active.map((id) => {
+			return lakesChartOptions[id]
+		})
 		const toggleChartVisibilty = handleDataSetsBooleanOption(
 			dataSets,
 			activeLakes,
-			"chartVisible",
+			"visible",
 			"hidden",
 			obsTypes
 		)
 		setDataSets(toggleChartVisibilty)
-	}, [activeLakes])
+	}, [lakesChartOptions])
 
 	useEffect(() => {
-		if (YEAR || dataSets.length !== activeLakes.length * obsTypes.length) return
+		console.log({ lakesChartOptions })
+	}, [lakesChartOptions])
+
+	useEffect(() => {
+		if (!lakesChartOptions[active.at(-1)]) return
+		if (YEAR || dataSets.length !== active.length * obsTypes.length) return
+		const activeLakes = active.map((id) => {
+			return lakesChartOptions[id]
+		})
 		const toggleBoldGraph = handleDataSetsBorderWidthOption(
 			dataSets,
 			activeLakes,
@@ -784,7 +663,7 @@ export default function useChartHook() {
 			chart
 		)
 		setDataSets(toggleBoldGraph)
-	}, [activeLakes])
+	}, [lakesChartOptions])
 
 	useEffect(() => {
 		if (!YEAR && activeLakes.length === 0) return
@@ -817,6 +696,9 @@ export default function useChartHook() {
 	const dataChart = {
 		datasets: dataSets,
 	}
+	useEffect(() => {
+		console.log({ dataSets })
+	}, [dataSets])
 
 	return {
 		dataChart,

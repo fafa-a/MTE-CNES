@@ -31,6 +31,7 @@ import {
 	getSeriePathByObsTypeAndObsDepth,
 } from "./utils/seriePath"
 import { getDataFormalized } from "./utils/data"
+import { addLakeChartOptions } from "./stores/lakesChartOptionsSlice"
 
 export function useAppHook() {
 	const [seriePath, setSeriePath] = useState([])
@@ -223,7 +224,6 @@ export function useAppHook() {
 				volumePeriodFull = fillEmptyDataOfDate([volumePeriodRaw])
 			}
 
-      console.log("volumeDayFull", volumeDayFull)
 			const fillingRate = {
 				[DurationTypes.DAY]: {
 					day: fillingRateDayRaw,
@@ -264,6 +264,7 @@ export function useAppHook() {
 				volumePeriodRaw.length > 0
 			) {
 				dispatch(addData({ id, fillingRate, surface, volume }))
+				dispatch(addLakeChartOptions({ id }))
 			}
 		} catch (err) {
 			console.log(err)
