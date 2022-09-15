@@ -130,13 +130,15 @@ export default function useChartHook() {
 			) {
 				for (const id of active) {
 					if (!YEAR && !VOLUME) {
+						const dataRaw = data[id][dataType][obsDepth].raw
 						const dataActualized = handleObsType(
-							data[id][dataType][obsDepth].raw,
+							dataRaw,
 							OPTIC,
 							RADAR,
 							REFERENCE
 						)
-						dataTmp.push([dataActualized[0]])
+						console.log("data", dataActualized)
+						dataTmp.push(dataActualized)
 					}
 					if (YEAR) {
 						const dataYear = Object.values(data[id][dataType][obsDepth].year)
@@ -149,31 +151,26 @@ export default function useChartHook() {
 						dataTmp.push(dataYearActualized)
 					}
 					if (VOLUME) {
-						console.log(obsDepth, mode)
 						const dataVolume = mode.volume[obsDepth].raw
 						console.log("dataVolume", dataVolume)
-						const dataVolumeActualized = handleObsTypeVolumeMode(
+						const dataVolumeActualized = handleObsType(
 							dataVolume,
 							OPTIC,
 							RADAR,
 							REFERENCE
 						)
-						console.log("dataVolumeActualized", dataVolumeActualized)
 						dataTmp.push(dataVolumeActualized)
 					}
 				}
-
+				console.log("dataTmp 01", dataTmp)
 				setChartData(dataTmp)
 			} else {
 				const id = active.at(-1)
 				if (!YEAR && !VOLUME) {
-					const dataActualized = handleObsType(
-						data[id][dataType][obsDepth].raw,
-						OPTIC,
-						RADAR,
-						REFERENCE
-					)
-					dataTmp.push([dataActualized[0]])
+					const dataRaw = data[id][dataType][obsDepth].raw
+					console.log("data", dataRaw)
+					const dataActualized = handleObsType(dataRaw, OPTIC, RADAR, REFERENCE)
+					dataTmp.push(dataActualized)
 				}
 				if (YEAR) {
 					const dataYear = Object.values(data[id][dataType][obsDepth].year)
@@ -186,25 +183,22 @@ export default function useChartHook() {
 					dataTmp.push(dataYearActualized)
 				}
 				if (VOLUME) {
-					console.log(obsDepth, mode)
 					const dataVolume = mode.volume[obsDepth].raw
 					console.log("dataVolume", dataVolume)
-					const dataVolumeActualized = handleObsTypeVolumeMode(
+					const dataVolumeActualized = handleObsType(
 						dataVolume,
 						OPTIC,
 						RADAR,
 						REFERENCE
 					)
-					console.log("dataVolumeActualized", dataVolumeActualized)
 					dataTmp.push(dataVolumeActualized)
 				}
 				if (JSON.stringify(dataTmp) !== JSON.stringify(chartData)) {
+					console.log("dataTmp 02", dataTmp)
 					if (YEAR || chartData.length === 1) {
 						setChartData(dataTmp)
-						console.log("solo")
 					} else {
 						setChartData([...chartData, ...dataTmp])
-						console.log("last set chart data")
 					}
 				}
 			}
@@ -212,17 +206,7 @@ export default function useChartHook() {
 			setLastObstypes(obsTypes)
 			setLastObsDepth(obsDepth)
 		}
-	}, [
-		active,
-		data,
-		dataType,
-		obsDepth,
-		obsTypes,
-		YEAR,
-		OPTIC,
-		RADAR,
-		REFERENCE,
-	])
+	}, [active, data, dataType, obsDepth, obsTypes])
 
 	const handleObsType = (data, optic, radar, reference) => {
 		let dataTmp = []
@@ -237,7 +221,7 @@ export default function useChartHook() {
 			if (data[2].length === 0) {
 				dataTmp.push([data.slice(0, 1)])
 			}
-			dataTmp.push([data.slice(0, -1)])
+			dataTmp.push([[data.slice(0, 1)[0], [data.at(-1)][0]]])
 		}
 
 		if (!optic && radar && !reference) {
@@ -256,6 +240,7 @@ export default function useChartHook() {
 			if (data.length < 3) return
 			dataTmp.push([[data.at(-1)]])
 		}
+		console.log("handle obstype", dataTmp)
 		return dataTmp[0]
 	}
 
@@ -297,41 +282,6 @@ export default function useChartHook() {
 		return dataTmp[0]
 	}
 
-	const handleObsTypeVolumeMode = (data, optic, radar, reference) => {
-		const dataTmp = []
-		if (optic && radar && reference) {
-			dataTmp.push([data])
-		}
-
-		if (optic && !radar && !reference) {
-			dataTmp.push([data.slice(0, 1)])
-		}
-
-		if (optic && !radar && reference) {
-			dataTmp.push([data.slice(0, -1)])
-		}
-
-		if (!optic && radar && !reference) {
-			dataTmp.push([data.slice(1, 2)])
-		}
-
-		if (!optic && radar && reference) {
-			dataTmp.push([data.slice(1, data.length)])
-		}
-
-		if (optic && radar && !reference) {
-			dataTmp.push([data.slice(0, 2)])
-		}
-
-		if (!optic && !radar && reference) {
-			dataTmp.push([[data.at(-1)]])
-		}
-
-		return dataTmp[0]
-	}
-	useEffect(() => {
-		console.log("chartData", chartData)
-	}, [chartData])
 
 	// useEffect(() => {
 	// 	if (activeLakes.length === 0) return

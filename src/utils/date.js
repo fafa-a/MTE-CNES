@@ -129,7 +129,6 @@ export const fillEmptyDataOfDate = (arr) => {
 		})
 	})
 	obsTypesDateFiltered.forEach((obs) => {
-		console.log({ obs })
 		arrOfDates.forEach((date) => {
 			if (obs.map((el) => el.date).includes(date)) {
 				value = obs.filter((el) => el.date === date).map((el) => el.value)[0]
