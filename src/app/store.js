@@ -6,6 +6,7 @@ import staticLakeSlice from "@stores/staticLakeSlice"
 import stateLakeSlice from "@stores/stateLakeSlice"
 import dataSlice from "@stores/dataSlice"
 import lakesChartOptionsSlice from "@stores/lakesChartOptionsSlice"
+import yearsChartOptionsSlice from "@stores/yearsChartOptionsSlice"
 
 export const store = configureStore({
 	reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
 		stateLake: stateLakeSlice,
 		data: dataSlice,
 		lakesChartOptions: lakesChartOptionsSlice,
+		yearsChartOptions: yearsChartOptionsSlice,
 		devTools: true,
 	},
 })

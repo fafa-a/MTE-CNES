@@ -13,6 +13,10 @@ import {
 	toggleLakeChartSelection,
 	toggleLakeChartVisibility,
 } from "@stores/lakesChartOptionsSlice"
+import {
+	toggleYearChartSelection,
+	toggleYearChartVisibility,
+} from "@stores/yearsChartOptionsSlice"
 import { saveAs } from "file-saver"
 import { useDispatch, useSelector } from "react-redux"
 import JSZip from "jszip"
@@ -35,34 +39,18 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 		(state) => state.lakes
 	)
 	const { lakesChartOptions } = useSelector((state) => state)
+	const { yearsChartOptions } = useSelector((state) => state)
 	const setlakeIconsOptions = useCallback(() => {
-		if (!YEAR) {
-			if (lakesChartOptions[id]) {
-				Object.entries(lakesChartOptions[id]).forEach(([key, value]) => {
-					if (key === "visible") {
-						setIsVisible(value)
-					}
-					if (key === "selected") {
-						setIsSelected(value)
-					}
-				})
-			}
-			// activeLakes
-			// 	.filter((lake) => lake.id === id)
-			// 	.map((lake) => {
-			// 		setIsVisible(lake.chartVisible)
-			// 		setIsSelected(lake.selected)
-			// 	})
+		if (!YEAR && lakesChartOptions[id]) {
+			setIsVisible(lakesChartOptions[id].visible)
+			setIsSelected(lakesChartOptions[id].selected)
 		}
-		if (YEAR) {
-			Object.values(activeYears).map((year) => {
-				if (year.id === id) {
-					setIsVisible(year.chartVisible)
-					setIsSelected(year.selected)
-				}
-			})
+		if (YEAR && yearsChartOptions[id]) {
+			setIsVisible(yearsChartOptions[id].visible)
+			setIsSelected(yearsChartOptions[id].selected)
 		}
-	}, [YEAR, activeLakes, activeYears, id, lakesChartOptions])
+	}, [YEAR, id, lakesChartOptions, yearsChartOptions])
+
 	useEffect(() => {
 		if (DAY) {
 			setObsDepth(DurationTypes.DAY)
@@ -126,7 +114,7 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 			console.log("toggleSelectedLake")
 		}
 		if (YEAR) {
-			dispatch(toggleYearSelection({ yearId: id }))
+			dispatch(toggleYearChartSelection({ year: id }))
 		}
 	}, [YEAR, coordinates, dispatch, id])
 
@@ -136,7 +124,7 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 		}
 
 		if (YEAR) {
-			dispatch(toggleYearsChartVisibility({ yearId: id }))
+			dispatch(toggleYearChartVisibility({ year: id }))
 		}
 	}, [YEAR, dispatch, id])
 

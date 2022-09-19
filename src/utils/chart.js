@@ -5,7 +5,6 @@ export const handleDataSetsBooleanOption = (
 	dataSetOption,
 	obsTypes
 ) => {
-	console.log("in")
 	const newData = [...arrDataSets]
 	const activeDataIndex = activeData.map((el, index) => {
 		return {
