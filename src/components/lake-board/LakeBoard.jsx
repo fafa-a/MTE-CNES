@@ -47,7 +47,8 @@ const Tooltip = styled(ReactTooltip, {
 })
 
 export const LakeBoard = () => {
-  const { VOLUME, dataSelection, clearSelection, activeLakesInfo } = useLakeBoardHook()
+  const { VOLUME, clearSelection, activeLakesInfo } = useLakeBoardHook()
+
   return (
     <Container>
       <HeadContainer>

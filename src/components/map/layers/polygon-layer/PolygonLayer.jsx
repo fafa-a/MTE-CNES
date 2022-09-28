@@ -13,17 +13,7 @@ export const PolygonLayer = ({ data }) => {
 	useEffect(() => {
 		setLayer(
 			data.features.map((feature) => {
-				const {
-					ID_SWOT,
-					DAM_NAME,
-					LONG_WW,
-					LAT_WW,
-					MAIN_USE,
-					COUNTRY,
-					LAT_DD,
-					LONG_DD,
-					NEAR_CITY,
-				} = feature.properties
+				const { ID_SWOT, DAM_NAME, LONG_WW, LAT_WW } = feature.properties
 				const { coordinates } = feature.geometry
 				const reversedMultiPolygons = coordinates[0].map((polygon) =>
 					polygon.map((p) => [p[1], p[0]])
@@ -37,15 +27,7 @@ export const PolygonLayer = ({ data }) => {
 						// eslint-disable-next-line react-perf/jsx-no-new-object-as-prop
 						eventHandlers={{
 							click: () => {
-								activeLake(
-									ID_SWOT,
-									DAM_NAME,
-									[LAT_WW, LONG_WW],
-									MAIN_USE,
-									COUNTRY,
-									NEAR_CITY,
-									[LAT_DD, LONG_DD]
-								)
+								activeLake(ID_SWOT, [LAT_WW, LONG_WW])
 							},
 						}}
 					>
@@ -56,7 +38,7 @@ export const PolygonLayer = ({ data }) => {
 				)
 			})
 		)
-	}, [id, color, data.features, activeLake])
+	}, [id, color])
 
 	return <LayerGroup>{zoomLevel > 8 ? layer : null}</LayerGroup>
 }

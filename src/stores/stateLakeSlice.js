@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
-  active:[],
-  loaded:[],
+	active: [],
+	loaded: [],
+	indexToRemoveFromChartData: "",
 }
 
 export const stateLakeSlice = createSlice({
@@ -11,7 +12,7 @@ export const stateLakeSlice = createSlice({
 	reducers: {
 		addLake: (state, action) => {
 			const { id } = action.payload
-
+			console.log("addLake", id)
 			if (!state.active.includes(id)) {
 				state.active.push(id)
 			}
@@ -22,9 +23,9 @@ export const stateLakeSlice = createSlice({
 		},
 		removeLake: (state, action) => {
 			const { id } = action.payload
-
 			if (state.active.includes(id)) {
 				state.active = state.active.filter((lake) => lake !== id)
+				state.indexToRemoveFromChartData = state.active.indexOf(id)
 			}
 		},
 		clearActiveLakes: (state) => {

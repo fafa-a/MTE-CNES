@@ -1,10 +1,9 @@
 import { useMap, useMapEvents } from "react-leaflet"
 import { useEffect, useState, useCallback } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { updateActiveLakes, updateTotalVolume } from "@/stores/lakesSlice"
-import { addLake } from '@/stores/stateLakeSlice'
-import { DataTypes, DurationTypes } from "../../../../config"
-
+import { addLake } from "@/stores/stateLakeSlice"
+import { updateModeVolume } from "../../../../stores/dataSlice"
+import { DataTypes, DurationTypes, ModeTypes } from "../../../../config"
 
 export default function usePolygonLayerHook() {
 	const [color, setColor] = useState("blue")
@@ -14,9 +13,10 @@ export default function usePolygonLayerHook() {
 		coord: [],
 	})
 	const [obsDepth, setObsDepth] = useState(null)
-	const { coordinatesLakeToCenter, activeLakes, dataLakes } =
-		useSelector((state) => state.lakes)
 	const { VOLUME, DAY, PERIOD } = useSelector((state) => state.form)
+	const { active, loaded } = useSelector((state) => state.stateLake)
+	const { information } = useSelector((state) => state.information)
+	const { lakesChartOptions } = useSelector((state) => state)
 	const map = useMap()
 	const dispatch = useDispatch()
 	const mapEvents = useMapEvents({
@@ -39,11 +39,11 @@ export default function usePolygonLayerHook() {
 	}, [coordId.coord])
 
 	useEffect(() => {
-		if (Object.values(activeLakes).length >= 2) return
-		if (Object.values(activeLakes).length === 1) {
+		if (active.length >= 2) return
+		if (active.length === 1) {
 			resizeMap()
 		}
-	}, [Object.values(activeLakes).length])
+	}, [active.length])
 
 	useEffect(() => {
 		if (!coordId.id) return
@@ -64,45 +64,45 @@ export default function usePolygonLayerHook() {
 	}, [DAY, PERIOD])
 
 	const centerSelectedPolygon = useCallback(() => {
-		const { lakeId, coordinates } = coordinatesLakeToCenter
+		if (
+			Object.entries(lakesChartOptions)
+				.map(([id, { selected }]) => {
+					return { id, selected }
+				})
+				.filter(({ selected }) => selected).length === 0
+		)
+			return
+
+		const { lakeId } = Object.entries(lakesChartOptions)
+			.map(([id, { selected }]) => {
+				return { lakeId: id, selected }
+			})
+			.filter(({ selected }) => selected)[0]
+
+		const { id, lakeCoord } = information[lakeId]
 		setCoordId({
-			id: lakeId,
-			coord: coordinates,
+			id,
+			coord: lakeCoord,
 		})
-	}, [coordinatesLakeToCenter])
+	}, [lakesChartOptions])
 
 	useEffect(() => {
 		centerSelectedPolygon()
-	}, [centerSelectedPolygon, coordinatesLakeToCenter])
+	}, [centerSelectedPolygon])
 
-  
 	const activeLake = useCallback(
-		(id, name, coordWW, mainUse, country, nearCity, coordDD) => {
-			if (activeLakes.map((lake) => lake.id).includes(id)) return
+		(id, coordWW) => {
+			if (!active.includes(id) && loaded.includes(id)) {
+				dispatch(updateModeVolume({ id }))
+			}
+			if (loaded.includes(id)) return
 			setCoordId({
 				id,
 				coord: coordWW,
 			})
-			const info = {
-				id,
-				name,
-				lakeCoord: coordWW,
-				mainUse,
-				country,
-				nearCity,
-				damCoord: coordDD,
-			}
-      dispatch(addLake({ id }))
-			dispatch(
-				updateActiveLakes({
-					info,
-				})
-			)
-			if (VOLUME && dataLakes[coordId.id]?.[DataTypes.VOLUME]) {
-				dispatch(updateTotalVolume({ lakeId: coordId.id, obsDepth }))
-			}
+			dispatch(addLake({ id }))
 		},
-		[dispatch, dataLakes[coordId.id], activeLakes]
+		[dispatch, active, loaded]
 	)
 
 	// useEffect(() => {

@@ -1,7 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit"
-const initialState = {
-
-}
+import { current, createSlice } from "@reduxjs/toolkit"
+const initialState = {}
 
 export const lakesChartOptionsSlice = createSlice({
 	name: "lakesChartOptions",
@@ -20,6 +18,12 @@ export const lakesChartOptionsSlice = createSlice({
 		},
 		toggleLakeChartSelection: (state, action) => {
 			const { id } = action.payload
+			Object.entries(state).map((el) => {
+				if (el[0] !== id && el[1].selected) {
+					el[1].selected = false
+				}
+			})
+
 			state[id].selected = !state[id].selected
 		},
 	},
