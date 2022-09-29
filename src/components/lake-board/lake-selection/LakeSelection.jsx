@@ -212,7 +212,7 @@ export const LakeSelection = ({
 					{OPTIC &&
 						Object.values(data[active.at(-1)]?.[dataType]?.[obsDepth]?.year)[
 							index
-						][0].length > 0 && (
+						][0]?.length > 0 && (
 							<StyledDivContainerObsTypes>
 								<StyledSpanObsColor style={bgOptic} />
 								<SpanBgWhite />
@@ -222,7 +222,7 @@ export const LakeSelection = ({
 					{RADAR &&
 						Object.values(data[active.at(-1)]?.[dataType]?.[obsDepth]?.year)[
 							index
-						][1].length > 0 && (
+						][1]?.length > 0 && (
 							<StyledDivContainerObsTypes>
 								<StyledSpanObsColor style={bgRadar} />
 								<SpanBgWhite />
@@ -232,7 +232,7 @@ export const LakeSelection = ({
 					{REFERENCE &&
 						Object.values(data[active.at(-1)]?.[dataType]?.[obsDepth]?.year)[
 							index
-						][2].length > 0 && (
+						][2]?.length > 0 && (
 							<StyledDivContainerObsTypes>
 								<StyledSpanObsColor style={bgReference} />
 								<SpanBgWhite />
