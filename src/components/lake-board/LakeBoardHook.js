@@ -30,14 +30,18 @@ export default function useLakeBoardHook() {
 		}
 	}, [DAY, PERIOD])
 
-	useEffect(() => {
-		if (YEAR) {
-			setLastMode(ModeTypes.YEAR)
-		}
-		if (VOLUME) {
-			setLastMode(ModeTypes.VOLUME)
-		}
-	}, [VOLUME, YEAR])
+	// useEffect(() => {
+	// 	if (YEAR) {
+	// 		setMode(ModeTypes.YEAR)
+	// 	}
+	// 	if (VOLUME) {
+	// 		setMode(ModeTypes.VOLUME)
+	// 	}
+	// 	if (!YEAR && !VOLUME) {
+	// 		setMode(null)
+	// 	}
+	// }, [VOLUME, YEAR])
+
 	useEffect(() => {
 		const isInfoCliked = Object.entries(lakesChartOptions)
 			.filter(([id, { infoVisible }]) => infoVisible)
@@ -47,35 +51,29 @@ export default function useLakeBoardHook() {
 		} else {
 			setShowInfo(false)
 		}
-		console.log(isInfoCliked)
 	}, [lakesChartOptions])
 	// useEffect(() => {
-	//   if (!YEAR && active.at(-1) !== activeLakesInfo.map((el) => el.id).at(-1)) {
-	//     const info = Object.entries(information).filter(([id]) => {
-	//       return active.includes(id)
-	//     })
-	//     const lakesIdName = info
-	//       .map(([id, { name }]) => ({ id, name }))
-	//       .filter((el) => el.id === active.at(-1))[0]
-	//     const activeLakesInfoId = activeLakesInfo.map((el) => el.id)
-	//     const newIdName = Object.values(lakesIdName).filter((el) =>
-	//       el.id !== activeLakesInfoId.includes(el.id)
-	//
-	//     )
-	//     consolesetLastMode(ModeTypes.YEAR).log({ lakesIdName, activeLakesInfoId, newIdName })
-	//     setActiveLakesInfo([...activeLakesInfo, lakesIdName])
-	//   }
-	//
-	//   if (YEAR && Object.keys(yearsChartOptions)) {
-	//     const yearsId = Object.keys(yearsChartOptions).map((el) => {
-	//       return {
-	//         id: el,
-	//         name: el
-	//       }
-	//     })
-	//     setActiveLakesInfo(yearsId)
-	//   }
-	// }, [active, YEAR, yearsChartOptions])
+	// 	if (YEAR || VOLUME) return
+	// 	if (active.at(-1) !== activeLakesInfo.map((el) => el.id).at(-1)) {
+	// 		const info = Object.entries(information).filter(([id]) => {
+	// 			return active.includes(id)
+	// 		})
+	// 		const lakesIdName = info
+	// 			.map(([id, { name }]) => ({ id, name }))
+	// 			.filter((el) => el.id === active.at(-1))[0]
+	// 		const activeLakesInfoId = activeLakesInfo.map((el) => el.id)
+	// 		const newIdName = Object.values(lakesIdName).filter(
+	// 			(el) => el.id !== activeLakesInfoId.includes(el.id)
+	// 		)
+	// 		consolesetLastMode(ModeTypes.YEAR).log({
+	// 			lakesIdName,
+	// 			activeLakesInfoId,
+	// 			newIdName,
+	// 		})
+	// 		setActiveLakesInfo([...activeLakesInfo, lakesIdName])
+	// 	}
+	// }, [active])
+
 	useEffect(() => {
 		if (active.length === 0 && activeLakesInfo.length > 0) {
 			setActiveLakesInfo([])
@@ -84,6 +82,7 @@ export default function useLakeBoardHook() {
 
 	useEffect(() => {
 		if (YEAR && Object.keys(yearsChartOptions) && active.length > 0) {
+			console.log("YEAR")
 			const yearsId = Object.keys(yearsChartOptions).map((el) => {
 				return {
 					id: el,
@@ -96,7 +95,30 @@ export default function useLakeBoardHook() {
 	}, [YEAR, yearsChartOptions, active])
 
 	useEffect(() => {
-		if (!YEAR && data[active.at(-1)]?.[dataType]?.[obsDepth]) {
+		if (!data[active.at(-1)]) return
+		if (!VOLUME && Object.entries(data[active.at(-1)]).length > 0) return
+		console.log("VOLUME")
+		const info = Object.entries(information).filter(([id]) => {
+			return active.includes(id)
+		})
+		const lakesIdName = info
+			.map(([id, { name }]) => ({ id, name }))
+			.filter((el) => el.id === active.at(-1))[0]
+		const activeLakesInfoId = activeLakesInfo.map((el) => el.id)
+		const newIdName = Object.values(lakesIdName).filter(
+			(el) => el.id !== activeLakesInfoId.includes(el.id)
+		)
+		console.log(newIdName)
+		if (!activeLakesInfoId.includes(lakesIdName.id)) {
+			setActiveLakesInfo([...activeLakesInfo, lakesIdName])
+			setLastMode(ModeTypes.VOLUME)
+		}
+	}, [VOLUME, data, active])
+
+	useEffect(() => {
+		if (YEAR || VOLUME) return
+		if (data[active.at(-1)]?.[dataType]?.[obsDepth]) {
+			console.log("NORMAL")
 			if (
 				yearsChartOptions &&
 				activeLakesInfo
@@ -150,25 +172,31 @@ export default function useLakeBoardHook() {
 			}
 			if (!lastMode && activeLakesInfo.length > active.length) {
 				const activeLakesInfoFiltered = activeLakesInfo.filter((lake) =>
-					active.includes(lake.id)
+					tive.includes(lake.id)
 				)
 				setActiveLakesInfo(activeLakesInfoFiltered)
 			}
 			setLastMode(null)
 		}
-	}, [YEAR, active, data, information])
+	}, [active, data, information])
 
 	const clearSelection = useCallback(() => {
 		if (!YEAR) {
 			dispatch(clearActiveLakes())
 			dispatch(resetLakechartOptions())
-			dispatch(resetModeVolume())
+			dacispatch(resetModeVolume())
 		}
 		if (YEAR) {
 			dispatch(toggleActiveYears())
 		}
 	}, [dispatch, YEAR])
 
+	useEffect(() => {
+		console.log("activeLakesInfo", activeLakesInfo)
+	}, [activeLakesInfo])
+	useEffect(() => {
+		console.log("volume", VOLUME)
+	}, [VOLUME])
 	return {
 		clearSelection,
 		VOLUME,

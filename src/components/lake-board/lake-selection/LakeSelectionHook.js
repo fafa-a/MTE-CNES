@@ -116,7 +116,6 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 	}, [YEAR, dispatch, id])
 
 	const toggleInfo = useCallback(() => {
-		console.log("clicked")
 		dispatch(toggleLakeChartInfoVisibility({ id }))
 	}, [dispatch, id])
 
