@@ -3,7 +3,6 @@
 	import { Map } from "@components/map/Map"
 	import { Chart } from "@components/chart/Chart"
 	import { Dashboard } from "@components/dashboard/Dashboard"
-	import { LakeCard } from "@components/lake-card/LakeCard"
 	import { Modal } from "./components/modal/Modal"
 	import { globalStyles, styled, darkTheme } from "@/stitches.config"
 	globalStyles()

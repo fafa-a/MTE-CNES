@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react"
-import { CarbonClose } from "../carbon-icons"
+import { CarbonClose } from "../../carbon-icons"
 import { styled, theme } from "@/stitches.config.js"
-import { toggleLakeShowInfo } from "../../stores/lakesSlice"
+import { toggleLakeChartInfoVisibility } from "@stores/lakesChartOptionsSlice"
 import { useSelector } from "react-redux"
 import ReactTooltip from "react-tooltip"
 import { useDispatch } from "react-redux"
@@ -67,7 +67,7 @@ const SDivCoord = styled("div", {
 		listStyle: "none",
 	},
 })
-export const LakeCard = () => {
+export const LakeCard = ({ id }) => {
 	const [lake, setLake] = useState({
 		id: "",
 		country: "",
@@ -77,20 +77,29 @@ export const LakeCard = () => {
 		nearCity: "",
 		damCoord: [],
 	})
-	const { activeLakes, dataLakes } = useSelector((state) => state.lakes)
+	const { lakesChartOptions } = useSelector((state) => state)
+	const { information } = useSelector((state) => state.information)
 	const dispatch = useDispatch()
 	useEffect(() => {
-		if (!Object.values(activeLakes)) return
-		const idLakeShowInfo = Object.values(activeLakes)
-			.filter((lake) => lake.showInfo === true)
-			.map((lake) => lake.id)[0]
+		const idLakeShowInfo = Object.entries(lakesChartOptions)
+			.filter(([id, { infoVisible }]) => infoVisible)
+			.map(([id]) => id)[0]
 		if (!idLakeShowInfo) return
-		const { info } = dataLakes[idLakeShowInfo]
-		setLake(info)
-	}, [activeLakes, dataLakes])
+		const { id, country, name, lakeCoord, mainUse, nearCity, damCoord } =
+			information[idLakeShowInfo]
+		setLake({
+			id,
+			country,
+			name,
+			lakeCoord,
+			mainUse,
+			nearCity,
+			damCoord,
+		})
+	}, [lakesChartOptions, information])
 
 	const closeInfo = useCallback(() => {
-		dispatch(toggleLakeShowInfo({ lakeId: lake.id }))
+		dispatch(toggleLakeChartInfoVisibility({ id: lake.id }))
 	}, [dispatch, lake.id])
 
 	return (

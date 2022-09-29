@@ -125,7 +125,13 @@ const decreaseWidth = {
 	width: "10%",
 }
 
-export const LakeSelection = ({ id, name, coordinates, index }) => {
+export const LakeSelection = ({
+	id,
+	name,
+	coordinates,
+	index,
+	showLakeInfo,
+}) => {
 	const {
 		toggleChartVisibilty,
 		handleClickDesactiveLake,
@@ -148,7 +154,7 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 		dataType,
 		obsDepth,
 		mode,
-	} = useLakeSelectionHook({ id, name, coordinates, index })
+	} = useLakeSelectionHook({ id, name, coordinates, index, showLakeInfo })
 	return (
 		<StyledDiv css={isSelected && backgroundBorderColored}>
 			{VOLUME && id === "total" && (

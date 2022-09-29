@@ -11,12 +11,13 @@ export default function useLakeBoardHook() {
 	const [obsDepth, setObsDepth] = useState()
 	const [lastMode, setLastMode] = useState(null)
 	const [activeLakesInfo, setActiveLakesInfo] = useState([])
+	const [showInfo, setShowInfo] = useState(false)
 	const { YEAR, VOLUME, dataType, DAY, PERIOD } = useSelector(
 		(state) => state.form
 	)
 	const { active } = useSelector((state) => state.stateLake)
-	const { data, mode } = useSelector((state) => state.data)
-	const { yearsChartOptions } = useSelector((state) => state)
+	const { data } = useSelector((state) => state.data)
+	const { yearsChartOptions, lakesChartOptions } = useSelector((state) => state)
 	const { information } = useSelector((state) => state.information)
 	const dispatch = useDispatch()
 
@@ -37,7 +38,17 @@ export default function useLakeBoardHook() {
 			setLastMode(ModeTypes.VOLUME)
 		}
 	}, [VOLUME, YEAR])
-
+	useEffect(() => {
+		const isInfoCliked = Object.entries(lakesChartOptions)
+			.filter(([id, { infoVisible }]) => infoVisible)
+			.map(([id]) => id)
+		if (isInfoCliked.length > 0) {
+			setShowInfo(true)
+		} else {
+			setShowInfo(false)
+		}
+		console.log(isInfoCliked)
+	}, [lakesChartOptions])
 	// useEffect(() => {
 	//   if (!YEAR && active.at(-1) !== activeLakesInfo.map((el) => el.id).at(-1)) {
 	//     const info = Object.entries(information).filter(([id]) => {
@@ -162,5 +173,6 @@ export default function useLakeBoardHook() {
 		clearSelection,
 		VOLUME,
 		activeLakesInfo,
+		showInfo,
 	}
 }
