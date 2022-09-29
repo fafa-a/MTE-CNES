@@ -12,7 +12,6 @@ export const stateLakeSlice = createSlice({
 	reducers: {
 		addLake: (state, action) => {
 			const { id } = action.payload
-			console.log("addLake", id)
 			if (!state.active.includes(id)) {
 				state.active.push(id)
 			}
@@ -28,6 +27,12 @@ export const stateLakeSlice = createSlice({
 				state.indexToRemoveFromChartData = state.active.indexOf(id)
 			}
 		},
+		updateActivelakes: (state, action) => {
+			const { id } = action.payload
+			if (!state.active.includes(id)) {
+				state.active.push(id)
+			}
+		},
 		clearActiveLakes: (state) => {
 			state.active = []
 		},
@@ -35,6 +40,7 @@ export const stateLakeSlice = createSlice({
 })
 
 
-export const { addLake, removeLake, clearActiveLakes } = stateLakeSlice.actions
+export const { addLake, removeLake, clearActiveLakes, updateActivelakes } =
+	stateLakeSlice.actions
 
 export default stateLakeSlice.reducer

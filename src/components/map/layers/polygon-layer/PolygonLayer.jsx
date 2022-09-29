@@ -6,9 +6,10 @@ import { PropTypes } from "prop-types"
 
 export const PolygonLayer = ({ data }) => {
   const [layer, setLayer] = useState(null)
-  const { id, activeLake, color, zoomLevel } = usePolygonLayerHook({
-		data,
-	})
+  const { id, activeLake, color, zoomLevel, active, loaded, updateLake } =
+		usePolygonLayerHook({
+			data,
+		})
 
 	useEffect(() => {
 		setLayer(
@@ -27,7 +28,14 @@ export const PolygonLayer = ({ data }) => {
 						// eslint-disable-next-line react-perf/jsx-no-new-object-as-prop
 						eventHandlers={{
 							click: () => {
-								activeLake(ID_SWOT, [LAT_WW, LONG_WW])
+								if (!loaded.includes(ID_SWOT)) {
+									console.log("not loaded", loaded)
+									activeLake(ID_SWOT, [LAT_WW, LONG_WW])
+								}
+								if (!active.includes(ID_SWOT) && loaded.includes(ID_SWOT)) {
+									console.log("loaded", loaded)
+									updateLake(ID_SWOT)
+								}
 							},
 						}}
 					>
@@ -38,7 +46,7 @@ export const PolygonLayer = ({ data }) => {
 				)
 			})
 		)
-	}, [id, color])
+	}, [color, active, loaded])
 
 	return <LayerGroup>{zoomLevel > 8 ? layer : null}</LayerGroup>
 }

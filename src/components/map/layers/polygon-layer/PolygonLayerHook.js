@@ -1,9 +1,10 @@
 import { useMap, useMapEvents } from "react-leaflet"
 import { useEffect, useState, useCallback } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { addLake } from "@/stores/stateLakeSlice"
+import { addLake, updateActivelakes } from "@/stores/stateLakeSlice"
 import { updateModeVolume } from "../../../../stores/dataSlice"
 import { DataTypes, DurationTypes, ModeTypes } from "../../../../config"
+import { addLakeChartOptions } from "../../../../stores/lakesChartOptionsSlice"
 
 export default function usePolygonLayerHook() {
 	const [color, setColor] = useState("blue")
@@ -92,19 +93,23 @@ export default function usePolygonLayerHook() {
 
 	const activeLake = useCallback(
 		(id, coordWW) => {
-			if (!active.includes(id) && loaded.includes(id)) {
-				dispatch(updateModeVolume({ id }))
-			}
-			if (loaded.includes(id)) return
 			setCoordId({
 				id,
 				coord: coordWW,
 			})
 			dispatch(addLake({ id }))
 		},
-		[dispatch, active, loaded]
+		[dispatch]
 	)
 
+	const updateLake = useCallback(
+		(id) => {
+			dispatch(updateModeVolume({ id }))
+			dispatch(updateActivelakes({ id }))
+			dispatch(addLakeChartOptions({ id }))
+		},
+		[dispatch]
+	)
 	// useEffect(() => {
 	// 	if (!VOLUME) return
 	// 	if (VOLUME && dataLakes[coordId.id]?.[DataTypes.VOLUME]) {
@@ -118,5 +123,8 @@ export default function usePolygonLayerHook() {
 		id: coordId.id,
 		color,
 		zoomLevel,
+		loaded,
+		active,
+		updateLake,
 	}
 }

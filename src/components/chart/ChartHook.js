@@ -104,7 +104,7 @@ export default function useChartHook() {
 		if (VOLUME && active.length === 0) {
 			setDataSets([])
 		}
-	}, [DAY, OPTIC, PERIOD, RADAR, REFERENCE, YEAR, active])
+	}, [DAY, OPTIC, PERIOD, RADAR, REFERENCE, YEAR, VOLUME, active])
 
 	useEffect(() => {
 		if (dataType === lastDataType) return
@@ -169,7 +169,7 @@ export default function useChartHook() {
 					}
 
 					if (VOLUME) {
-						const dataVolume = mode.volume[obsDepth].raw
+						const dataVolume = mode.volume[obsDepth]?.raw
 						const dataVolumeActualized = handleObsType(
 							dataVolume,
 							OPTIC,
@@ -379,7 +379,7 @@ export default function useChartHook() {
 		if (!YEAR) {
 			chartData.forEach((key, index) => {
 				key.forEach((item) => {
-					item.forEach((itm, idx) => {
+					item?.forEach((itm, idx) => {
 						const data = setDataLines(
 							itm,
 							obsTypes[idx],

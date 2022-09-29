@@ -8,10 +8,15 @@ import { toggleActiveYears } from "../../stores/lakesSlice"
 import { toggleYear } from "../../stores/formSlice"
 export default function useFormHook({ canvas }) {
 	const form = useSelector((state) => state.form)
-	const { activeLakes } = useSelector((state) => state.lakes)
+	const { active } = useSelector((state) => state.stateLake)
+	const { information } = useSelector((state) => state.information)
 
 	const dispatch = useDispatch()
-	const filenameLakes = activeLakes.map((lake) => lake.name).join("_")
+	const filenameLakes = active
+		.map((id) => {
+			return information[id].name
+		})
+		.join("_")
 	const dataTypesValues = AppConfig.attributes
 	const observationTypesValues = AppConfig.observationTypes
 	const durationValues = AppConfig.duration
@@ -34,7 +39,7 @@ export default function useFormHook({ canvas }) {
 				}
 			}
 		},
-		[canvas]
+		[canvas, filenameLakes]
 	)
 
 	const resetZoomChart = useCallback((e) => {

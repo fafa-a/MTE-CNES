@@ -3,6 +3,7 @@ import { removeLake } from "@stores/stateLakeSlice"
 import {
 	toggleLakeChartSelection,
 	toggleLakeChartVisibility,
+	removeLakeChartOptions,
 } from "@stores/lakesChartOptionsSlice"
 import {
 	toggleYearChartSelection,
@@ -12,13 +13,12 @@ import { removeDataFromVolume } from "@stores/dataSlice"
 import { saveAs } from "file-saver"
 import { useDispatch, useSelector } from "react-redux"
 import JSZip from "jszip"
-import { DurationTypes } from "../../../config"
-
+import { AppConfig, DurationTypes } from "../../../config"
+import { handleSeriesPathDependsOfForm } from "@/utils/seriePath"
 export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 	const [bgOptic, setBgOptic] = useState({})
 	const [bgRadar, setBgRadar] = useState({})
 	const [bgReference, setBgReference] = useState({})
-	const [year, setYear] = useState([])
 	const [isVisible, setIsVisible] = useState(true)
 	const [isSelected, setIsSelected] = useState(false)
 	const [obsDepth, setObsDepth] = useState(DurationTypes.PERIOD)
@@ -26,12 +26,12 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 	const chartOptions = useSelector((state) => state.chart)
 	const { dataType, OPTIC, RADAR, YEAR, REFERENCE, VOLUME, DAY, PERIOD } =
 		useSelector((state) => state.form)
+	const { form } = useSelector((state) => state)
 
-	const { dataLakes } = useSelector((state) => state.lakes)
 	const { lakesChartOptions } = useSelector((state) => state)
 	const { yearsChartOptions } = useSelector((state) => state)
 	const { data, mode } = useSelector((state) => state.data)
-	const { information } = useSelector((state) => state.information)
+	const { information, seriePath } = useSelector((state) => state.information)
 	const { active } = useSelector((state) => state.stateLake)
 	const setlakeIconsOptions = useCallback(() => {
 		if (!YEAR && lakesChartOptions[id]) {
@@ -91,6 +91,7 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 	const handleClickDesactiveLake = useCallback(() => {
 		dispatch(removeLake({ id }))
 		dispatch(removeDataFromVolume({ id }))
+		dispatch(removeLakeChartOptions({ id }))
 	}, [dispatch, id])
 
 	const toggleSelectedLake = useCallback(() => {
@@ -118,8 +119,8 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 
 	const handleDownloadFile = useCallback(async () => {
 		const zip = new JSZip()
-		for (const path of dataLakes[id][dataType][obsDepth].seriePath) {
-			const fileName = path.split("/").pop().split(".")[0]
+		const seriePathLakes = handleSeriesPathDependsOfForm(seriePath[id], form)
+		for (const path of seriePathLakes) {
 			const res = await fetch(path)
 			const blob = await res.blob()
 			zip.file(`${fileName}.csv`, blob)
@@ -127,7 +128,7 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 		zip.generateAsync({ type: "blob" }).then((content) => {
 			saveAs(content, `${name}_${dataType.toLowerCase()}.zip`)
 		})
-	}, [dataLakes, id, dataType])
+	}, [id, dataType])
 
 	return {
 		toggleChartVisibilty,

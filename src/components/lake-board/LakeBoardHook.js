@@ -4,11 +4,13 @@ import { clearActiveLakes } from "../../stores/stateLakeSlice"
 import { useDispatch } from "react-redux"
 import { useCallback, useEffect, useState } from "react"
 import { DurationTypes, ModeTypes } from "../../config"
+import { resetLakechartOptions } from "../../stores/lakesChartOptionsSlice"
+import { resetModeVolume } from "../../stores/dataSlice"
+
 export default function useLakeBoardHook() {
 	const [obsDepth, setObsDepth] = useState()
 	const [lastMode, setLastMode] = useState(null)
 	const [activeLakesInfo, setActiveLakesInfo] = useState([])
-
 	const { YEAR, VOLUME, dataType, DAY, PERIOD } = useSelector(
 		(state) => state.form
 	)
@@ -17,10 +19,6 @@ export default function useLakeBoardHook() {
 	const { yearsChartOptions } = useSelector((state) => state)
 	const { information } = useSelector((state) => state.information)
 	const dispatch = useDispatch()
-
-	useEffect(() => {
-		console.log({ activeLakesInfo })
-	}, [activeLakesInfo])
 
 	useEffect(() => {
 		if (DAY) {
@@ -162,6 +160,8 @@ export default function useLakeBoardHook() {
 	const clearSelection = useCallback(() => {
 		if (!YEAR) {
 			dispatch(clearActiveLakes())
+			dispatch(resetLakechartOptions())
+			dispatch(resetModeVolume())
 		}
 		if (YEAR) {
 			dispatch(toggleActiveYears())
