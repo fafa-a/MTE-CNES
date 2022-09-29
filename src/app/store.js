@@ -20,4 +20,9 @@ export const store = configureStore({
 		yearsChartOptions: yearsChartOptionsSlice,
 		devTools: true,
 	},
+	middleware: (getDefaultMiddleware) =>
+		getDefaultMiddleware({
+			immutableCheck: { warnAfter: 128 },
+			serializableCheck: { warnAfter: 128 },
+		}),
 })

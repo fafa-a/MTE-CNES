@@ -157,7 +157,6 @@ export const dataSlice = createSlice({
 		},
 		removeDataFromVolume: (state, action) => {
 			const { id } = action.payload
-			console.log({ id })
 			const volumeDayRawToRemove = state.data[id].VOLUME.DAY.full
 			const volumePeriodRawToRemove = state.data[id].VOLUME.PERIOD.full
 			state.mode.volume.DAY.raw = state.mode.volume.DAY.raw.map(

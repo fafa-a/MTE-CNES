@@ -149,9 +149,6 @@ export const LakeSelection = ({ id, name, coordinates, index }) => {
 		obsDepth,
 		mode,
 	} = useLakeSelectionHook({ id, name, coordinates, index })
-	useEffect(() => {
-		console.log({ index })
-	}, [index])
 	return (
 		<StyledDiv css={isSelected && backgroundBorderColored}>
 			{VOLUME && id === "total" && (

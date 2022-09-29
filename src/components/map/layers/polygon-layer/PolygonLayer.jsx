@@ -29,11 +29,9 @@ export const PolygonLayer = ({ data }) => {
 						eventHandlers={{
 							click: () => {
 								if (!loaded.includes(ID_SWOT)) {
-									console.log("not loaded", loaded)
 									activeLake(ID_SWOT, [LAT_WW, LONG_WW])
 								}
 								if (!active.includes(ID_SWOT) && loaded.includes(ID_SWOT)) {
-									console.log("loaded", loaded)
 									updateLake(ID_SWOT)
 								}
 							},

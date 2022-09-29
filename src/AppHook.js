@@ -273,12 +273,11 @@ export function useAppHook() {
 			console.log(err)
 		}
 	}, [dispatch, active])
-  
+
 	useEffect(() => {
 		if (active.length === 0) return
 		if (!YEAR || data[active.at(-1)][dataType][obsDepth].year.length === 0)
 			return
-		console.log("in app year")
 
 		const dataYears = data[active.at(-1)][dataType][obsDepth].year
 		const years = Object.keys(dataYears)

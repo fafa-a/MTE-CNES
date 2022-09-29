@@ -73,7 +73,6 @@ export default function useLakeBoardHook() {
 
 	useEffect(() => {
 		if (YEAR && Object.keys(yearsChartOptions) && active.length > 0) {
-			console.log("specific YEAR")
 			const yearsId = Object.keys(yearsChartOptions).map((el) => {
 				return {
 					id: el,
@@ -93,22 +92,18 @@ export default function useLakeBoardHook() {
 					.map((el) => el.id)
 					.includes(Object.keys(yearsChartOptions)[0])
 			) {
-				console.log("02")
 				const info = Object.entries(information).filter(([id]) => {
 					return active.includes(id)
 				})
-				console.log({ info })
 				const allLakesActiveIdName = info
 					.map(([id, { name }]) => ({ id, name }))
 					.filter((el) => active.includes(el.id))
-				console.log({ allLakesActiveIdName })
 				setActiveLakesInfo(allLakesActiveIdName)
 			}
 			if (
 				!lastMode &&
 				active.at(-1) !== activeLakesInfo.map((el) => el.id).at(-1)
 			) {
-				console.log("03")
 				const info = Object.entries(information).filter(([id]) => {
 					return active.includes(id)
 				})
@@ -134,23 +129,18 @@ export default function useLakeBoardHook() {
 			//
 			//     }
 			if (lastMode === DurationTypes.YEAR) {
-				console.log("04")
 				const info = Object.entries(information).filter(([id]) => {
 					return active.includes(id)
 				})
-				console.log({ info })
 				const allLakesActiveIdName = info
 					.map(([id, { name }]) => ({ id, name }))
 					.filter((el) => active.includes(el.id))
-				console.log({ allLakesActiveIdName })
 				setActiveLakesInfo(allLakesActiveIdName)
 			}
 			if (!lastMode && activeLakesInfo.length > active.length) {
-				console.log("05")
 				const activeLakesInfoFiltered = activeLakesInfo.filter((lake) =>
 					active.includes(lake.id)
 				)
-				console.log({ activeLakesInfoFiltered })
 				setActiveLakesInfo(activeLakesInfoFiltered)
 			}
 			setLastMode(null)
