@@ -176,6 +176,7 @@ export default function useChartHook() {
 							RADAR,
 							REFERENCE
 						)
+
 						dataTmp.push(dataVolumeActualized)
 					}
 				}
@@ -185,6 +186,7 @@ export default function useChartHook() {
 				if (!VOLUME) {
 					const dataRaw = data[id][dataType][obsDepth].raw
 					const dataActualized = handleObsType(dataRaw, OPTIC, RADAR, REFERENCE)
+
 					dataTmp.push(dataActualized)
 				}
 
@@ -391,8 +393,8 @@ export default function useChartHook() {
 								: active.map((id) => information.information[id].name)[index],
 							index
 						)
-						const itemDates = itm.map((el) => el.date)
-						allDates.push(...itemDates)
+						const itemDates = itm?.map((el) => el.date)
+						if (itemDates) allDates.push(...itemDates)
 						arr.push(data)
 					})
 				})
@@ -716,7 +718,6 @@ export default function useChartHook() {
 	const dataChart = {
 		datasets: dataSets,
 	}
-
   return {
     dataChart,
     options,

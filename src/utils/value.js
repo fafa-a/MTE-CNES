@@ -50,6 +50,7 @@ export const extractField = (arr, column) => {
 }
 
 export const formatValue = (data, unit) => {
+  if (!data) return
 	const {
 		columns: { length },
 	} = data

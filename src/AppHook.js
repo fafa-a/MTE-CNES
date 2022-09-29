@@ -1,34 +1,33 @@
 import { useEffect, useState, useCallback } from "react"
 import { useSelector } from "react-redux"
 import { useDispatch } from "react-redux"
-import { addLake } from "./stores/lakesSlice"
 import { addData } from "./stores/dataSlice"
 import { addColor } from "./stores/chartSlice"
 import {
-  AppConfig,
-  SeriePathUtils,
-  ObservationTypes,
-  DurationTypes,
-  DataTypes,
+	AppConfig,
+	SeriePathUtils,
+	ObservationTypes,
+	DurationTypes,
+	DataTypes,
 } from "./config"
 import { csv } from "d3"
 import {
-  fillEmptyDataOfDate,
-  getDataByYear,
-  getFirstDateOfArrays,
-  getLastDateOfArrays,
+	fillEmptyDataOfDate,
+	getDataByYear,
+	getFirstDateOfArrays,
+	getLastDateOfArrays,
 } from "./utils/date"
 import {
-  extractField,
-  formatCSVValue,
-  formatValue,
-  normalizeValue,
+	extractField,
+	formatCSVValue,
+	formatValue,
+	normalizeValue,
 } from "./utils/value"
 import { returnHighestValue } from "./utils/math"
 import { desactiveLake } from "@stores/lakesSlice"
 import {
-  getSeriePathByAttribute,
-  getSeriePathByObsTypeAndObsDepth,
+	getSeriePathByAttribute,
+	getSeriePathByObsTypeAndObsDepth,
 } from "./utils/seriePath"
 import { getDataFormalized } from "./utils/data"
 import { addLakeChartOptions } from "./stores/lakesChartOptionsSlice"
@@ -36,29 +35,12 @@ import { addYearsChartOptions } from "./stores/yearsChartOptionsSlice"
 import { lastDayOfDecade } from "date-fns"
 
 export function useAppHook() {
-	const [seriePath, setSeriePath] = useState([])
-	const [lakeData, setLakeData] = useState([])
-	const [dataReference, setDataReference] = useState([])
-	const [lakeDataWithReference, setLakeDataWithReference] = useState([])
-	const [tmpFillingRateReference, setTmpFillingRateReference] = useState([])
-	const [fillingRateReference, setFillingRateReference] = useState([])
-	const [surfaceReference, setSurfaceReference] = useState([])
-	const [volumeReference, setVolumeReference] = useState([])
-	const [lastDataType, setLastDataType] = useState(DataTypes.FILLING_RATE)
-	const [lakeDataByYear, setLakeDataByYear] = useState([])
-	const [fullDataOfVolume, setFullDataOfVolume] = useState([])
-	const [showLakeInfo, setShowLakeInfo] = useState(false)
 	const [isOneLakeActive, setIsOneLakeActive] = useState(false)
 	const [theme, setTheme] = useState("dark")
-	const [noDataLake, setNodataLake] = useState(false)
 	const [obsDepth, setObsDepth] = useState(DurationTypes.PERIOD)
 	const [lastObsDepth, setLastObsDepth] = useState(DurationTypes.PERIOD)
-	const [lastLakeDataByYear, setLastLakeDataByYear] = useState([])
 	const [canvas, setCanvas] = useState(null)
 	const form = useSelector((state) => state.form)
-	const { activeLakes, lakeIdToDesactivate, dataLakes } = useSelector(
-		(state) => state.lakes
-	)
 	const { active, loaded } = useSelector((state) => state.stateLake)
 	const { data } = useSelector((state) => state.data)
 	const { seriePath: serPath } = useSelector((state) => state.information)
@@ -201,17 +183,14 @@ export function useAppHook() {
 
 			let fillingRateDayByYEar = []
 			let fillingRatePeriodByYear = []
-			if (
-				fillingRateDayRaw[0].length > 0 &&
-				fillingRatePeriodRaw[0].length > 0
-			) {
+			if (fillingRateDayRaw.length > 0 && fillingRatePeriodRaw.length > 0) {
 				fillingRateDayByYEar = getDataByYear([fillingRateDayRaw])
 				fillingRatePeriodByYear = getDataByYear([fillingRatePeriodRaw])
 			}
 
 			let surfaceDayByYear = []
 			let surfacePeriodByYear = []
-			if (surfaceDayRaw[0].length > 0 && surfacePeriodRaw[0].length > 0) {
+			if (surfaceDayRaw?.length > 0 && surfacePeriodRaw?.length > 0) {
 				surfaceDayByYear = getDataByYear([surfaceDayRaw])
 				surfacePeriodByYear = getDataByYear([surfacePeriodRaw])
 			}
@@ -221,7 +200,7 @@ export function useAppHook() {
 			let volumeDayFull = []
 			let volumePeriodFull = []
 
-			if (volumeDayRaw[0].length > 0 && volumePeriodRaw[0].length > 0) {
+			if (volumeDayRaw?.length > 0 && volumePeriodRaw?.length > 0) {
 				volumeDayByYear = getDataByYear([volumeDayRaw])
 				volumeDayFull = fillEmptyDataOfDate([volumeDayRaw])
 				volumePeriodByYear = getDataByYear([volumePeriodRaw])
@@ -727,12 +706,9 @@ export function useAppHook() {
 	// ])
 
 	return {
-		showLakeInfo,
 		isOneLakeActive,
 		theme,
 		toggleTheme,
-		noDataLake,
-		// handleSetNoDataLake,
 		handleCanvas,
 		canvas,
 	}

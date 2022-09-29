@@ -1,4 +1,5 @@
 export const extractDataByYear = (data) => {
+	if (!data) return []
 	const dataByYear = {}
 	data
 		.map((item) => {
@@ -62,7 +63,7 @@ export const getDataByYear = (arr) => {
 
 const getStartDate = (arr) => {
 	const firstDate = arr[0]
-		.filter((el) => el.length > 0)
+		.filter((el) => el?.length > 0)
 		?.map((el) => {
 			return el[0]?.date
 		})
@@ -72,7 +73,7 @@ const getStartDate = (arr) => {
 
 const getLastDate = (arr) => {
 	const lastDate = arr[0]
-		.filter((el) => el.length > 0)
+		.filter((el) => el?.length > 0)
 		?.map((el) => {
 			return el.at(-1)?.date
 		})
@@ -81,6 +82,7 @@ const getLastDate = (arr) => {
 }
 
 export const getFirstDateOfArrays = (arr) => {
+	if (!arr[0]) return
 	const dateTmp = []
 	const firstDate01 = arr[0]
 		.map((el) => el.date)
@@ -93,6 +95,7 @@ export const getFirstDateOfArrays = (arr) => {
 	return dateTmp[0]
 }
 export const getLastDateOfArrays = (arr) => {
+	if (!arr[0]) return
 	const dateTmp = []
 	const lastDate01 = arr[0]
 		.map((el) => el.date)
@@ -121,7 +124,7 @@ export const fillEmptyDataOfDate = (arr) => {
 	let arrTmp = []
 	const obsTypes = arr[0]?.map((obs) => obs)
 	const obsTypesDateFiltered = obsTypes.map((obs) => {
-		return obs.filter((el) => {
+		return obs?.filter((el) => {
 			return (
 				el.date >= new Date(startingDate[0]).toISOString().slice(0, 10) &&
 				el.date <= endingDate.toISOString().slice(0, 10)
@@ -130,7 +133,7 @@ export const fillEmptyDataOfDate = (arr) => {
 	})
 	obsTypesDateFiltered.forEach((obs) => {
 		arrOfDates.forEach((date) => {
-			if (obs.map((el) => el.date).includes(date)) {
+			if (obs?.map((el) => el.date).includes(date)) {
 				value = obs.filter((el) => el.date === date).map((el) => el.value)[0]
 			}
 			arrTmp.push({
