@@ -120,7 +120,6 @@ export const fillEmptyDataOfDate = (arr) => {
 		d <= endingDate;
 		d.setDate(d.getDate() + 1)
 	) {
-		console.log("01", new Date(d).toISOString().slice(0, 10))
 		arrOfDates.push(new Date(d).toISOString().slice(0, 10))
 	}
 	let value = ""
@@ -128,8 +127,6 @@ export const fillEmptyDataOfDate = (arr) => {
 	const obsTypes = arr[0]?.map((obs) => obs)
 	const obsTypesDateFiltered = obsTypes.map((obs) => {
 		return obs?.filter((el) => {
-			console.log("02", new Date(startingDate[0]).toISOString().slice(0, 10))
-			console.log("03", endingDate.toISOString().slice(0, 10))
 			return (
 				el.date >= new Date(startingDate[0]).toISOString().slice(0, 10) &&
 				el.date <= endingDate.toISOString().slice(0, 10)
@@ -146,22 +143,8 @@ export const fillEmptyDataOfDate = (arr) => {
 				value,
 			})
 		})
-    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", arrTmp)
-    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", startingDate, endingDate)
 		newData.push(
 			arrTmp.filter((el) => {
-
-       console.log(
-					"04.0",
-					new Date(startingDate.at(-1)).toISOString().slice(0, 10)
-				)
-
-				console.log("04.1", endingDate.toISOString().slice(0, 10))
-        console.log(
-					"04.2",
-					new Date(startingDate.at(-1)).toISOString().slice(0, 10)
-				)
-				console.log("05", endingDate.toISOString().slice(0, 10))
 				return (
 					el.date >= new Date(startingDate.at(-1)).toISOString().slice(0, 10) &&
 					el.date <= endingDate.toISOString().slice(0, 10)
