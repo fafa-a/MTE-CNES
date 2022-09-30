@@ -145,10 +145,14 @@ export const fillEmptyDataOfDate = (arr) => {
 			})
 		})
     console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", arrTmp)
+    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", startingDate, endingDate)
 		newData.push(
 			arrTmp.filter((el) => {
 
-       console.log("04.0", startingDate.at(-1).toISOString().slice(0, 10))
+       console.log(
+					"04.0",
+					new Date(startingDate.at(-1)).toISOString().slice(0, 10)
+				)
 
 				console.log("04.1", endingDate.toISOString().slice(0, 10))
         console.log(
