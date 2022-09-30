@@ -123,6 +123,7 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 		const zip = new JSZip()
 		const seriePathLakes = handleSeriesPathDependsOfForm(seriePath[id], form)
 		for (const path of seriePathLakes) {
+      const fileName = path.split("/").pop().split(".")[0]
 			const res = await fetch(path)
 			const blob = await res.blob()
 			zip.file(`${fileName}.csv`, blob)
