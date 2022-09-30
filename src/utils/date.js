@@ -144,6 +144,7 @@ export const fillEmptyDataOfDate = (arr) => {
 				value,
 			})
 		})
+    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", arrTmp)
 		newData.push(
 			arrTmp.filter((el) => {
         console.log(
