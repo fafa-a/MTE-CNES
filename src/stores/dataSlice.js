@@ -157,16 +157,32 @@ export const dataSlice = createSlice({
 		},
 		removeDataFromVolume: (state, action) => {
 			const { id } = action.payload
-			const volumeDayRawToRemove = state.data[id].VOLUME.DAY.full
-			const volumePeriodRawToRemove = state.data[id].VOLUME.PERIOD.full
+			const volumeDayRawToRemove = state.data[id].VOLUME.DAY.full.map((el) => {
+				return el.filter(
+					(el) =>
+						el.date >= state.mode.volume.DAY.raw[0][0].date &&
+						el.date <= state.mode.volume.DAY.raw[0].at(-1).date
+				)
+			})
+
+			const volumePeriodRawToRemove = state.data[id].VOLUME.PERIOD.full.map(
+				(el) => {
+					return el.filter(
+						(el) =>
+							el.date >= state.mode.volume.PERIOD.raw[0][0].date &&
+							el.date <= state.mode.volume.PERIOD.raw[0].at(-1).date
+					)
+				}
+			)
+
 			state.mode.volume.DAY.raw = state.mode.volume.DAY.raw.map(
 				(obs, index) => {
 					return obs.map((el, i) => {
 						const { date, value } = volumeDayRawToRemove[index][i]
-						if (el.date === date) {
+						if (el.date == date) {
 							return {
 								date: el.date,
-								value: el.value - value,
+								value: el.value > value ? el.value - value : value - el.value,
 							}
 						}
 					})
@@ -179,12 +195,13 @@ export const dataSlice = createSlice({
 						if (el.date === date) {
 							return {
 								date: el.date,
-								value: el.value - value,
+								value: el.value > value ? el.value - value : value - el.value,
 							}
 						}
 					})
 				}
 			)
+			console.log(current(state.mode.volume))
 		},
 		updateModeVolume: (state, action) => {
 			const { id } = action.payload
