@@ -147,8 +147,12 @@ export const fillEmptyDataOfDate = (arr) => {
     console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", arrTmp)
 		newData.push(
 			arrTmp.filter((el) => {
+
+       console.log("04.0", startingDate.at(-1).toISOString().slice(0, 10))
+
+				console.log("04.1", endingDate.toISOString().slice(0, 10))
         console.log(
-					"04",
+					"04.2",
 					new Date(startingDate.at(-1)).toISOString().slice(0, 10)
 				)
 				console.log("05", endingDate.toISOString().slice(0, 10))
