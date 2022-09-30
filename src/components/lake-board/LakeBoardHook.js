@@ -132,6 +132,7 @@ export default function useLakeBoardHook() {
 					.map(([id, { name }]) => ({ id, name }))
 					.filter((el) => active.includes(el.id))
 				setActiveLakesInfo(allLakesActiveIdName)
+				setLastMode(null)
 			}
 			if (
 				!lastMode &&
@@ -147,7 +148,10 @@ export default function useLakeBoardHook() {
 				const newIdName = Object.values(lakesIdName).filter(
 					(el) => el.id !== activeLakesInfoId.includes(el.id)
 				)
-				setActiveLakesInfo([...activeLakesInfo, lakesIdName])
+				if (!activeLakesInfo.includes(lakesIdName.id)) {
+					setActiveLakesInfo([...activeLakesInfo, lakesIdName])
+					setLastMode(null)
+				}
 			}
 			//      if (activeLakesInfo.length === 0) {
 			//       console.log("init")
@@ -162,6 +166,7 @@ export default function useLakeBoardHook() {
 			//
 			//     }
 			if (lastMode === DurationTypes.YEAR) {
+				console.log("lastmode year")
 				const info = Object.entries(information).filter(([id]) => {
 					return active.includes(id)
 				})
@@ -171,14 +176,15 @@ export default function useLakeBoardHook() {
 				setActiveLakesInfo(allLakesActiveIdName)
 			}
 			if (!lastMode && activeLakesInfo.length > active.length) {
+				console.log(" !lastmode")
 				const activeLakesInfoFiltered = activeLakesInfo.filter((lake) =>
-					tive.includes(lake.id)
+					active.includes(lake.id)
 				)
 				setActiveLakesInfo(activeLakesInfoFiltered)
 			}
 			setLastMode(null)
 		}
-	}, [active, data, information])
+	}, [YEAR, VOLUME, active, data, information])
 
 	const clearSelection = useCallback(() => {
 		if (!YEAR) {
