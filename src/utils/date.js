@@ -67,6 +67,7 @@ const getStartDate = (arr) => {
 		?.map((el) => {
 			return el[0]?.date
 		})
+		.filter((el) => el !== undefined)
 		.sort((a, b) => (new Date(a) < new Date(b) ? -1 : 1))
 	return firstDate
 }
@@ -77,6 +78,7 @@ const getLastDate = (arr) => {
 		?.map((el) => {
 			return el.at(-1)?.date
 		})
+		.filter((el) => el !== undefined)
 		.sort((a, b) => (new Date(a) < new Date(b) ? -1 : 1))[0]
 	return lastDate
 }
