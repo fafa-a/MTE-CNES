@@ -158,7 +158,7 @@ export default function useChartHook() {
 			) {
 				for (const id of active) {
 					if (!VOLUME) {
-						const dataRaw = data[id][dataType][obsDepth].raw
+						const dataRaw = data[id][dataType][obsDepth]?.raw
 						const dataActualized = handleObsType(
 							dataRaw,
 							OPTIC,

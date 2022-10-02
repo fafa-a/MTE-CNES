@@ -201,7 +201,6 @@ export const dataSlice = createSlice({
 					})
 				}
 			)
-			console.log(current(state.mode.volume))
 		},
 		updateModeVolume: (state, action) => {
 			const { id } = action.payload

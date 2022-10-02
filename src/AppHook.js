@@ -17,14 +17,8 @@ import {
 	getFirstDateOfArrays,
 	getLastDateOfArrays,
 } from "./utils/date"
-import {
-	extractField,
-	formatCSVValue,
-	formatValue,
-	normalizeValue,
-} from "./utils/value"
+import { extractField, formatValue, normalizeValue } from "./utils/value"
 import { returnHighestValue } from "./utils/math"
-import { desactiveLake } from "@stores/lakesSlice"
 import {
 	getSeriePathByAttribute,
 	getSeriePathByObsTypeAndObsDepth,
@@ -32,7 +26,6 @@ import {
 import { getDataFormalized } from "./utils/data"
 import { addLakeChartOptions } from "./stores/lakesChartOptionsSlice"
 import { addYearsChartOptions } from "./stores/yearsChartOptionsSlice"
-import { lastDayOfDecade } from "date-fns"
 
 export function useAppHook() {
 	const [isOneLakeActive, setIsOneLakeActive] = useState(false)
@@ -290,6 +283,9 @@ export function useAppHook() {
 	useEffect(() => {
 		if (active.length > 0) {
 			setIsOneLakeActive(true)
+		}
+		if (active.length === 0) {
+			setIsOneLakeActive(false)
 		}
 	}, [active])
 
@@ -625,40 +621,40 @@ export function useAppHook() {
 	//   setLakeData(data)
 	// }, [fetchData])
 	//
-	// const addChartColor = useCallback(() => {
-	//   const randomColor = `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(
-	//     Math.random() * 255
-	//   )}, ${Math.floor(Math.random() * 255)}, 1)`
-	//   dispatch(
-	//     addColor({
-	//       dataType,
-	//       obsType: ObservationTypes.OPTIC,
-	//       color: randomColor,
-	//     })
-	//   )
-	//   let newColor = randomColor.replace(/,[^,]+$/, ",0.66)")
-	//   dispatch(
-	//     addColor({
-	//       dataType,
-	//       obsType: ObservationTypes.RADAR,
-	//       color: newColor,
-	//     })
-	//   )
-	//   newColor = randomColor.replace(/,[^,]+$/, ",0.33)")
-	//   dispatch(
-	//     addColor({
-	//       dataType,
-	//       obsType: ObservationTypes.REFERENCE,
-	//       color: newColor,
-	//     })
-	//   )
-	// }, [dataType])
-	//
-	// useEffect(() => {
-	//   if (activeLakes.length > 10) {
-	//     addChartColor()
-	//   }
-	// }, [activeLakes, addChartColor])
+	const addChartColor = useCallback(() => {
+		const randomColor = `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(
+			Math.random() * 255
+		)}, ${Math.floor(Math.random() * 255)}, 1)`
+		dispatch(
+			addColor({
+				dataType,
+				obsType: ObservationTypes.OPTIC,
+				color: randomColor,
+			})
+		)
+		let newColor = randomColor.replace(/,[^,]+$/, ",0.66)")
+		dispatch(
+			addColor({
+				dataType,
+				obsType: ObservationTypes.RADAR,
+				color: newColor,
+			})
+		)
+		newColor = randomColor.replace(/,[^,]+$/, ",0.33)")
+		dispatch(
+			addColor({
+				dataType,
+				obsType: ObservationTypes.REFERENCE,
+				color: newColor,
+			})
+		)
+	}, [dataType])
+
+	useEffect(() => {
+		if (active.length > 10) {
+			addChartColor()
+		}
+	}, [active, addChartColor])
 	//
 	// useEffect(() => {
 	//   if (seriePath.length === 0) return
