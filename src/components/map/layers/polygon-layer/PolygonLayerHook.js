@@ -59,6 +59,7 @@ export default function usePolygonLayerHook() {
 		if (containerHeight === "100%" && coordId.coord.length > 0) {
 			map.invalidateSize(true)
 			map.setView(coordId.coord, 3)
+			map.setZoom(2.5)
 			map.flyTo(coordId.coord, 3)
 		}
 	}, [containerHeight])
@@ -66,11 +67,17 @@ export default function usePolygonLayerHook() {
 	useEffect(() => {
 		if (!coordId.id) return
 		const container = document.getElementsByClassName("leaflet-container")
-		if ((container[0].style.height = "45%")) {
+		if (container[0].style.height == "45%" && active.length > 0) {
 			setColor("#CDF0EA")
 			centerPolygon()
 		}
-	}, [coordId.id])
+	}, [coordId.id, active])
+
+	useEffect(() => {
+		if (active.length < 1) {
+			setColor("blue")
+		}
+	}, [active])
 
 	useEffect(() => {
 		if (DAY) {
