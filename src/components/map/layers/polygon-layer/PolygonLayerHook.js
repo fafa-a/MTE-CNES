@@ -9,6 +9,7 @@ import { addLakeChartOptions } from "../../../../stores/lakesChartOptionsSlice"
 export default function usePolygonLayerHook() {
 	const [color, setColor] = useState("blue")
 	const [zoomLevel, setZoomLevel] = useState(null)
+	const [containerHeight, setContainerHeight] = useState(null)
 	const [coordId, setCoordId] = useState({
 		id: "",
 		coord: [],
@@ -26,13 +27,16 @@ export default function usePolygonLayerHook() {
 		},
 	})
 
-	const resizeMap = useCallback(() => {
-		const container = document.getElementsByClassName("leaflet-container")
-		if (container) {
-			map.invalidateSize(true)
-			container[0].style.height = "45%"
-		}
-	}, [map])
+	const resizeMap = useCallback(
+		(value) => {
+			const container = document.getElementsByClassName("leaflet-container")
+			if (container) {
+				map.invalidateSize(true)
+				container[0].style.height = value
+			}
+		},
+		[map]
+	)
 
 	const centerPolygon = useCallback(() => {
 		// map.flyTo(coordId.coord)
@@ -41,10 +45,23 @@ export default function usePolygonLayerHook() {
 
 	useEffect(() => {
 		if (active.length >= 2) return
-		if (active.length === 1) {
-			resizeMap()
+		if (active.length === 1 && containerHeight !== "45%") {
+			resizeMap("45%")
+			setContainerHeight("45%")
+		}
+		if (active.length === 0 && containerHeight !== "100%") {
+			resizeMap("100%")
+			setContainerHeight("100%")
 		}
 	}, [active.length])
+
+	useEffect(() => {
+		if (containerHeight === "100%" && coordId.coord.length > 0) {
+			map.invalidateSize(true)
+			map.setView(coordId.coord, 3)
+			map.flyTo(coordId.coord, 3)
+		}
+	}, [containerHeight])
 
 	useEffect(() => {
 		if (!coordId.id) return
