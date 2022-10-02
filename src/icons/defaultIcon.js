@@ -1,6 +1,6 @@
 import L from "leaflet"
-import iconUrl from "@src/images/marker-icon.png"
-import iconShadow from "@src/images/marker-shadow.png"
+import iconUrl from "@/images/marker-icon.png"
+import iconShadow from "@/images/marker-shadow.png"
 
 const { iconSize, shadowSize, iconAnchor, popupAnchor, tooltipAnchor } =
   L.Marker.prototype.options.icon.options

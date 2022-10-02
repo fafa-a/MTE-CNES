@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { Marker } from "react-leaflet"
 import { v4 as uuid } from "@lukeed/uuid"
 import { noSizeIcon } from "@/icons/transparentIcon"
+import { defaultIcon } from "@/icons/defaultIcon"
 import useMarkerLayerClusterHook from "./MarkerLayerClusterHook"
 import MarkerClusterGroup from "react-leaflet-markercluster"
 import PropTypes from "prop-types"
@@ -13,13 +14,13 @@ import PropTypes from "prop-types"
  */
 export const MarkerLayerCluster = ({ data }) => {
 	const { coordinates, zoomLevel } = useMarkerLayerClusterHook(data)
-  const [layer, setLayer] = useState(null)
+	const [layer, setLayer] = useState(null)
 	useEffect(() => {
 		setLayer(
 			data.features.map((_, index) => {
 				return (
 					<Marker
-						icon={noSizeIcon}
+						icon={defaultIcon}
 						key={uuid()}
 						position={coordinates[index]}
 					/>
