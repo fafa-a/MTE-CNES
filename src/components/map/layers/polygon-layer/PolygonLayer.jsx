@@ -44,7 +44,7 @@ export const PolygonLayer = ({ data }) => {
 				)
 			})
 		)
-	}, [color, active, loaded])
+	}, [id, color, active, loaded])
 
 	return <LayerGroup>{zoomLevel > 8 ? layer : null}</LayerGroup>
 }

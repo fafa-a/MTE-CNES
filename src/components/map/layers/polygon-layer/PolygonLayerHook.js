@@ -39,7 +39,6 @@ export default function usePolygonLayerHook() {
 	)
 
 	const centerPolygon = useCallback(() => {
-		// map.flyTo(coordId.coord)
 		map.setView(coordId.coord, 11)
 	}, [coordId.coord])
 
@@ -58,9 +57,7 @@ export default function usePolygonLayerHook() {
 	useEffect(() => {
 		if (containerHeight === "100%" && coordId.coord.length > 0) {
 			map.invalidateSize(true)
-			map.setView(coordId.coord, 3)
-			map.setZoom(2.5)
-			map.flyTo(coordId.coord, 3)
+			map.setView(coordId.coord, map.getZoom() - 1)
 		}
 	}, [containerHeight])
 
@@ -87,7 +84,7 @@ export default function usePolygonLayerHook() {
 			setObsDepth(DurationTypes.PERIOD)
 		}
 	}, [DAY, PERIOD])
-
+  
 	const centerSelectedPolygon = useCallback(() => {
 		if (
 			Object.entries(lakesChartOptions)
@@ -103,7 +100,6 @@ export default function usePolygonLayerHook() {
 				return { lakeId: id, selected }
 			})
 			.filter(({ selected }) => selected)[0]
-
 		const { id, lakeCoord } = information[lakeId]
 		setCoordId({
 			id,
