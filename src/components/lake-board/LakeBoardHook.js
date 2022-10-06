@@ -125,6 +125,7 @@ export default function useLakeBoardHook() {
 					.map((el) => el.id)
 					.includes(Object.keys(yearsChartOptions)[0])
 			) {
+				console.log("01")
 				const allLakesActiveIdName = []
 				for (const [id, { name }] of Object.entries(information)) {
 					if (active.includes(id)) {
@@ -145,16 +146,20 @@ export default function useLakeBoardHook() {
 				!lastMode &&
 				active.at(-1) !== activeLakesInfo.map((el) => el.id).at(-1)
 			) {
+				console.log("02")
 				const info = Object.entries(information).filter(([id]) => {
+					console.log({ id, active: active.at(-1) })
 					return active.includes(id)
 				})
+				console.log({ info })
 				const lakesIdName = info
 					.map(([id, { name }]) => ({ id, name }))
 					.filter((el) => el.id === active.at(-1))[0]
-				const activeLakesInfoId = activeLakesInfo.map((el) => el.id)
-				const newIdName = Object.values(lakesIdName).filter(
-					(el) => el.id !== activeLakesInfoId.includes(el.id)
-				)
+				const activeLakesInfoId = activeLakesInfo?.map((el) => el.id)
+				// const newIdName = Object.values(lakesIdName).filter(
+				// 	(el) => el.id !== activeLakesInfoId.includes(el.id)
+				// )
+				console.log(lakesIdName)
 				if (!activeLakesInfoId.includes(lakesIdName.id)) {
 					setActiveLakesInfo([...activeLakesInfo, lakesIdName])
 					setLastMode(null)
@@ -169,6 +174,8 @@ export default function useLakeBoardHook() {
 					.filter((el) => active.includes(el.id))
 				setActiveLakesInfo(allLakesActiveIdName)
 			}
+
+			console.log("03")
 			if (!lastMode && activeLakesInfo.length > active.length) {
 				const activeLakesInfoFiltered = activeLakesInfo.filter((lake) =>
 					active.includes(lake.id)
