@@ -1,56 +1,56 @@
 /* eslint-disable no-undef */
-import { AppConfig } from "@/config"
-import { useSelector, useDispatch } from "react-redux"
-import { DataTypes, DurationTypes, ObservationTypes } from "../../config"
-import { useEffect, useState, useCallback, useRef } from "react"
-import { handleResetZoom } from "../../stores/chartSlice"
+import { AppConfig } from '@/config'
+import { useSelector, useDispatch } from 'react-redux'
+import { DataTypes, DurationTypes, ObservationTypes } from '../../config'
+import { useEffect, useState, useCallback, useRef } from 'react'
+import { handleResetZoom } from '../../stores/chartSlice'
 import {
-  getChartStartDateCurrentMonth,
-  getChartFirstDateNextMonth,
-} from "../../utils/date"
+	getChartStartDateCurrentMonth,
+	getChartFirstDateNextMonth,
+} from '../../utils/date'
 import {
-  handleDataSetsBooleanOption,
-  handleDataSetsBorderWidthOption,
-} from "../../utils/chart"
+	handleDataSetsBooleanOption,
+	handleDataSetsBorderWidthOption,
+} from '../../utils/chart'
 
 export default function useChartHook() {
-  const [chartData, setChartData] = useState([])
-  const [dataSets, setDataSets] = useState([])
-  const [dateMin, setDateMin] = useState()
-  const [dateMax, setDateMax] = useState()
+	const [chartData, setChartData] = useState([])
+	const [dataSets, setDataSets] = useState([])
+	const [dateMin, setDateMin] = useState()
+	const [dateMax, setDateMax] = useState()
 
-  const [obsTypes, setObsTypes] = useState([])
-  const [lastDataType, setLastDataType] = useState("")
-  const [lastObstypes, setLastObstypes] = useState([])
-  const [obsDepth, setObsDepth] = useState()
-  const [lastObsDepth, setLastObsDepth] = useState("")
-  const [scales, setScales] = useState()
-  const [options, setOptions] = useState()
-  const [datesOfYear, setDatesOfYear] = useState({})
-  const form = useSelector((state) => state.form)
-  const { yearsVisible } = useSelector((state) => state.lakes)
-  const chart = useSelector((state) => state.chart)
-  const { lakesChartOptions } = useSelector((state) => state)
-  const { yearsChartOptions } = useSelector((state) => state)
-  const { zoomReset } = chart
-  const {
-    dataType,
-    OPTIC,
-    RADAR,
-    DAY,
-    PERIOD,
-    REFERENCE,
-    YEAR,
-    VOLUME,
-    charType,
-  } = form
+	const [obsTypes, setObsTypes] = useState([])
+	const [lastDataType, setLastDataType] = useState('')
+	const [lastObstypes, setLastObstypes] = useState([])
+	const [obsDepth, setObsDepth] = useState()
+	const [lastObsDepth, setLastObsDepth] = useState('')
+	const [scales, setScales] = useState()
+	const [options, setOptions] = useState()
+	const [datesOfYear, setDatesOfYear] = useState({})
+	const form = useSelector(state => state.form)
+	const { yearsVisible } = useSelector(state => state.lakes)
+	const chart = useSelector(state => state.chart)
+	const { lakesChartOptions } = useSelector(state => state)
+	const { yearsChartOptions } = useSelector(state => state)
+	const { zoomReset } = chart
+	const {
+		dataType,
+		OPTIC,
+		RADAR,
+		DAY,
+		PERIOD,
+		REFERENCE,
+		YEAR,
+		VOLUME,
+		charType,
+	} = form
 
-  const { label, unit } = AppConfig.attributes[dataType]
-  const { active, indexToRemoveFromChartData } = useSelector(
-		(state) => state.stateLake
+	const { label, unit } = AppConfig.attributes[dataType]
+	const { active, indexToRemoveFromChartData } = useSelector(
+		state => state.stateLake
 	)
-	const { information } = useSelector((state) => state)
-	const { data, mode } = useSelector((state) => state.data)
+	const { information } = useSelector(state => state)
+	const { data, mode } = useSelector(state => state.data)
 
 	const chartRef = useRef()
 	const dispatch = useDispatch()
@@ -256,33 +256,33 @@ export default function useChartHook() {
 		}
 
 		if (optic && !radar && !reference) {
-			dataTmp.push(data.map((obs) => obs.slice(0, 1)))
+			dataTmp.push(data.map(obs => obs.slice(0, 1)))
 		}
 
 		if (optic && !radar && reference) {
 			if (data[0].length === 2) {
-				dataTmp.push(data.map((obs) => obs.slice(0, 1)))
+				dataTmp.push(data.map(obs => obs.slice(0, 1)))
 			}
 			if (data[0].length === 3) {
-				dataTmp.push(data.map((obs) => [obs.slice(0, 1)[0], obs.at(-1)]))
+				dataTmp.push(data.map(obs => [obs.slice(0, 1)[0], obs.at(-1)]))
 			}
 		}
 
 		if (!optic && radar && !reference) {
-			dataTmp.push(data.map((obs) => obs.slice(1, 2)))
+			dataTmp.push(data.map(obs => obs.slice(1, 2)))
 		}
 
 		if (!optic && radar && reference) {
-			dataTmp.push(data.map((obs) => obs.slice(1, 3)))
+			dataTmp.push(data.map(obs => obs.slice(1, 3)))
 		}
 
 		if (optic && radar && !reference) {
-			dataTmp.push(data.map((obs) => obs.slice(0, 2)))
+			dataTmp.push(data.map(obs => obs.slice(0, 2)))
 		}
 
 		if (!optic && !radar && reference) {
 			if (data[0].length === 2) return
-			dataTmp.push(data.map((obs) => obs.at(-1)))
+			dataTmp.push(data.map(obs => obs.at(-1)))
 		}
 		return dataTmp
 	}
@@ -296,33 +296,33 @@ export default function useChartHook() {
 			let borderColor
 			let pointBackgroundColor
 
-			if (["OPTIC", "RADAR", "REFERENCE"].includes(obsType)) {
+			if (['OPTIC', 'RADAR', 'REFERENCE'].includes(obsType)) {
 				backgroundColor =
 					chart[dataType].style[obsType][indexColor].pointBackgroundColor
 				borderColor = chart[dataType].style[obsType][indexColor].borderColor
 				pointBackgroundColor =
 					chart[dataType].style[obsType][indexColor].pointBackgroundColor
 			}
-			if (charType === "LINE") {
+			if (charType === 'LINE') {
 				pointRadius = 0
 			}
 			let xAxisID
 			if (YEAR) {
 				xAxisID = `x${index}`
 			}
-			if (YEAR && obsType === "OPTIC") {
+			if (YEAR && obsType === 'OPTIC') {
 				backgroundColor = chart.YEAR.style[xAxisID].OPTIC.backgroundColor
 				borderColor = chart.YEAR.style[xAxisID].OPTIC.borderColor
 				pointBackgroundColor =
 					chart.YEAR.style[xAxisID].OPTIC.pointBackgroundColor
 			}
-			if (YEAR && obsType === "RADAR") {
+			if (YEAR && obsType === 'RADAR') {
 				backgroundColor = chart.YEAR.style[xAxisID].RADAR.backgroundColor
 				borderColor = chart.YEAR.style[xAxisID].RADAR.borderColor
 				pointBackgroundColor =
 					chart.YEAR.style[xAxisID].RADAR.pointBackgroundColor
 			}
-			if (YEAR && obsType === "REFERENCE") {
+			if (YEAR && obsType === 'REFERENCE') {
 				backgroundColor = chart.YEAR.style[xAxisID].REFERENCE.backgroundColor
 				borderColor = chart.YEAR.style[xAxisID].REFERENCE.borderColor
 				pointBackgroundColor =
@@ -330,7 +330,7 @@ export default function useChartHook() {
 			}
 
 			if (!YEAR) {
-				xAxisID = "x"
+				xAxisID = 'x'
 			}
 			const isHidden = () => {
 				if (VOLUME && lakeName !== undefined) {
@@ -380,20 +380,18 @@ export default function useChartHook() {
 		let allDatesSorted = []
 		if (!YEAR) {
 			chartData.forEach((key, index) => {
-				key.forEach((item) => {
+				key.forEach(item => {
 					item?.forEach((itm, idx) => {
 						const data = setDataLines(
 							itm,
 							obsTypes[idx],
 							idx,
 							VOLUME
-								? active.map((id) => information.information[id].name)[
-										index - 1
-								  ]
-								: active.map((id) => information.information[id].name)[index],
+								? active.map(id => information.information[id].name)[index - 1]
+								: active.map(id => information.information[id].name)[index],
 							index
 						)
-						const itemDates = itm?.map((el) => el.date)
+						const itemDates = itm?.map(el => el.date)
 						if (itemDates) allDates.push(...itemDates)
 						arr.push(data)
 					})
@@ -413,7 +411,7 @@ export default function useChartHook() {
 			const arrFistDate = []
 			const arrLastDate = []
 			const arrDate = []
-			chartData.forEach((year) => {
+			chartData.forEach(year => {
 				Object.values(year).forEach((obs, index) => {
 					obs.forEach((itm, idx) => {
 						const data = setDataLines(
@@ -432,24 +430,22 @@ export default function useChartHook() {
 					})
 				})
 			})
-			const allYears = arrFistDate.map((date) => new Date(date).getFullYear())
-			const allYearsDates = allYears.map((year) =>
-				arrDate.filter(
-					(date) => new Date(date.dateBegin).getFullYear() === year
-				)
+			const allYears = arrFistDate.map(date => new Date(date).getFullYear())
+			const allYearsDates = allYears.map(year =>
+				arrDate.filter(date => new Date(date.dateBegin).getFullYear() === year)
 			)
 			const allFirstDates = allYearsDates
-				.map((year) => {
-					return year.map((el) => el.dateBegin)
+				.map(year => {
+					return year.map(el => el.dateBegin)
 				})
-				.map((year) => year.sort((a, b) => new Date(a) - new Date(b))[0])
+				.map(year => year.sort((a, b) => new Date(a) - new Date(b))[0])
 			const uniqueFirstDate = Array.from(new Set(allFirstDates))
-			const years = uniqueFirstDate.map((date) => new Date(date).getFullYear())
+			const years = uniqueFirstDate.map(date => new Date(date).getFullYear())
 			const allLastDates = allYearsDates
-				.map((year) => {
-					return year.map((el) => el.dateEnd)
+				.map(year => {
+					return year.map(el => el.dateEnd)
 				})
-				.map((year) => year.sort((a, b) => new Date(a) - new Date(b)).at(-1))
+				.map(year => year.sort((a, b) => new Date(a) - new Date(b)).at(-1))
 			const uniqueLastDate = Array.from(new Set(allLastDates))
 
 			const obj = {}
@@ -474,17 +470,17 @@ export default function useChartHook() {
 
 	const makesScalesForyear = useCallback((isDisplay, startDate, endDate) => {
 		const obj = {
-			type: "time",
+			type: 'time',
 			parsing: false,
 			display: isDisplay,
 			min: startDate,
 			max: endDate,
 			time: {
 				displayFormats: {
-					month: "MMM yyyy",
-					day: "dd MMM",
+					month: 'MMM yyyy',
+					day: 'dd MMM',
 				},
-				tooltipFormat: "dd MMM yyyy",
+				tooltipFormat: 'dd MMM yyyy',
 			},
 		}
 		return obj
@@ -511,16 +507,16 @@ export default function useChartHook() {
 		if (!YEAR) {
 			setScales({
 				x: {
-					type: "time",
+					type: 'time',
 					min: dateMin,
 					max: dateMax,
 					parsing: false,
 					time: {
 						displayFormats: {
-							month: "MMM yyyy",
-							day: "dd MMM",
+							month: 'MMM yyyy',
+							day: 'dd MMM',
 						},
-						tooltipFormat: "dd MMM yyyy",
+						tooltipFormat: 'dd MMM yyyy',
 					},
 				},
 				y: {
@@ -536,13 +532,13 @@ export default function useChartHook() {
 			maintainAspectRatio: false,
 			interaction: {
 				intersect: false,
-				mode: "nearest",
+				mode: 'nearest',
 			},
 			plugins: {
 				title: {
 					display: true,
 					text: `${label}  ${unit}`,
-					position: "top",
+					position: 'top',
 					font: {
 						size: 16,
 					},
@@ -580,12 +576,12 @@ export default function useChartHook() {
 							if (VOLUME) {
 								const { date } = context.raw
 								const { index } = context.dataset
-								const allValue = active.map((id) => {
+								const allValue = active.map(id => {
 									return data[id][DataTypes.VOLUME]?.[obsDepth].full[index]
-										.filter((item) => item.date === date)
-										.map((item) => item.value)
+										.filter(item => item.date === date)
+										.map(item => item.value)
 								})
-								const allActiveLakesName = active.map((id) => {
+								const allActiveLakesName = active.map(id => {
 									return information.information[id].name
 								})
 								return allValue.map((val, index) => {
@@ -605,7 +601,7 @@ export default function useChartHook() {
 				zoom: {
 					pan: {
 						enabled: true,
-						modifierKey: "ctrl",
+						modifierKey: 'ctrl',
 						// onPanStart: chart => {
 						//   chart.event.changedPointers[0].target.style.cursor = "grab"
 						// },
@@ -616,18 +612,18 @@ export default function useChartHook() {
 						},
 						drag: {
 							enabled: true,
-							backgroundColor: "rgba(0,204,255,0.15)",
-							borderColor: "rgba(0,204,255,1.00)",
+							backgroundColor: 'rgba(0,204,255,0.15)',
+							borderColor: 'rgba(0,204,255,1.00)',
 							borderWidth: 1,
 						},
 						pinch: {
 							enabled: true,
 						},
-						mode: "xy",
+						mode: 'xy',
 					},
 					limits: {
-						y: { min: 0, max: "original" },
-						x: { min: "original", max: "original" },
+						y: { min: 0, max: 'original' },
+						x: { min: 'original', max: 'original' },
 					},
 				},
 			},
@@ -636,8 +632,8 @@ export default function useChartHook() {
 				beginAtZero: true,
 			},
 			parsing: {
-				xAxisKey: "date",
-				yAxisKey: "value",
+				xAxisKey: 'date',
+				yAxisKey: 'value',
 			},
 			animation: false,
 		}
@@ -647,14 +643,15 @@ export default function useChartHook() {
 	useEffect(() => {
 		if (!lakesChartOptions[active.at(-1)]) return
 		if (YEAR || dataSets.length !== active.length * obsTypes.length) return
-		const activeLakes = active.map((id) => {
+		const activeLakes = active.map(id => {
 			return lakesChartOptions[id]
 		})
+
 		const toggleChartVisibilty = handleDataSetsBooleanOption(
 			dataSets,
 			activeLakes,
-			"visible",
-			"hidden",
+			'visible',
+			'hidden',
 			obsTypes
 		)
 		setDataSets(toggleChartVisibilty)
@@ -663,14 +660,14 @@ export default function useChartHook() {
 	useEffect(() => {
 		if (!lakesChartOptions[active.at(-1)]) return
 		if (YEAR || dataSets.length !== active.length * obsTypes.length) return
-		const activeLakes = active.map((id) => {
+		const activeLakes = active.map(id => {
 			return lakesChartOptions[id]
 		})
 		const toggleBoldGraph = handleDataSetsBorderWidthOption(
 			dataSets,
 			activeLakes,
-			"selected",
-			"borderWidth",
+			'selected',
+			'borderWidth',
 			obsTypes,
 			chart
 		)
@@ -689,8 +686,8 @@ export default function useChartHook() {
 		const toggleYearChartVisibilty = handleDataSetsBooleanOption(
 			dataSets,
 			activeYears,
-			"visible",
-			"hidden",
+			'visible',
+			'hidden',
 			obsTypes
 		)
 		setDataSets(toggleYearChartVisibilty)
@@ -707,8 +704,8 @@ export default function useChartHook() {
 		const toggleYearBoldGraph = handleDataSetsBorderWidthOption(
 			dataSets,
 			activeYears,
-			"selected",
-			"borderWidth",
+			'selected',
+			'borderWidth',
 			obsTypes,
 			chart
 		)
@@ -718,11 +715,11 @@ export default function useChartHook() {
 	const dataChart = {
 		datasets: dataSets,
 	}
-  return {
-    dataChart,
-    options,
-    form,
-    charType,
-    chartRef,
-  }
+	return {
+		dataChart,
+		options,
+		form,
+		charType,
+		chartRef,
+	}
 }

@@ -1,11 +1,11 @@
-import { useSelector } from "react-redux"
-import { toggleActiveYears } from "../../stores/lakesSlice"
-import { clearActiveLakes } from "../../stores/stateLakeSlice"
-import { useDispatch } from "react-redux"
-import { useCallback, useEffect, useState } from "react"
-import { DurationTypes, ModeTypes } from "../../config"
-import { resetLakechartOptions } from "../../stores/lakesChartOptionsSlice"
-import { resetModeVolume } from "../../stores/dataSlice"
+import { useSelector } from 'react-redux'
+import { toggleActiveYears } from '../../stores/lakesSlice'
+import { clearActiveLakes } from '../../stores/stateLakeSlice'
+import { useDispatch } from 'react-redux'
+import { useCallback, useEffect, useState } from 'react'
+import { DurationTypes, ModeTypes } from '../../config'
+import { resetLakechartOptions } from '../../stores/lakesChartOptionsSlice'
+import { resetModeVolume } from '../../stores/dataSlice'
 
 export default function useLakeBoardHook() {
 	const [obsDepth, setObsDepth] = useState()
@@ -13,12 +13,12 @@ export default function useLakeBoardHook() {
 	const [activeLakesInfo, setActiveLakesInfo] = useState([])
 	const [showInfo, setShowInfo] = useState(false)
 	const { YEAR, VOLUME, dataType, DAY, PERIOD } = useSelector(
-		(state) => state.form
+		state => state.form
 	)
-	const { active } = useSelector((state) => state.stateLake)
-	const { data } = useSelector((state) => state.data)
-	const { yearsChartOptions, lakesChartOptions } = useSelector((state) => state)
-	const { information } = useSelector((state) => state.information)
+	const { active } = useSelector(state => state.stateLake)
+	const { data } = useSelector(state => state.data)
+	const { yearsChartOptions, lakesChartOptions } = useSelector(state => state)
+	const { information } = useSelector(state => state.information)
 	const dispatch = useDispatch()
 
 	useEffect(() => {
@@ -67,7 +67,7 @@ export default function useLakeBoardHook() {
 
 	useEffect(() => {
 		if (YEAR && Object.keys(yearsChartOptions) && active.length > 0) {
-			const yearsId = Object.keys(yearsChartOptions).map((el) => {
+			const yearsId = Object.keys(yearsChartOptions).map(el => {
 				return {
 					id: el,
 					name: el,
@@ -86,15 +86,15 @@ export default function useLakeBoardHook() {
 		})
 		const lakesIdName = info
 			.map(([id, { name }]) => ({ id, name }))
-			.filter((el) => el.id === active.at(-1))[0]
-		const activeLakesInfoId = activeLakesInfo.map((el) => el.id)
+			.filter(el => el.id === active.at(-1))[0]
+		const activeLakesInfoId = activeLakesInfo.map(el => el.id)
 		const newIdName = Object.values(lakesIdName).filter(
-			(el) => el.id !== activeLakesInfoId.includes(el.id)
+			el => el.id !== activeLakesInfoId.includes(el.id)
 		)
 		if (
 			yearsChartOptions &&
 			activeLakesInfo
-				.map((el) => el.id)
+				.map(el => el.id)
 				.includes(Object.keys(yearsChartOptions)[0])
 		) {
 			const info = Object.entries(information).filter(([id]) => {
@@ -102,7 +102,7 @@ export default function useLakeBoardHook() {
 			})
 			const allLakesActiveIdName = info
 				.map(([id, { name }]) => ({ id, name }))
-				.filter((el) => active.includes(el.id))
+				.filter(el => active.includes(el.id))
 			setActiveLakesInfo(allLakesActiveIdName)
 			setLastMode(null)
 		}
@@ -122,10 +122,9 @@ export default function useLakeBoardHook() {
 			if (
 				yearsChartOptions &&
 				activeLakesInfo
-					.map((el) => el.id)
+					.map(el => el.id)
 					.includes(Object.keys(yearsChartOptions)[0])
 			) {
-				console.log("01")
 				const allLakesActiveIdName = []
 				for (const [id, { name }] of Object.entries(information)) {
 					if (active.includes(id)) {
@@ -134,7 +133,7 @@ export default function useLakeBoardHook() {
 				}
 				const allLakesSortedLikeActive = []
 				for (const id of active) {
-					const lake = allLakesActiveIdName.find((el) => el.id === id)
+					const lake = allLakesActiveIdName.find(el => el.id === id)
 					if (lake) {
 						allLakesSortedLikeActive.push(lake)
 					}
@@ -144,22 +143,18 @@ export default function useLakeBoardHook() {
 			}
 			if (
 				!lastMode &&
-				active.at(-1) !== activeLakesInfo.map((el) => el.id).at(-1)
+				active.at(-1) !== activeLakesInfo.map(el => el.id).at(-1)
 			) {
-				console.log("02")
 				const info = Object.entries(information).filter(([id]) => {
-					console.log({ id, active: active.at(-1) })
 					return active.includes(id)
 				})
-				console.log({ info })
 				const lakesIdName = info
 					.map(([id, { name }]) => ({ id, name }))
-					.filter((el) => el.id === active.at(-1))[0]
-				const activeLakesInfoId = activeLakesInfo?.map((el) => el.id)
+					.filter(el => el.id === active.at(-1))[0]
+				const activeLakesInfoId = activeLakesInfo?.map(el => el.id)
 				// const newIdName = Object.values(lakesIdName).filter(
 				// 	(el) => el.id !== activeLakesInfoId.includes(el.id)
 				// )
-				console.log(lakesIdName)
 				if (!activeLakesInfoId.includes(lakesIdName.id)) {
 					setActiveLakesInfo([...activeLakesInfo, lakesIdName])
 					setLastMode(null)
@@ -171,13 +166,12 @@ export default function useLakeBoardHook() {
 				})
 				const allLakesActiveIdName = info
 					.map(([id, { name }]) => ({ id, name }))
-					.filter((el) => active.includes(el.id))
+					.filter(el => active.includes(el.id))
 				setActiveLakesInfo(allLakesActiveIdName)
 			}
 
-			console.log("03")
 			if (!lastMode && activeLakesInfo.length > active.length) {
-				const activeLakesInfoFiltered = activeLakesInfo.filter((lake) =>
+				const activeLakesInfoFiltered = activeLakesInfo.filter(lake =>
 					active.includes(lake.id)
 				)
 				setActiveLakesInfo(activeLakesInfoFiltered)

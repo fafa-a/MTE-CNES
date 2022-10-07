@@ -1,42 +1,42 @@
-import { useEffect, useState, useCallback } from "react"
-import { useSelector } from "react-redux"
-import { useDispatch } from "react-redux"
-import { addData } from "./stores/dataSlice"
-import { addColor } from "./stores/chartSlice"
+import { useEffect, useState, useCallback } from 'react'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { addData } from './stores/dataSlice'
+import { addColor } from './stores/chartSlice'
 import {
 	AppConfig,
 	SeriePathUtils,
 	ObservationTypes,
 	DurationTypes,
 	DataTypes,
-} from "./config"
-import { csv } from "d3"
+} from './config'
+import { csv } from 'd3'
 import {
 	fillEmptyDataOfDate,
 	getDataByYear,
 	getFirstDateOfArrays,
 	getLastDateOfArrays,
-} from "./utils/date"
-import { extractField, formatValue, normalizeValue } from "./utils/value"
-import { returnHighestValue } from "./utils/math"
+} from './utils/date'
+import { extractField, formatValue, normalizeValue } from './utils/value'
+import { returnHighestValue } from './utils/math'
 import {
 	getSeriePathByAttribute,
 	getSeriePathByObsTypeAndObsDepth,
-} from "./utils/seriePath"
-import { getDataFormalized } from "./utils/data"
-import { addLakeChartOptions } from "./stores/lakesChartOptionsSlice"
-import { addYearsChartOptions } from "./stores/yearsChartOptionsSlice"
+} from './utils/seriePath'
+import { getDataFormalized } from './utils/data'
+import { addLakeChartOptions } from './stores/lakesChartOptionsSlice'
+import { addYearsChartOptions } from './stores/yearsChartOptionsSlice'
 
 export function useAppHook() {
 	const [isOneLakeActive, setIsOneLakeActive] = useState(false)
-	const [theme, setTheme] = useState("dark")
+	const [theme, setTheme] = useState('dark')
 	const [obsDepth, setObsDepth] = useState(DurationTypes.PERIOD)
 	const [lastObsDepth, setLastObsDepth] = useState(DurationTypes.PERIOD)
 	const [canvas, setCanvas] = useState(null)
-	const form = useSelector((state) => state.form)
-	const { active, loaded } = useSelector((state) => state.stateLake)
-	const { data } = useSelector((state) => state.data)
-	const { seriePath: serPath } = useSelector((state) => state.information)
+	const form = useSelector(state => state.form)
+	const { active, loaded } = useSelector(state => state.stateLake)
+	const { data } = useSelector(state => state.data)
+	const { seriePath: serPath } = useSelector(state => state.information)
 	const { OPTIC, RADAR, DAY, PERIOD, REFERENCE, YEAR, dataType } = form
 	const { getSeriePath, getTimeseriesPath } = SeriePathUtils
 	const dispatch = useDispatch()
@@ -124,10 +124,10 @@ export function useAppHook() {
 		)
 
 		const referenceSeries = getSeriePathByAttribute(allSeriesPath, reference)
-		const referenceSeriesRaw = await csv(referenceSeries).catch((err) => {})
+		const referenceSeriesRaw = await csv(referenceSeries).catch(err => {})
 		const volumeCSV = [
-			await getDataFormalized(volumeOpticDay, "hm³"),
-			await getDataFormalized(volumeRadarDay, "hm³"),
+			(await getDataFormalized(volumeOpticDay, 'hm³')) || [],
+			(await getDataFormalized(volumeRadarDay, 'hm³')) || [],
 		]
 		const firstDate = getFirstDateOfArrays(volumeCSV)
 		const lastDate = getLastDateOfArrays(volumeCSV)
@@ -135,42 +135,42 @@ export function useAppHook() {
 			referenceSeriesRaw && formatValue(referenceSeriesRaw)
 		const surfaceZSV =
 			referenceSeriesFormalized &&
-			extractField([referenceSeriesFormalized], "area")[0]
+			extractField([referenceSeriesFormalized], 'area')[0]
 		const volumeZSV =
 			referenceSeriesFormalized &&
-			extractField([referenceSeriesFormalized], "volume")[0]
+			extractField([referenceSeriesFormalized], 'volume')[0]
 		const rateRef = volumeZSV && returnHighestValue([volumeZSV])
 		const fillingRateZSV = rateRef && normalizeValue([volumeZSV], rateRef)[0]
 		try {
 			const fillingRateDayRaw = [
-				await getDataFormalized(fillingRateOpticDay, "%"),
-				await getDataFormalized(fillingRateRadarDay, "%"),
+				(await getDataFormalized(fillingRateOpticDay, '%')) || [],
+				(await getDataFormalized(fillingRateRadarDay, '%')) || [],
 				fillingRateZSV || [],
 			]
 			const fillingRatePeriodRaw = [
-				await getDataFormalized(fillingRateOpticPeriod, "%"),
-				await getDataFormalized(fillingRateRadarPeriod, "%"),
+				(await getDataFormalized(fillingRateOpticPeriod, '%')) || [],
+				(await getDataFormalized(fillingRateRadarPeriod, '%')) || [],
 				fillingRateZSV || [],
 			]
 
 			const surfaceDayRaw = [
-				await getDataFormalized(surfaceOpticDay, "ha"),
-				await getDataFormalized(surfaceRadarDay, "ha"),
+				(await getDataFormalized(surfaceOpticDay, 'ha')) || [],
+				(await getDataFormalized(surfaceRadarDay, 'ha')) || [],
 				surfaceZSV || [],
 			]
 			const surfacePeriodRaw = [
-				await getDataFormalized(surfaceOpticPeriod, "ha"),
-				await getDataFormalized(surfaceRadarPeriod, "ha"),
+				(await getDataFormalized(surfaceOpticPeriod, 'ha')) || [],
+				(await getDataFormalized(surfaceRadarPeriod, 'ha')) || [],
 				surfaceZSV || [],
 			]
 			const volumeDayRaw = [
-				await getDataFormalized(volumeOpticDay, "hm³"),
-				await getDataFormalized(volumeRadarDay, "hm³"),
+				(await getDataFormalized(volumeOpticDay, 'hm³')) || [],
+				(await getDataFormalized(volumeRadarDay, 'hm³')) || [],
 				volumeZSV || [],
 			]
 			const volumePeriodRaw = [
-				await getDataFormalized(volumeOpticPeriod, "hm³"),
-				await getDataFormalized(volumeRadarPeriod, "hm³"),
+				(await getDataFormalized(volumeOpticPeriod, 'hm³')) || [],
+				(await getDataFormalized(volumeRadarPeriod, 'hm³')) || [],
 				volumeZSV || [],
 			]
 
@@ -262,12 +262,12 @@ export function useAppHook() {
 		}
 	}, [active])
 
-	const handleCanvas = useCallback((cvas) => {
+	const handleCanvas = useCallback(cvas => {
 		setCanvas(cvas)
 	}, [])
 
 	const toggleTheme = useCallback(() => {
-		setTheme(theme === "dark" ? "light" : "dark")
+		setTheme(theme === 'dark' ? 'light' : 'dark')
 	})
 
 	useEffect(() => {
@@ -632,7 +632,7 @@ export function useAppHook() {
 				color: randomColor,
 			})
 		)
-		let newColor = randomColor.replace(/,[^,]+$/, ",0.66)")
+		let newColor = randomColor.replace(/,[^,]+$/, ',0.66)')
 		dispatch(
 			addColor({
 				dataType,
@@ -640,7 +640,7 @@ export function useAppHook() {
 				color: newColor,
 			})
 		)
-		newColor = randomColor.replace(/,[^,]+$/, ",0.33)")
+		newColor = randomColor.replace(/,[^,]+$/, ',0.33)')
 		dispatch(
 			addColor({
 				dataType,
