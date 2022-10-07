@@ -1,7 +1,7 @@
 import { styled, theme } from '@/stitches.config'
 const H1 = styled('h1', {
 	color: '$text',
-	fontSize: '2.5rem',
+	fontSize: '2.2rem',
 	fontFamily: 'montserrat',
 	textTransform: 'uppercase',
 	letterSpacing: '.3rem',
