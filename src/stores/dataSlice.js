@@ -1,6 +1,6 @@
-import { current } from "@reduxjs/toolkit"
-import { createSlice } from "@reduxjs/toolkit"
-import { DataTypes, DurationTypes, ObservationTypes } from "./../config"
+import { current } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
+import { DataTypes, DurationTypes, ObservationTypes } from './../config'
 
 const initialState = {
 	data: {},
@@ -17,11 +17,12 @@ const initialState = {
 }
 
 export const dataSlice = createSlice({
-	name: "data",
+	name: 'data',
 	initialState,
 	reducers: {
 		addData: (state, action) => {
 			const { id, fillingRate, surface, volume } = action.payload
+			console.log({ volume })
 
 			if (!state.data[id]) {
 				state.data[id] = {
@@ -58,8 +59,11 @@ export const dataSlice = createSlice({
 						},
 					},
 				}
-
-				if (state.mode.volume.DAY.raw.length === 0) {
+				console.log(volume.DAY.day[0])
+				if (
+					state.mode.volume.DAY.raw.length === 0 &&
+					volume.DAY.day[0].length > 0
+				) {
 					state.mode.volume = {
 						[DurationTypes.DAY]: {
 							raw: volume.DAY.dayFull,
@@ -99,27 +103,27 @@ export const dataSlice = createSlice({
 						periodLastDate = volumePeriodLastDate
 					}
 
-					const volumeDayFilter = volume.DAY.dayFull.map((obs) => {
-						return obs.filter((o) => {
+					const volumeDayFilter = volume.DAY.dayFull.map(obs => {
+						return obs.filter(o => {
 							return o.date >= dayFirstDate && o.date <= dayLastDate
 						})
 					})
 
-					const volumePeriodFilter = volume.PERIOD.periodFull.map((obs) => {
-						return obs.filter((o) => {
+					const volumePeriodFilter = volume.PERIOD.periodFull.map(obs => {
+						return obs.filter(o => {
 							return o.date >= periodFirstDate && o.date <= periodLastDate
 						})
 					})
 
-					state.mode.volume.DAY.raw = state.mode.volume.DAY.raw.map((obs) => {
-						return obs.filter((o) => {
+					state.mode.volume.DAY.raw = state.mode.volume.DAY.raw.map(obs => {
+						return obs.filter(o => {
 							return o.date >= dayFirstDate && o.date <= dayLastDate
 						})
 					})
 
 					state.mode.volume.PERIOD.raw = state.mode.volume.PERIOD.raw.map(
-						(obs) => {
-							return obs.filter((o) => {
+						obs => {
+							return obs.filter(o => {
 								return o.date >= periodFirstDate && o.date <= periodLastDate
 							})
 						}
@@ -157,18 +161,18 @@ export const dataSlice = createSlice({
 		},
 		removeDataFromVolume: (state, action) => {
 			const { id } = action.payload
-			const volumeDayRawToRemove = state.data[id].VOLUME.DAY.full.map((el) => {
+			const volumeDayRawToRemove = state.data[id].VOLUME.DAY.full.map(el => {
 				return el.filter(
-					(el) =>
+					el =>
 						el.date >= state.mode.volume.DAY.raw[0][0].date &&
 						el.date <= state.mode.volume.DAY.raw[0].at(-1).date
 				)
 			})
 
 			const volumePeriodRawToRemove = state.data[id].VOLUME.PERIOD.full.map(
-				(el) => {
+				el => {
 					return el.filter(
-						(el) =>
+						el =>
 							el.date >= state.mode.volume.PERIOD.raw[0][0].date &&
 							el.date <= state.mode.volume.PERIOD.raw[0].at(-1).date
 					)
@@ -240,30 +244,30 @@ export const dataSlice = createSlice({
 					periodLastDate = volumePeriodLastDate
 				}
 
-				const volumeDayFilter = state.data[id].VOLUME.DAY.full.map((obs) => {
-					return obs.filter((o) => {
+				const volumeDayFilter = state.data[id].VOLUME.DAY.full.map(obs => {
+					return obs.filter(o => {
 						return o.date >= dayFirstDate && o.date <= dayLastDate
 					})
 				})
 
 				const volumePeriodFilter = state.data[id].VOLUME.PERIOD.full.map(
-					(obs) => {
-						return obs.filter((o) => {
+					obs => {
+						return obs.filter(o => {
 							return o.date >= periodFirstDate && o.date <= periodLastDate
 						})
 					}
 				)
 				if (state.mode.volume.DAY) {
-					state.mode.volume.DAY.raw = state.mode.volume.DAY.raw.map((obs) => {
-						return obs.filter((o) => {
+					state.mode.volume.DAY.raw = state.mode.volume.DAY.raw.map(obs => {
+						return obs.filter(o => {
 							return o.date >= dayFirstDate && o.date <= dayLastDate
 						})
 					})
 				}
 				if (state.mode.volume.PERIOD) {
 					state.mode.volume.PERIOD.raw = state.mode.volume.PERIOD.raw.map(
-						(obs) => {
-							return obs.filter((o) => {
+						obs => {
+							return obs.filter(o => {
 								return o.date >= periodFirstDate && o.date <= periodLastDate
 							})
 						}
@@ -299,7 +303,7 @@ export const dataSlice = createSlice({
 				)
 			}
 		},
-		resetModeVolume: (state) => {
+		resetModeVolume: state => {
 			state.mode.volume = {
 				[DurationTypes.DAY]: {
 					raw: [],
