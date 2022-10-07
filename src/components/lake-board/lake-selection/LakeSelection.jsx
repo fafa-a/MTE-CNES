@@ -1,128 +1,128 @@
 /* eslint-disable react/jsx-no-undef */
-import { useLakeSelectionHook } from "./LakeSelectionHook"
-import { styled, theme } from "@/stitches.config"
-import ReactTooltip from "react-tooltip"
-import { PropTypes } from "prop-types"
+import { useLakeSelectionHook } from './LakeSelectionHook'
+import { styled, theme } from '@/stitches.config'
+import ReactTooltip from 'react-tooltip'
+import { PropTypes } from 'prop-types'
 import {
 	CarbonCloseOutline,
 	CarbonView,
 	CarbonViewOff,
 	CarbonDownload,
 	CarbonInformation,
-} from "../../carbon-icons"
-import { useEffect } from "react"
-const StyledDiv = styled("div", {
-	display: "flex",
-	justifyContent: "space-between",
-	alignItems: "center",
-	width: "100%",
-	height: "40px",
-	border: "1px solid #ccc",
+} from '../../carbon-icons'
+import { useEffect } from 'react'
+const StyledDiv = styled('div', {
+	display: 'flex',
+	justifyContent: 'space-between',
+	alignItems: 'center',
+	width: '100%',
+	height: '40px',
+	border: '1px solid #ccc',
 	borderRadius: theme.borderRadius.sm,
 	marginBottom: theme.space.xs,
 	padding: theme.space.xs,
 })
 
-const StyledContainerButton = styled("div", {
-	width: "30%",
-	height: "100%",
-	display: "flex",
-	justifyContent: "space-evenly",
-	alignItems: "center",
+const StyledContainerButton = styled('div', {
+	width: '30%',
+	height: '100%',
+	display: 'flex',
+	justifyContent: 'space-evenly',
+	alignItems: 'center',
 })
 
-const StyledButton = styled("button", {
-	"borderStyle": "none",
-	"cursor": "pointer",
-	"height": "60%",
-	"padding": "0",
-	"display": "grid",
-	"placeItems": "center",
-	"width": "20px",
-	"backgroundColor": "transparent",
-	"color": "$iconColor",
+const StyledButton = styled('button', {
+	'borderStyle': 'none',
+	'cursor': 'pointer',
+	'height': '60%',
+	'padding': '0',
+	'display': 'grid',
+	'placeItems': 'center',
+	'width': '20px',
+	'backgroundColor': 'transparent',
+	'color': '$iconColor',
 
-	"&:hover": {
-		color: "$iconHoverColor",
+	'&:hover': {
+		color: '$iconHoverColor',
 	},
 })
 
-const StyledContainerP = styled("div", {
-	width: "50%",
-	maxWidth: "50%",
-	maxHeigth: "100%",
+const StyledContainerP = styled('div', {
+	width: '50%',
+	maxWidth: '50%',
+	maxHeigth: '100%',
 })
 
-const StyledParagraph = styled("p", {
-	cursor: "pointer",
-	fontFamily: "arial",
+const StyledParagraph = styled('p', {
+	cursor: 'pointer',
+	fontFamily: 'arial',
 	paddingLeft: theme.space.sm,
-	width: "100%",
-	height: "100%",
-	overflow: "hidden",
-	whiteSpace: "nowrap",
-	textOverflow: "ellipsis",
+	width: '100%',
+	height: '100%',
+	overflow: 'hidden',
+	whiteSpace: 'nowrap',
+	textOverflow: 'ellipsis',
 })
 
-const StyledDivObservationTypes = styled("div", {
-	height: "100%",
-	display: "flex",
-	flexDirection: "column",
-	justifyContent: "space-evenly",
-	width: "20%",
+const StyledDivObservationTypes = styled('div', {
+	height: '100%',
+	display: 'flex',
+	flexDirection: 'column',
+	justifyContent: 'space-evenly',
+	width: '20%',
 	// paddingLeft: theme.space.sm,
 })
 
-const StyledDivContainerObsTypes = styled("div", {
-	height: "33%",
-	display: "flex",
-	alignItems: "center",
+const StyledDivContainerObsTypes = styled('div', {
+	height: '33%',
+	display: 'flex',
+	alignItems: 'center',
 })
 
-const StyledSpanObsColor = styled("span", {
-	width: "8px",
-	height: "8px",
-	display: "inline-block",
-	zIndex: "1",
+const StyledSpanObsColor = styled('span', {
+	width: '8px',
+	height: '8px',
+	display: 'inline-block',
+	zIndex: '1',
 })
-const SpanBgWhite = styled("span", {
-	backgroundColor: "white",
-	position: "relative",
-	top: "0",
-	left: "0",
-	width: "8px",
-	height: "8px",
-	marginLeft: "-8px",
+const SpanBgWhite = styled('span', {
+	backgroundColor: 'white',
+	position: 'relative',
+	top: '0',
+	left: '0',
+	width: '8px',
+	height: '8px',
+	marginLeft: '-8px',
 })
 
-const StyledSpanLabel = styled("span", {
-	fontFamily: "arial",
+const StyledSpanLabel = styled('span', {
+	fontFamily: 'arial',
 	marginLeft: theme.space.xs,
 	fontSize: theme.fontSizes.xs,
 })
 
 const StyledReactTooltip = styled(ReactTooltip, {
-	fontFamily: "arial",
+	fontFamily: 'arial',
 	fontSize: `${theme.fontSizes.xs}!important`,
-	marginTop: "0 !important",
-	padding: "4px 8px !important",
-	zIndex: "1111 !important",
+	marginTop: '0 !important',
+	padding: '4px 8px !important',
+	zIndex: '1111 !important',
 })
 
 const backgroundBorderColored = {
-	borderColor: "$borderSelectedColor",
-	backgroundColor: "$backgroundSelectedColor",
+	borderColor: '$borderSelectedColor',
+	backgroundColor: '$backgroundSelectedColor',
 }
 
 const increaseWidth = {
-	width: "70%",
-	maxWidth: "70%",
+	width: '70%',
+	maxWidth: '70%',
 }
 
-const fontBold = { fontWeight: "bold" }
+const fontBold = { fontWeight: 'bold' }
 
 const decreaseWidth = {
-	width: "10%",
+	width: '10%',
 }
 
 export const LakeSelection = ({
@@ -157,7 +157,7 @@ export const LakeSelection = ({
 	} = useLakeSelectionHook({ id, name, coordinates, index, showLakeInfo })
 	return (
 		<StyledDiv css={isSelected && backgroundBorderColored}>
-			{VOLUME && id === "total" && (
+			{VOLUME && id === 'total' && (
 				<StyledDivObservationTypes>
 					{OPTIC && mode?.volume[obsDepth]?.raw[0]?.length > 0 && (
 						<StyledDivContainerObsTypes>
@@ -184,21 +184,21 @@ export const LakeSelection = ({
 			)}
 			{!VOLUME && !YEAR && (
 				<StyledDivObservationTypes>
-					{OPTIC && data[id]?.[dataType]?.[obsDepth]?.raw[0]?.length > 0 && (
+					{OPTIC && data[id]?.[dataType]?.[obsDepth]?.raw[0]?.[0]?.date && (
 						<StyledDivContainerObsTypes>
 							<StyledSpanObsColor style={bgOptic} />
 							<SpanBgWhite />
 							<StyledSpanLabel>optic</StyledSpanLabel>
 						</StyledDivContainerObsTypes>
 					)}
-					{RADAR && data[id]?.[dataType]?.[obsDepth]?.raw[1]?.length > 0 && (
+					{RADAR && data[id]?.[dataType]?.[obsDepth]?.raw[1]?.[0]?.date && (
 						<StyledDivContainerObsTypes>
 							<StyledSpanObsColor style={bgRadar} />
 							<SpanBgWhite />
 							<StyledSpanLabel>radar</StyledSpanLabel>
 						</StyledDivContainerObsTypes>
 					)}
-					{REFERENCE && data[id]?.[dataType]?.[obsDepth]?.raw[2]?.length > 0 && (
+					{REFERENCE && data[id]?.[dataType]?.[obsDepth]?.raw[2]?.[0]?.date && (
 						<StyledDivContainerObsTypes>
 							<StyledSpanObsColor style={bgReference} />
 							<SpanBgWhite />
@@ -286,7 +286,7 @@ export const LakeSelection = ({
 						)}
 					</>
 				)}
-				{!YEAR && id !== "total" && (
+				{!YEAR && id !== 'total' && (
 					<>
 						<StyledButton data-tip data-for="info" onClick={toggleInfo}>
 							<CarbonInformation fontSize={16} />
