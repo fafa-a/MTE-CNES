@@ -1,84 +1,84 @@
-import { useState, useEffect, useCallback } from "react"
-import { CarbonClose } from "../../carbon-icons"
-import { styled, theme } from "@/stitches.config.js"
-import { toggleLakeChartInfoVisibility } from "@stores/lakesChartOptionsSlice"
-import { useSelector } from "react-redux"
-import ReactTooltip from "react-tooltip"
-import { useDispatch } from "react-redux"
-const SDiv = styled("div", {
-	padding: "1.5rem",
-	backgroundColor: "$background",
-	position: "absolute",
-	top: "83px",
-	left: "14vw",
-	marginLeft: "10px",
-	zIndex: "1111",
+import { useState, useEffect, useCallback } from 'react'
+import { CarbonClose } from '../../carbon-icons'
+import { styled, theme } from '@/stitches.config.js'
+import { toggleLakeChartInfoVisibility } from '@stores/lakesChartOptionsSlice'
+import { useSelector } from 'react-redux'
+import ReactTooltip from 'react-tooltip'
+import { useDispatch } from 'react-redux'
+const SDiv = styled('div', {
+	padding: '1.5rem',
+	backgroundColor: '$background',
+	position: 'absolute',
+	top: '83px',
+	left: '14vw',
+	marginLeft: '10px',
+	zIndex: '1111',
 	borderRadius: theme.borderRadius.sm,
-	display: "flex",
-	flexDirection: "column",
-	fontFamily: "arial",
+	display: 'flex',
+	flexDirection: 'column',
+	fontFamily: 'arial',
 
-	color: "$text",
+	color: '$text',
 })
 
-const SpanCoord = styled("span", {
-	fontWeight: "bold",
+const SpanBold = styled('span', {
+	fontWeight: 'bold',
 })
-const SButtonContainer = styled("div", {
-	position: "absolute",
-	top: "5px",
-	right: "5px",
+const SButtonContainer = styled('div', {
+	position: 'absolute',
+	top: '5px',
+	right: '5px',
 })
-const SButton = styled("button", {
-	"borderStyle": "none",
-	"cursor": "pointer",
-	"height": "60%",
-	"padding": "0",
-	"display": "grid",
-	"placeItems": "center",
-	"width": "20px",
-	"backgroundColor": "transparent",
-	"color": "$iconColor",
+const SButton = styled('button', {
+	'borderStyle': 'none',
+	'cursor': 'pointer',
+	'height': '60%',
+	'padding': '0',
+	'display': 'grid',
+	'placeItems': 'center',
+	'width': '20px',
+	'backgroundColor': 'transparent',
+	'color': '$iconColor',
 
-	"&:hover": {
-		color: "$iconHoverColor",
+	'&:hover': {
+		color: '$iconHoverColor',
 	},
 })
 
 const SReactTooltip = styled(ReactTooltip, {
-	fontFamily: "arial",
+	fontFamily: 'arial',
 	fontSize: `${theme.fontSizes.xs}!important`,
-	marginTop: "0 !important",
-	padding: "4px 8px !important",
-	zIndex: "1111 !important",
+	marginTop: '0 !important',
+	padding: '4px 8px !important',
+	zIndex: '1111 !important',
 })
 
-const SH2 = styled("h2", {
-	fontFamily: "arial",
+const SH2 = styled('h2', {
+	fontFamily: 'arial',
 	marginBottom: theme.space.base,
 })
 
-const SArticle = styled("article", {})
-const SDivId = styled("div", {
+const SArticle = styled('article', {})
+const SDivId = styled('div', {
 	marginBottom: theme.space.sm,
 })
-const SDivCoord = styled("div", {
+const SDivCoord = styled('div', {
 	li: {
-		listStyle: "none",
+		listStyle: 'none',
 	},
 })
 export const LakeCard = ({ id }) => {
 	const [lake, setLake] = useState({
-		id: "",
-		country: "",
-		name: "",
+		id: '',
+		country: '',
+		name: '',
 		lakeCoord: [],
-		mainUse: "",
-		nearCity: "",
+		mainUse: '',
+		nearCity: '',
 		damCoord: [],
 	})
-	const { lakesChartOptions } = useSelector((state) => state)
-	const { information } = useSelector((state) => state.information)
+	const { lakesChartOptions } = useSelector(state => state)
+	const { information } = useSelector(state => state.information)
 	const dispatch = useDispatch()
 	useEffect(() => {
 		const idLakeShowInfo = Object.entries(lakesChartOptions)
@@ -118,27 +118,27 @@ export const LakeCard = ({ id }) => {
 			<SArticle>
 				<SDivId>
 					<p>
-						<span> Id SWOT :</span> {lake.id}
+						<SpanBold> Id DB :</SpanBold> {lake.id}
 					</p>
 					<p>
-						<span>Main use :</span>{" "}
-						{lake.mainUse !== "NULL" ? lake.mainUse : "n/a"}
+						<SpanBold>Main use :</SpanBold>{' '}
+						{lake.mainUse !== 'NULL' ? lake.mainUse : 'n/a'}
 					</p>
 					<p>
-						<span>Near city :</span>{" "}
-						{lake.nearCity !== "NULL" ? lake.nearCity : "n/a"}
+						<SpanBold>Department :</SpanBold>{' '}
+						{lake.nearCity !== 'NULL' ? lake.nearCity : 'n/a'}
 					</p>
 				</SDivId>
 				<SDivCoord>
 					<p>
-						<SpanCoord>Dam coordinates:</SpanCoord>
+						<SpanBold>Dam coordinates:</SpanBold>
 					</p>
 					<ul>
 						<li>lat : {lake.damCoord[0]}</li>
 						<li>long : {lake.damCoord[1]}</li>
 					</ul>
 					<span>
-						<SpanCoord>Reservoirs coordinates:</SpanCoord>
+						<SpanBold>Reservoirs coordinates:</SpanBold>
 						<ul>
 							<li>lat : {lake.lakeCoord[0]}</li>
 							<li>long : {lake.lakeCoord[1]}</li>

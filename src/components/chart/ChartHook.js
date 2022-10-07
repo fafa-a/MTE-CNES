@@ -408,8 +408,6 @@ export default function useChartHook() {
 			YEAR &&
 			Object.keys(yearsChartOptions).length === chartData[0]?.length
 		) {
-			const arrFistDate = []
-			const arrLastDate = []
 			const arrDate = []
 			chartData.forEach(year => {
 				Object.values(year).forEach((obs, index) => {
@@ -421,39 +419,25 @@ export default function useChartHook() {
 							information.information[active.at(-1)].name,
 							index
 						)
-						arrFistDate.push(itm[0][0].date)
-						arrLastDate.push(itm[0].at(-1).date)
 						const dateBegin = itm[0][0].date
 						const dateEnd = itm[0].at(-1).date
-						arrDate.push({ dateBegin, dateEnd })
+						arrDate.push(dateBegin, dateEnd)
 						arr.push(data)
 					})
 				})
 			})
-			const allYears = arrFistDate.map(date => new Date(date).getFullYear())
-			const allYearsDates = allYears.map(year =>
-				arrDate.filter(date => new Date(date.dateBegin).getFullYear() === year)
-			)
-			const allFirstDates = allYearsDates
-				.map(year => {
-					return year.map(el => el.dateBegin)
-				})
-				.map(year => year.sort((a, b) => new Date(a) - new Date(b))[0])
-			const uniqueFirstDate = Array.from(new Set(allFirstDates))
-			const years = uniqueFirstDate.map(date => new Date(date).getFullYear())
-			const allLastDates = allYearsDates
-				.map(year => {
-					return year.map(el => el.dateEnd)
-				})
-				.map(year => year.sort((a, b) => new Date(a) - new Date(b)).at(-1))
-			const uniqueLastDate = Array.from(new Set(allLastDates))
+			const years = arrDate.map(date => new Date(date).getFullYear())
+
+			const normalizeDateSorted = arrDate
+				.map(el => el.replace(/\d{4}/, '2022'))
+				.sort((a, b) => new Date(a) - new Date(b))
 
 			const obj = {}
 			const objAllDatesByYear = () => {
-				years.map((year, index) => {
+				years.map(year => {
 					return (obj[year] = {
-						start: uniqueFirstDate[index],
-						end: uniqueLastDate[index],
+						start: normalizeDateSorted[0].replace(/\d{4}/, year),
+						end: normalizeDateSorted.at(-1).replace(/\d{4}/, year),
 					})
 				})
 			}

@@ -1,17 +1,16 @@
-import { addInformation } from "../../stores/staticLakeSlice"
-import { useDispatch } from "react-redux"
-import { useEffect } from "react"
+import { addInformation } from '../../stores/staticLakeSlice'
+import { useDispatch } from 'react-redux'
+import { useEffect } from 'react'
 
-export default function useMapHook({dataGeojson}) {
-  const coordinates = [-5, 0]
-  const dispatch = useDispatch()
+export default function useMapHook({ dataGeojson }) {
+	const coordinates = [45.3501, 2.72778]
+	const dispatch = useDispatch()
 
-  useEffect(() => {
-
-    for(const data of dataGeojson){
-      const { features } = data
-      features.forEach(({ properties }) => {
-        const {
+	useEffect(() => {
+		for (const data of dataGeojson) {
+			const { features } = data
+			features.forEach(({ properties }) => {
+				const {
 					ID_DB: id,
 					DAM_NAME: name,
 					LONG_WW,
@@ -23,7 +22,7 @@ export default function useMapHook({dataGeojson}) {
 					NEAR_CITY: nearCity,
 				} = properties
 
-  			const info = {
+				const info = {
 					id: id.toString(),
 					name,
 					lakeCoord: [LAT_WW, LONG_WW],
@@ -33,12 +32,10 @@ export default function useMapHook({dataGeojson}) {
 					damCoord: [LAT_DD, LONG_DD],
 				}
 
-      dispatch(addInformation({ id, info }))
+				dispatch(addInformation({ id, info }))
+			})
+		}
+	}, [])
 
-      })
-    }
-  },[])
-
-
-  return { coordinates }
+	return { coordinates }
 }
