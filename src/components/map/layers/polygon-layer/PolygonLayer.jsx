@@ -25,7 +25,16 @@ export const PolygonLayer = ({ data }) => {
 					<Polygon
 						key={uuid()}
 						positions={reversedMultiPolygons}
-						color={ID_DB === id ? color : 'blue'}
+						color={
+							ID_DB === id
+								? color
+								: ID_DB === 477 ||
+								  ID_DB === 187 ||
+								  ID_DB === 345 ||
+								  ID_DB === 35
+								? '#87A2FB'
+								: 'blue'
+						}
 						// eslint-disable-next-line react-perf/jsx-no-new-object-as-prop
 						eventHandlers={{
 							click: () => {
