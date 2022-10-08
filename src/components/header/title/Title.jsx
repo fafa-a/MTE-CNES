@@ -8,5 +8,5 @@ const H1 = styled('h1', {
 })
 
 export const Title = () => {
-	return <H1>Inventaire national des plans d’eau</H1>
+	return <H1>Tableau de bord des volumes stockés</H1>
 }
