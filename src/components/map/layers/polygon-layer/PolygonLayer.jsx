@@ -38,10 +38,13 @@ export const PolygonLayer = ({ data }) => {
 						// eslint-disable-next-line react-perf/jsx-no-new-object-as-prop
 						eventHandlers={{
 							click: () => {
-								if (!loaded.includes(ID_DB)) {
+								if (!loaded.includes(ID_DB.toString())) {
 									activeLake(ID_DB, [LAT_WW, LONG_WW])
 								}
-								if (!active.includes(ID_DB) && loaded.includes(ID_DB)) {
+								if (
+									!active.includes(ID_DB.toString()) &&
+									loaded.includes(ID_DB.toString())
+								) {
 									updateLake(ID_DB)
 								}
 							},

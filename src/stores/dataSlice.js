@@ -22,7 +22,6 @@ export const dataSlice = createSlice({
 	reducers: {
 		addData: (state, action) => {
 			const { id, fillingRate, surface, volume } = action.payload
-			console.log({ volume })
 
 			if (!state.data[id]) {
 				state.data[id] = {
@@ -59,7 +58,7 @@ export const dataSlice = createSlice({
 						},
 					},
 				}
-				console.log(volume.DAY.day[0])
+
 				if (
 					state.mode.volume.DAY.raw.length === 0 &&
 					volume.DAY.day[0].length > 0

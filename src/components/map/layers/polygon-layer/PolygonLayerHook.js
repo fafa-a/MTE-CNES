@@ -124,18 +124,12 @@ export default function usePolygonLayerHook() {
 
 	const updateLake = useCallback(
 		id => {
-			dispatch(updateModeVolume({ id: id.toString() }))
 			dispatch(updateActivelakes({ id: id.toString() }))
+			dispatch(updateModeVolume({ id: id.toString() }))
 			dispatch(addLakeChartOptions({ id: id.toString() }))
 		},
 		[dispatch]
 	)
-	// useEffect(() => {
-	// 	if (!VOLUME) return
-	// 	if (VOLUME && dataLakes[coordId.id]?.[DataTypes.VOLUME]) {
-	// 		dispatch(updateTotalVolume({ lakeId: coordId.id, obsDepth }))
-	// 	}
-	// }, [dispatch, dataLakes[coordId.id]])
 
 	return {
 		activeLake,
