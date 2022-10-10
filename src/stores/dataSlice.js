@@ -23,7 +23,6 @@ export const dataSlice = createSlice({
 		addData: (state, action) => {
 			const { id, fillingRate, surface, volume } = action.payload
 
-			console.log({ id, fillingRate, surface, volume })
 			if (!state.data[id]) {
 				state.data[id] = {
 					[DataTypes.FILLING_RATE]: {

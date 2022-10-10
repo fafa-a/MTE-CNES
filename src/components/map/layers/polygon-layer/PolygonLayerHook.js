@@ -5,6 +5,7 @@ import { addLake, updateActivelakes } from '@/stores/stateLakeSlice'
 import { updateModeVolume } from '../../../../stores/dataSlice'
 import { DataTypes, DurationTypes, ModeTypes } from '../../../../config'
 import { addLakeChartOptions } from '../../../../stores/lakesChartOptionsSlice'
+import { addYearsChartOptions } from '../../../../stores/yearsChartOptionsSlice'
 
 export default function usePolygonLayerHook() {
 	const [color, setColor] = useState('blue')
@@ -15,10 +16,13 @@ export default function usePolygonLayerHook() {
 		coord: [],
 	})
 	const [obsDepth, setObsDepth] = useState(null)
-	const { VOLUME, DAY, PERIOD } = useSelector(state => state.form)
+	const { VOLUME, DAY, YEAR, PERIOD, dataType } = useSelector(
+		state => state.form
+	)
 	const { active, loaded } = useSelector(state => state.stateLake)
 	const { information } = useSelector(state => state.information)
 	const { lakesChartOptions } = useSelector(state => state)
+	const { data } = useSelector(state => state.data)
 	const map = useMap()
 	const dispatch = useDispatch()
 	const mapEvents = useMapEvents({
@@ -128,8 +132,17 @@ export default function usePolygonLayerHook() {
 			dispatch(updateModeVolume({ id: id.toString() }))
 			dispatch(addLakeChartOptions({ id: id.toString() }))
 		},
-		[dispatch]
+		[dispatch, YEAR, dataType, obsDepth, data, active]
 	)
+
+	useEffect(() => {
+		if (active.length === 0) return
+		if (YEAR && data[active.at(-1)]) {
+			const dataYears = data[active.at(-1)][dataType][obsDepth].year
+			const years = Object.keys(dataYears)
+			dispatch(addYearsChartOptions({ years }))
+		}
+	}, [dispatch, YEAR, active, dataType, obsDepth, loaded, data])
 
 	return {
 		activeLake,

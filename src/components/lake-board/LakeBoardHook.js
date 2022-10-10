@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux'
 import { useCallback, useEffect, useState } from 'react'
 import { DurationTypes, ModeTypes } from '../../config'
 import { resetLakechartOptions } from '../../stores/lakesChartOptionsSlice'
+import { resetYearschartOptions } from '../../stores/yearsChartOptionsSlice'
 import { resetModeVolume } from '../../stores/dataSlice'
 
 export default function useLakeBoardHook() {
@@ -29,18 +30,6 @@ export default function useLakeBoardHook() {
 			setObsDepth(DurationTypes.PERIOD)
 		}
 	}, [DAY, PERIOD])
-
-	// useEffect(() => {
-	// 	if (YEAR) {
-	// 		setMode(ModeTypes.YEAR)
-	// 	}
-	// 	if (VOLUME) {
-	// 		setMode(ModeTypes.VOLUME)
-	// 	}
-	// 	if (!YEAR && !VOLUME) {
-	// 		setMode(null)
-	// 	}
-	// }, [VOLUME, YEAR])
 
 	useEffect(() => {
 		const isInfoCliked = Object.entries(lakesChartOptions)
@@ -181,15 +170,12 @@ export default function useLakeBoardHook() {
 	}, [YEAR, VOLUME, active, data, information])
 
 	const clearSelection = useCallback(() => {
-		if (!YEAR) {
-			dispatch(clearActiveLakes())
-			dispatch(resetLakechartOptions())
-			dispatch(resetModeVolume())
-		}
-		if (YEAR) {
-			dispatch(toggleActiveYears())
-		}
+		dispatch(clearActiveLakes())
+		dispatch(resetLakechartOptions())
+		dispatch(resetYearschartOptions())
+		dispatch(resetModeVolume())
 	}, [dispatch, YEAR])
+
 	return {
 		clearSelection,
 		VOLUME,

@@ -1,11 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice } from '@reduxjs/toolkit'
 import {
 	DataTypes,
 	ObservationTypes,
 	DurationTypes,
 	ChartTypes,
 	ModeTypes,
-} from "@/config"
+} from '@/config'
 
 const initialState = {
 	[ObservationTypes.OPTIC]: true,
@@ -21,24 +21,24 @@ const initialState = {
 }
 
 export const formSlice = createSlice({
-	name: "form",
+	name: 'form',
 	initialState,
 	reducers: {
-		toggleOptic: (state) => {
+		toggleOptic: state => {
 			state.OPTIC = !state.OPTIC
 			state.isCleared = false
 		},
-		toggleRadar: (state) => {
+		toggleRadar: state => {
 			state.RADAR = !state.RADAR
 			state.isCleared = false
 		},
-		toggleDay: (state) => {
-      state.PERIOD = !state.PERIOD
+		toggleDay: state => {
+			state.PERIOD = !state.PERIOD
 			state.DAY = !state.DAY
 			state.isCleared = false
 		},
-		togglePeriod: (state) => {
-      state.DAY = !state.DAY
+		togglePeriod: state => {
+			state.DAY = !state.DAY
 			state.PERIOD = !state.PERIOD
 			state.isCleared = false
 		},
@@ -52,41 +52,33 @@ export const formSlice = createSlice({
 			state.charType = value
 			state.isCleared = false
 		},
-		toggleReference: (state) => {
+		toggleReference: state => {
 			state.REFERENCE = !state.REFERENCE
 			state.isCleared = false
 		},
-		toggleYear: (state) => {
-      if (state.VOLUME === true) {
+		toggleYear: state => {
+			if (state.VOLUME === true) {
 				state.VOLUME = false
 			}
 			state.YEAR = !state.YEAR
 			state.isCleared = false
 		},
-		toggleVolume: (state) => {
-      if (state.YEAR === true) {
+		toggleVolume: state => {
+			if (state.YEAR === true) {
 				state.YEAR = false
 			}
 			state.VOLUME = !state.VOLUME
-      state.dataType = state.VOLUME ? DataTypes.VOLUME : DataTypes.FILLING_RATE
+			state.dataType = state.VOLUME ? DataTypes.VOLUME : DataTypes.FILLING_RATE
 			state.isCleared = false
 		},
-		cleanForm: (state) => {
-			state.OPTIC = false
-			state.RADAR = false
-			state.DAY = false
-			state.PERIOD = false
-			state.dataType = DataTypes.FILLING_RATE
-			state.charType = ChartTypes.LINE
-			state.REFERENCE = false
-			state.YEAR = false
-			state.isCleared = true
+		resetForm: () => {
+			return initialState
 		},
 	},
 })
 
 export const {
-	cleanForm,
+	resetForm,
 	toggleOptic,
 	toggleRadar,
 	toggleDay,
