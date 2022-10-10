@@ -68,7 +68,19 @@ export default function useLakeBoardHook() {
 	}, [YEAR, yearsChartOptions, active])
 
 	useEffect(() => {
-		if (!data[active.at(-1)]) return
+		if (!VOLUME && active.length === 0) return
+		const info = Object.entries(information).filter(([id]) => {
+			return active.includes(id)
+		})
+		const allLakesActiveIdName = info
+			.map(([id, { name }]) => ({ id, name }))
+			.filter(el => active.includes(el.id))
+		setActiveLakesInfo(allLakesActiveIdName)
+		setLastMode(ModeTypes.VOLUME)
+	}, [VOLUME, active, information])
+
+	useEffect(() => {
+		if (!data[active.at(-1)] || YEAR || VOLUME) return
 		if (!VOLUME && Object.entries(data[active.at(-1)]).length > 0) return
 		const info = Object.entries(information).filter(([id]) => {
 			return active.includes(id)

@@ -98,7 +98,6 @@ export default function useChartHook() {
 			setObsDepth(DurationTypes.PERIOD)
 		}
 		if (active.length === 0) {
-			console.log('active.length === 0')
 			setChartData([])
 			setDataSets([])
 		}
@@ -132,7 +131,6 @@ export default function useChartHook() {
 	}, [indexToRemoveFromChartData])
 
 	useEffect(() => {
-		console.log('useEffect year', active, data[active.at(-1)])
 		if (
 			active.length > 0 &&
 			data[active.at(-1)]?.[dataType]?.[obsDepth]?.year
@@ -408,7 +406,6 @@ export default function useChartHook() {
 			const lastDateGraph = getChartFirstDateNextMonth(allDatesSorted.at(-1))
 			setDateMax(lastDateGraph)
 		}
-		console.log('!!!!! setDataSets before if YEAR', arr)
 		if (
 			YEAR &&
 			Object.keys(yearsChartOptions).length === chartData[0]?.length
@@ -516,6 +513,7 @@ export default function useChartHook() {
 	}, [dateMin, dateMax])
 
 	useEffect(() => {
+		if (active.length === 0) return
 		const chartOptions = {
 			responsive: true,
 			maintainAspectRatio: false,
@@ -627,7 +625,7 @@ export default function useChartHook() {
 			animation: false,
 		}
 		setOptions(chartOptions)
-	}, [scales, label, unit, VOLUME])
+	}, [scales, label, unit, VOLUME, data, active])
 
 	useEffect(() => {
 		if (!lakesChartOptions[active.at(-1)]) return

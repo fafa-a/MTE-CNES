@@ -125,7 +125,6 @@ export const fillEmptyDataOfDate = arr => {
 	let value = ''
 	let arrTmp = []
 	const obsTypes = arr[0]?.map(obs => obs)
-	console.log({ arr, obsTypes })
 	const obsTypesDateFiltered = obsTypes.map(obs => {
 		if (obs.length === 0) return []
 		return obs?.filter(el => {
