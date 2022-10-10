@@ -699,6 +699,14 @@ export default function useChartHook() {
 	const dataChart = {
 		datasets: dataSets,
 	}
+	useEffect(() => {
+		console.log('chartData', chartData)
+	}, [chartData])
+
+	useEffect(() => {
+		console.log({ dataSets })
+	}, [dataSets])
+
 	return {
 		dataChart,
 		options,

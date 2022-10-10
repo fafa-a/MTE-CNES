@@ -1,14 +1,14 @@
-export const extractDataByYear = (data) => {
+export const extractDataByYear = data => {
 	if (!data) return []
 	const dataByYear = {}
 	data
-		.map((item) => {
+		.map(item => {
 			return {
 				date: new Date(item.date),
 				value: item.value,
 			}
 		})
-		.map((item) => {
+		.map(item => {
 			const year = item.date.getFullYear()
 			if (!dataByYear[year]) {
 				dataByYear[year] = []
@@ -30,10 +30,10 @@ export const extractDataByYear = (data) => {
 
 	return dataByYear
 }
-export const groupDataByYear = (data) => {
+export const groupDataByYear = data => {
 	const dataByYear = {}
 	const yearsArray = Object.keys(data[0])
-	yearsArray.forEach((year) => {
+	yearsArray.forEach(year => {
 		dataByYear[year] = []
 	})
 	Object.entries(data).forEach(([, obsType]) => {
@@ -47,11 +47,11 @@ export const groupDataByYear = (data) => {
 	return dataByYear
 }
 
-export const getDataByYear = (arr) => {
+export const getDataByYear = arr => {
 	const dataTmp = []
-	arr.forEach((el) => {
+	arr.forEach(el => {
 		const dataYear = []
-		el.forEach((data) => {
+		el.forEach(data => {
 			dataYear.push(extractDataByYear(data))
 		})
 		const dataByYear = groupDataByYear(dataYear)
@@ -61,56 +61,56 @@ export const getDataByYear = (arr) => {
 	return dataTmp
 }
 
-const getStartDate = (arr) => {
+const getStartDate = arr => {
 	const firstDate = arr[0]
-		.filter((el) => el?.length > 0)
-		?.map((el) => {
+		.filter(el => el?.length > 0)
+		?.map(el => {
 			return el[0]?.date
 		})
-		.filter((el) => el !== undefined)
+		.filter(el => el !== undefined)
 		.sort((a, b) => (new Date(a) < new Date(b) ? -1 : 1))
 	return firstDate
 }
 
-const getLastDate = (arr) => {
+const getLastDate = arr => {
 	const lastDate = arr[0]
-		.filter((el) => el?.length > 0)
-		?.map((el) => {
+		.filter(el => el?.length > 0)
+		?.map(el => {
 			return el.at(-1)?.date
 		})
-		.filter((el) => el !== undefined)
+		.filter(el => el !== undefined)
 		.sort((a, b) => (new Date(a) < new Date(b) ? -1 : 1))[0]
 	return lastDate
 }
 
-export const getFirstDateOfArrays = (arr) => {
+export const getFirstDateOfArrays = arr => {
 	if (!arr[0]) return
 	const dateTmp = []
 	const firstDate01 = arr[0]
-		.map((el) => el.date)
+		.map(el => el.date)
 		.sort((a, b) => (new Date(a) < new Date(b) ? -1 : 1))[0]
 	const firstDate02 = arr[1]
-		?.map((el) => el.date)
+		?.map(el => el.date)
 		.sort((a, b) => (new Date(a) < new Date(b) ? -1 : 1))[0]
 	dateTmp.push(firstDate01, firstDate02)
 	dateTmp.sort((a, b) => (a < b ? -1 : 1))
 	return dateTmp[0]
 }
-export const getLastDateOfArrays = (arr) => {
+export const getLastDateOfArrays = arr => {
 	if (!arr[0]) return
 	const dateTmp = []
 	const lastDate01 = arr[0]
-		.map((el) => el.date)
+		.map(el => el.date)
 		.sort((a, b) => (new Date(a) > new Date(b) ? -1 : 1))[0]
 	const lastDate02 = arr[1]
-		?.map((el) => el.date)
+		?.map(el => el.date)
 		.sort((a, b) => (new Date(a) > new Date(b) ? -1 : 1))[0]
 	dateTmp.push(lastDate01, lastDate02)
 	dateTmp.sort((a, b) => (a < b ? -1 : 1))
 	return dateTmp.at(-1)
 }
 
-export const fillEmptyDataOfDate = (arr) => {
+export const fillEmptyDataOfDate = arr => {
 	const arrOfDates = []
 	const newData = []
 	const startingDate = getStartDate(arr)
@@ -122,21 +122,24 @@ export const fillEmptyDataOfDate = (arr) => {
 	) {
 		arrOfDates.push(new Date(d).toISOString().slice(0, 10))
 	}
-	let value = ""
+	let value = ''
 	let arrTmp = []
-	const obsTypes = arr[0]?.map((obs) => obs)
-	const obsTypesDateFiltered = obsTypes.map((obs) => {
-		return obs?.filter((el) => {
+	const obsTypes = arr[0]?.map(obs => obs)
+	console.log({ arr, obsTypes })
+	const obsTypesDateFiltered = obsTypes.map(obs => {
+		if (obs.length === 0) return []
+		return obs?.filter(el => {
 			return (
 				el.date >= new Date(startingDate[0]).toISOString().slice(0, 10) &&
 				el.date <= endingDate.toISOString().slice(0, 10)
 			)
 		})
 	})
-	obsTypesDateFiltered.forEach((obs) => {
-		arrOfDates.forEach((date) => {
-			if (obs?.map((el) => el.date).includes(date)) {
-				value = obs.filter((el) => el.date === date).map((el) => el.value)[0]
+	obsTypesDateFiltered.forEach(obs => {
+		if (obs.length === 0) return
+		arrOfDates.forEach(date => {
+			if (obs?.map(el => el.date).includes(date)) {
+				value = obs.filter(el => el.date === date).map(el => el.value)[0]
 			}
 			arrTmp.push({
 				date,
@@ -144,7 +147,7 @@ export const fillEmptyDataOfDate = (arr) => {
 			})
 		})
 		newData.push(
-			arrTmp.filter((el) => {
+			arrTmp.filter(el => {
 				return (
 					el.date >= new Date(startingDate.at(-1)).toISOString().slice(0, 10) &&
 					el.date <= endingDate.toISOString().slice(0, 10)
@@ -152,10 +155,11 @@ export const fillEmptyDataOfDate = (arr) => {
 			})
 		)
 		arrTmp = []
+		value = ''
 	})
 	return [newData]
 }
-export const getChartStartDateCurrentMonth = (date) => {
+export const getChartStartDateCurrentMonth = date => {
 	const minDatevalue = new Date(date)
 	const firstDayMonth = new Date(
 		minDatevalue.getFullYear(),
@@ -165,7 +169,7 @@ export const getChartStartDateCurrentMonth = (date) => {
 	return firstDayMonth
 }
 
-export const getChartFirstDateNextMonth = (date) => {
+export const getChartFirstDateNextMonth = date => {
 	const maxDateValue = new Date(date)
 	const nextMonth = new Date(
 		maxDateValue.getFullYear(),

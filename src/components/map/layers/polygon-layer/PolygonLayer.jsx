@@ -31,7 +31,10 @@ export const PolygonLayer = ({ data }) => {
 								: ID_DB === 477 ||
 								  ID_DB === 187 ||
 								  ID_DB === 345 ||
-								  ID_DB === 35
+								  ID_DB === 35 ||
+								  ID_DB === 231 ||
+								  ID_DB === 204 ||
+								  ID_DB === 367
 								? '#87A2FB'
 								: 'blue'
 						}
