@@ -639,7 +639,7 @@ export default function useChartHook() {
 			activeLakes,
 			'visible',
 			'hidden',
-			obsTypes
+			obsTypes.length
 		)
 		setDataSets(toggleChartVisibilty)
 	}, [lakesChartOptions])
@@ -662,23 +662,30 @@ export default function useChartHook() {
 	}, [lakesChartOptions])
 
 	useEffect(() => {
+		if (!data[active.at(-1)] || !YEAR || dataSets.length === 0) return
 		if (
 			!YEAR ||
 			dataSets.length !==
-				Object.values(yearsChartOptions).length * obsTypes.length
+				Object.values(yearsChartOptions).length *
+					data[active.at(-1)][dataType][obsDepth].year[
+						Object.keys(yearsChartOptions)[0]
+					].length
 		)
 			return
-
+		const dataLength =
+			data[active.at(-1)][dataType][obsDepth].year[
+				Object.keys(yearsChartOptions)[0]
+			].length
 		const activeYears = Object.values(yearsChartOptions)
 		const toggleYearChartVisibilty = handleDataSetsBooleanOption(
 			dataSets,
 			activeYears,
 			'visible',
 			'hidden',
-			obsTypes
+			dataLength
 		)
 		setDataSets(toggleYearChartVisibilty)
-	}, [yearsChartOptions])
+	}, [yearsChartOptions, data, dataType, obsDepth])
 
 	useEffect(() => {
 		if (
