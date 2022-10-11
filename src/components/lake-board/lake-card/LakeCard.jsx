@@ -138,7 +138,7 @@ export const LakeCard = ({ id }) => {
 				</p>
 				<p>
 					<SpanBold>Capacity :</SpanBold>
-					{lake.capacity !== 'NULL' ? ` ${lake.capacity} Mm³` : 'n/a'}
+					{lake.capacity !== 'NULL' ? ` ${lake.capacity} Hm³` : 'n/a'}
 				</p>
 				<p>
 					<SpanBold>Area :</SpanBold>

@@ -3,6 +3,7 @@ import { LayerGroup, Polygon, Tooltip } from 'react-leaflet'
 import { v4 as uuid } from '@lukeed/uuid'
 import { useState, useEffect } from 'react'
 import { PropTypes } from 'prop-types'
+import { polygon } from 'leaflet'
 
 export const PolygonLayer = ({ data }) => {
 	const [layer, setLayer] = useState(null)
@@ -10,24 +11,16 @@ export const PolygonLayer = ({ data }) => {
 		usePolygonLayerHook({
 			data,
 		})
-
 	useEffect(() => {
 		setLayer(
 			data.features.map(feature => {
 				const { ID_DB, DAM_NAME, LONG_WW, LAT_WW } = feature.properties
 				const { coordinates } = feature.geometry
-				const reversedMultiPolygons = coordinates[0].map(polygon => [
-					polygon[1],
-					polygon[0],
-				])
-				// if (ID_DB === 193) {
-				// 	console.log(
-				// 		' 193 exists',
-				// 		DAM_NAME,
-				// 		coordinates,
-				// 		reversedMultiPolygons
-				// 	)
-				// }
+
+				const reversedMultiPolygons = coordinates[0].map(polygon => {
+					return [polygon[1], polygon[0]]
+				})
+
 				return (
 					<Polygon
 						key={uuid()}
@@ -42,8 +35,8 @@ export const PolygonLayer = ({ data }) => {
 								  ID_DB === 231 ||
 								  ID_DB === 204 ||
 								  ID_DB === 367
-								? '#87A2FB'
-								: 'blue'
+								? '#0096FF'
+								: '#00FFD1'
 						}
 						// eslint-disable-next-line react-perf/jsx-no-new-object-as-prop
 						eventHandlers={{

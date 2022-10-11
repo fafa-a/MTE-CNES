@@ -78,7 +78,7 @@ export default function usePolygonLayerHook() {
 
 	useEffect(() => {
 		if (active.length < 1) {
-			setColor('blue')
+			setColor('#00FFD1')
 		}
 	}, [active])
 
