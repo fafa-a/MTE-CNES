@@ -20,7 +20,6 @@ export const PolygonLayer = ({ data }) => {
 					polygon[1],
 					polygon[0],
 				])
-
 				// if (ID_DB === 193) {
 				// 	console.log(
 				// 		' 193 exists',
@@ -34,7 +33,7 @@ export const PolygonLayer = ({ data }) => {
 						key={uuid()}
 						positions={reversedMultiPolygons}
 						color={
-							ID_DB === id
+							ID_DB.toString() === id
 								? color
 								: ID_DB === 477 ||
 								  ID_DB === 187 ||

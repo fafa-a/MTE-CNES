@@ -11,6 +11,7 @@ export default function usePolygonLayerHook() {
 	const [color, setColor] = useState('blue')
 	const [zoomLevel, setZoomLevel] = useState(null)
 	const [containerHeight, setContainerHeight] = useState(null)
+	const [mapY, setMapY] = useState(null)
 	const [coordId, setCoordId] = useState({
 		id: '',
 		coord: [],
@@ -36,6 +37,7 @@ export default function usePolygonLayerHook() {
 			const container = document.getElementsByClassName('leaflet-container')
 			if (container) {
 				map.invalidateSize(true)
+				map._onResize(true)
 				container[0].style.height = value
 			}
 		},
@@ -56,7 +58,7 @@ export default function usePolygonLayerHook() {
 			resizeMap('100%')
 			setContainerHeight('100%')
 		}
-	}, [active.length])
+	}, [active, resizeMap])
 
 	useEffect(() => {
 		if (containerHeight === '100%' && coordId.coord.length > 0) {
