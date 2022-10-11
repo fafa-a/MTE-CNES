@@ -24,6 +24,7 @@ export default function useChartHook() {
 	const [lastObstypes, setLastObstypes] = useState([])
 	const [obsDepth, setObsDepth] = useState()
 	const [lastObsDepth, setLastObsDepth] = useState('')
+	const [lastchartData, setLastchartData] = useState([])
 	const [scales, setScales] = useState()
 	const [options, setOptions] = useState()
 	const [datesOfYear, setDatesOfYear] = useState({})
@@ -146,9 +147,13 @@ export default function useChartHook() {
 					REFERENCE
 				)
 				setChartData(dataYearActualized)
+
+				setLastDataType(dataType)
+				setLastObstypes(obsTypes)
+				setLastObsDepth(obsDepth)
 			}
 		}
-	}, [YEAR, active, data, dataType, obsDepth, obsTypes])
+	}, [YEAR, active, data, dataType, obsDepth])
 
 	useEffect(() => {
 		if (YEAR) return
@@ -377,7 +382,12 @@ export default function useChartHook() {
 	)
 
 	useEffect(() => {
-		if (!Object.values(data).length && chartData.length === 0) return
+		if (
+			!Object.values(data).length &&
+			chartData.length === 0 &&
+			JSON.stringify(chartData[0]) === lastchartData
+		)
+			return
 		const arr = []
 		const allDates = []
 		let allDatesSorted = []
@@ -447,12 +457,14 @@ export default function useChartHook() {
 
 			setDatesOfYear(obj)
 		}
+
 		if (JSON.stringify([...arr]) !== JSON.stringify(dataSets)) {
 			setDataSets([...arr])
 		}
 
 		arr.length = 0
-	}, [YEAR, chartData, charType])
+		setLastchartData(JSON.stringify(chartData[0]))
+	}, [YEAR, chartData, charType, lastchartData, setDataLines])
 
 	const makesScalesForyear = useCallback((isDisplay, startDate, endDate) => {
 		const obj = {

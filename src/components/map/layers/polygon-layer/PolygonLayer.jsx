@@ -21,6 +21,14 @@ export const PolygonLayer = ({ data }) => {
 					polygon[0],
 				])
 
+				// if (ID_DB === 193) {
+				// 	console.log(
+				// 		' 193 exists',
+				// 		DAM_NAME,
+				// 		coordinates,
+				// 		reversedMultiPolygons
+				// 	)
+				// }
 				return (
 					<Polygon
 						key={uuid()}

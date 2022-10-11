@@ -26,6 +26,7 @@ import {
 import { getDataFormalized } from './utils/data'
 import { addLakeChartOptions } from './stores/lakesChartOptionsSlice'
 import { addYearsChartOptions } from './stores/yearsChartOptionsSlice'
+import { removeLake } from './stores/stateLakeSlice'
 
 export function useAppHook() {
 	const [isOneLakeActive, setIsOneLakeActive] = useState(false)
@@ -33,6 +34,7 @@ export function useAppHook() {
 	const [obsDepth, setObsDepth] = useState(DurationTypes.PERIOD)
 	const [lastObsDepth, setLastObsDepth] = useState(DurationTypes.PERIOD)
 	const [canvas, setCanvas] = useState(null)
+	const [noData, setNoData] = useState(false)
 	const form = useSelector(state => state.form)
 	const { active, loaded } = useSelector(state => state.stateLake)
 	const { data } = useSelector(state => state.data)
@@ -174,6 +176,26 @@ export function useAppHook() {
 				volumeZSV || [],
 			]
 
+			const allData = [
+				...fillingRateDayRaw,
+				...fillingRatePeriodRaw,
+				...surfaceDayRaw,
+				...surfacePeriodRaw,
+				...volumeDayRaw,
+				...volumePeriodRaw,
+			]
+			let noDataLength = 0
+			for (const data of allData) {
+				if (data.length === 0) {
+					noDataLength++
+				}
+			}
+
+			if (noDataLength === allData.length) {
+				setNoData(true)
+				dispatch(removeLake({ id }))
+			}
+
 			let fillingRateDayByYEar = []
 			let fillingRatePeriodByYear = []
 			if (fillingRateDayRaw.length > 0 && fillingRatePeriodRaw.length > 0) {
@@ -234,6 +256,7 @@ export function useAppHook() {
 				},
 			}
 			if (
+				noDataLength < allData.length &&
 				fillingRatePeriodRaw.length > 0 &&
 				surfacePeriodRaw.length > 0 &&
 				volumePeriodRaw.length > 0
@@ -508,9 +531,9 @@ export function useAppHook() {
 	//   return arrTmp
 	// }, [seriePath, dispatch])
 	//
-	// const handleSetNoDataLake = useCallback(() => {
-	//   setNodataLake(false)
-	// }, [])
+	const handleSetNoData = useCallback(() => {
+		setNoData(false)
+	}, [])
 	//
 	// useEffect(() => {
 	//   if (!dataReference.length) return
@@ -707,5 +730,7 @@ export function useAppHook() {
 		toggleTheme,
 		handleCanvas,
 		canvas,
+		noData,
+		handleSetNoData,
 	}
 }
