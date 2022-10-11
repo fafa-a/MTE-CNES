@@ -20,6 +20,8 @@ export default function useMapHook({ dataGeojson }) {
 					LAT_DD,
 					LONG_DD,
 					NEAR_CITY: nearCity,
+					CAP_MCM: capacity,
+					AREA_HA: area,
 				} = properties
 
 				const info = {
@@ -30,6 +32,8 @@ export default function useMapHook({ dataGeojson }) {
 					country,
 					nearCity,
 					damCoord: [LAT_DD, LONG_DD],
+					capacity,
+					area,
 				}
 
 				dispatch(addInformation({ id, info }))

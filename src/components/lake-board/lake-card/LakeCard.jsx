@@ -76,6 +76,8 @@ export const LakeCard = ({ id }) => {
 		mainUse: '',
 		nearCity: '',
 		damCoord: [],
+		capacity: '',
+		area: '',
 	})
 	const { lakesChartOptions } = useSelector(state => state)
 	const { information } = useSelector(state => state.information)
@@ -85,8 +87,17 @@ export const LakeCard = ({ id }) => {
 			.filter(([id, { infoVisible }]) => infoVisible)
 			.map(([id]) => id)[0]
 		if (!idLakeShowInfo) return
-		const { id, country, name, lakeCoord, mainUse, nearCity, damCoord } =
-			information[idLakeShowInfo]
+		const {
+			id,
+			country,
+			name,
+			lakeCoord,
+			mainUse,
+			nearCity,
+			damCoord,
+			capacity,
+			area,
+		} = information[idLakeShowInfo]
 		setLake({
 			id,
 			country,
@@ -95,6 +106,8 @@ export const LakeCard = ({ id }) => {
 			mainUse,
 			nearCity,
 			damCoord,
+			capacity,
+			area,
 		})
 	}, [lakesChartOptions, information])
 
@@ -116,29 +129,28 @@ export const LakeCard = ({ id }) => {
 				{lake.name} {lake.country}
 			</SH2>
 			<SArticle>
-				<SDivId>
-					<p>
-						<SpanBold> Id DB :</SpanBold> {lake.id}
-					</p>
-					<p>
-						<SpanBold>Main use :</SpanBold>{' '}
-						{lake.mainUse !== 'NULL' ? lake.mainUse : 'n/a'}
-					</p>
+				<p>
+					<SpanBold> ID DB :</SpanBold> {lake.id}
+				</p>
+				<p>
+					<SpanBold>Main use :</SpanBold>{' '}
+					{lake.mainUse !== 'NULL' ? lake.mainUse : 'n/a'}
+				</p>
+				<p>
+					<SpanBold>Capacity :</SpanBold>
+					{lake.capacity !== 'NULL' ? ` ${lake.capacity} Mm³` : 'n/a'}
+				</p>
+				<p>
+					<SpanBold>Area :</SpanBold>
+					{lake.area !== 'NULL' ? ` ${lake.area} m²` : 'n/a'}
+				</p>
+				<SDivCoord>
 					<p>
 						<SpanBold>Department :</SpanBold>{' '}
 						{lake.nearCity !== 'NULL' ? lake.nearCity : 'n/a'}
 					</p>
-				</SDivId>
-				<SDivCoord>
-					<p>
-						<SpanBold>Dam coordinates:</SpanBold>
-					</p>
-					<ul>
-						<li>lat : {lake.damCoord[0]}</li>
-						<li>long : {lake.damCoord[1]}</li>
-					</ul>
 					<span>
-						<SpanBold>Reservoirs coordinates:</SpanBold>
+						<SpanBold>Reservoir coordinates:</SpanBold>
 						<ul>
 							<li>lat : {lake.lakeCoord[0]}</li>
 							<li>long : {lake.lakeCoord[1]}</li>
