@@ -155,179 +155,198 @@ export const LakeSelection = ({
 		obsDepth,
 		mode,
 	} = useLakeSelectionHook({ id, name, coordinates, index, showLakeInfo })
-	return (
-		<StyledDiv css={isSelected && backgroundBorderColored}>
-			{VOLUME && id === 'total' && (
-				<StyledDivObservationTypes>
-					{OPTIC && mode?.volume[obsDepth]?.raw[0]?.length > 0 && (
-						<StyledDivContainerObsTypes>
-							<StyledSpanObsColor style={bgOptic} />
-							<SpanBgWhite />
-							<StyledSpanLabel>optic</StyledSpanLabel>
-						</StyledDivContainerObsTypes>
-					)}
-					{RADAR && mode?.volume[obsDepth]?.raw[1]?.length > 0 && (
-						<StyledDivContainerObsTypes>
-							<StyledSpanObsColor style={bgRadar} />
-							<SpanBgWhite />
-							<StyledSpanLabel>radar</StyledSpanLabel>
-						</StyledDivContainerObsTypes>
-					)}
-					{REFERENCE && mode?.volume[obsDepth]?.raw[2]?.length > 0 && (
-						<StyledDivContainerObsTypes>
-							<StyledSpanObsColor style={bgReference} />
-							<SpanBgWhite />
-							<StyledSpanLabel>ref</StyledSpanLabel>
-						</StyledDivContainerObsTypes>
-					)}
-				</StyledDivObservationTypes>
-			)}
-			{!VOLUME && !YEAR && (
-				<StyledDivObservationTypes>
-					{OPTIC && data[id]?.[dataType]?.[obsDepth]?.raw[0]?.[0]?.date && (
-						<StyledDivContainerObsTypes>
-							<StyledSpanObsColor style={bgOptic} />
-							<SpanBgWhite />
-							<StyledSpanLabel>optic</StyledSpanLabel>
-						</StyledDivContainerObsTypes>
-					)}
-					{RADAR && data[id]?.[dataType]?.[obsDepth]?.raw[1]?.[0]?.date && (
-						<StyledDivContainerObsTypes>
-							<StyledSpanObsColor style={bgRadar} />
-							<SpanBgWhite />
-							<StyledSpanLabel>radar</StyledSpanLabel>
-						</StyledDivContainerObsTypes>
-					)}
-					{REFERENCE && data[id]?.[dataType]?.[obsDepth]?.raw[2]?.[0]?.date && (
-						<StyledDivContainerObsTypes>
-							<StyledSpanObsColor style={bgReference} />
-							<SpanBgWhite />
-							<StyledSpanLabel>ref</StyledSpanLabel>
-						</StyledDivContainerObsTypes>
-					)}
-				</StyledDivObservationTypes>
-			)}
-			{YEAR && data[active.at(-1)] && (
-				<StyledDivObservationTypes>
-					{OPTIC &&
-						Object.values(data[active.at(-1)]?.[dataType]?.[obsDepth]?.year)[
-							index
-						][0]?.length > 0 && (
+	if (active.includes(id) && !data[id]) {
+		return (
+			<StyledDiv>
+				<StyledParagraph>Loading...</StyledParagraph>
+			</StyledDiv>
+		)
+	} else {
+		return (
+			<StyledDiv css={isSelected && backgroundBorderColored}>
+				{VOLUME && id === 'total' && (
+					<StyledDivObservationTypes>
+						{OPTIC && mode?.volume[obsDepth]?.raw[0]?.length > 0 && (
 							<StyledDivContainerObsTypes>
 								<StyledSpanObsColor style={bgOptic} />
 								<SpanBgWhite />
 								<StyledSpanLabel>optic</StyledSpanLabel>
 							</StyledDivContainerObsTypes>
 						)}
-					{RADAR &&
-						Object.values(data[active.at(-1)]?.[dataType]?.[obsDepth]?.year)[
-							index
-						][1]?.length > 0 && (
+						{RADAR && mode?.volume[obsDepth]?.raw[1]?.length > 0 && (
 							<StyledDivContainerObsTypes>
 								<StyledSpanObsColor style={bgRadar} />
 								<SpanBgWhite />
 								<StyledSpanLabel>radar</StyledSpanLabel>
 							</StyledDivContainerObsTypes>
 						)}
-					{REFERENCE &&
-						Object.values(data[active.at(-1)]?.[dataType]?.[obsDepth]?.year)[
-							index
-						][2]?.length > 0 && (
+						{REFERENCE && mode?.volume[obsDepth]?.raw[2]?.length > 0 && (
 							<StyledDivContainerObsTypes>
 								<StyledSpanObsColor style={bgReference} />
 								<SpanBgWhite />
 								<StyledSpanLabel>ref</StyledSpanLabel>
 							</StyledDivContainerObsTypes>
 						)}
-				</StyledDivObservationTypes>
-			)}
-
-			<StyledContainerP
-				onClick={!VOLUME ? toggleSelectedLake : undefined}
-				css={YEAR && increaseWidth}
-			>
-				<StyledParagraph css={isSelected && fontBold}>
-					{YEAR &&
-						active.length > 0 &&
-						`${name} ${information[active.at(-1)].name}`}
-					{!YEAR && name}
-				</StyledParagraph>
-			</StyledContainerP>
-			<StyledContainerButton css={YEAR && decreaseWidth}>
-				{!VOLUME && (
+					</StyledDivObservationTypes>
+				)}
+				{!VOLUME && !YEAR && (
+					<StyledDivObservationTypes>
+						{OPTIC && data[id]?.[dataType]?.[obsDepth]?.raw[0]?.[0]?.date && (
+							<StyledDivContainerObsTypes>
+								<StyledSpanObsColor style={bgOptic} />
+								<SpanBgWhite />
+								<StyledSpanLabel>optic</StyledSpanLabel>
+							</StyledDivContainerObsTypes>
+						)}
+						{RADAR && data[id]?.[dataType]?.[obsDepth]?.raw[1]?.[0]?.date && (
+							<StyledDivContainerObsTypes>
+								<StyledSpanObsColor style={bgRadar} />
+								<SpanBgWhite />
+								<StyledSpanLabel>radar</StyledSpanLabel>
+							</StyledDivContainerObsTypes>
+						)}
+						{REFERENCE && data[id]?.[dataType]?.[obsDepth]?.raw[2]?.[0]?.date && (
+							<StyledDivContainerObsTypes>
+								<StyledSpanObsColor style={bgReference} />
+								<SpanBgWhite />
+								<StyledSpanLabel>ref</StyledSpanLabel>
+							</StyledDivContainerObsTypes>
+						)}
+					</StyledDivObservationTypes>
+				)}
+				{YEAR && data[active.at(-1)] && (
+					<StyledDivObservationTypes>
+						{OPTIC &&
+							Object.values(data[active.at(-1)]?.[dataType]?.[obsDepth]?.year)[
+								index
+							][0]?.length > 0 && (
+								<StyledDivContainerObsTypes>
+									<StyledSpanObsColor style={bgOptic} />
+									<SpanBgWhite />
+									<StyledSpanLabel>optic</StyledSpanLabel>
+								</StyledDivContainerObsTypes>
+							)}
+						{RADAR &&
+							Object.values(data[active.at(-1)]?.[dataType]?.[obsDepth]?.year)[
+								index
+							][1]?.length > 0 && (
+								<StyledDivContainerObsTypes>
+									<StyledSpanObsColor style={bgRadar} />
+									<SpanBgWhite />
+									<StyledSpanLabel>radar</StyledSpanLabel>
+								</StyledDivContainerObsTypes>
+							)}
+						{REFERENCE &&
+							Object.values(data[active.at(-1)]?.[dataType]?.[obsDepth]?.year)[
+								index
+							][2]?.length > 0 && (
+								<StyledDivContainerObsTypes>
+									<StyledSpanObsColor style={bgReference} />
+									<SpanBgWhite />
+									<StyledSpanLabel>ref</StyledSpanLabel>
+								</StyledDivContainerObsTypes>
+							)}
+					</StyledDivObservationTypes>
+				)}
+				{data[id] && (
 					<>
-						{!isVisible && (
-							<>
-								<StyledButton
-									data-tip
-									data-for="visible"
-									onClick={toggleChartVisibilty}
-								>
-									<CarbonView fontSize={16} />
-								</StyledButton>
-								<StyledReactTooltip id="visible" place="top" effect="solid">
-									<span>Visible</span>
-								</StyledReactTooltip>
-							</>
-						)}
-						{isVisible && (
-							<>
-								<StyledButton
-									data-tip
-									data-for="hide"
-									onClick={toggleChartVisibilty}
-								>
-									<CarbonViewOff fontSize={16} />
-								</StyledButton>
-								<StyledReactTooltip id="hide" place="top" effect="solid">
-									<span>Hide chart</span>
-								</StyledReactTooltip>
-							</>
-						)}
+						<StyledContainerP
+							onClick={!VOLUME ? toggleSelectedLake : undefined}
+							css={YEAR && increaseWidth}
+						>
+							<StyledParagraph css={isSelected && fontBold}>
+								{YEAR &&
+									active.length > 0 &&
+									`${name} ${information[active.at(-1)].name}`}
+								{!YEAR && name}
+							</StyledParagraph>
+						</StyledContainerP>
+						<StyledContainerButton css={YEAR && decreaseWidth}>
+							{!VOLUME && (
+								<>
+									{!isVisible && (
+										<>
+											<StyledButton
+												data-tip
+												data-for="visible"
+												onClick={toggleChartVisibilty}
+											>
+												<CarbonView fontSize={16} />
+											</StyledButton>
+											<StyledReactTooltip
+												id="visible"
+												place="top"
+												effect="solid"
+											>
+												<span>Visible</span>
+											</StyledReactTooltip>
+										</>
+									)}
+									{isVisible && (
+										<>
+											<StyledButton
+												data-tip
+												data-for="hide"
+												onClick={toggleChartVisibilty}
+											>
+												<CarbonViewOff fontSize={16} />
+											</StyledButton>
+											<StyledReactTooltip id="hide" place="top" effect="solid">
+												<span>Hide chart</span>
+											</StyledReactTooltip>
+										</>
+									)}
+								</>
+							)}
+							{!YEAR && id !== 'total' && (
+								<>
+									<StyledButton data-tip data-for="info" onClick={toggleInfo}>
+										<CarbonInformation fontSize={16} />
+									</StyledButton>
+									<StyledReactTooltip id="info" place="top" effect="solid">
+										<span>Info</span>
+									</StyledReactTooltip>
+									{!VOLUME && (
+										<>
+											<StyledButton
+												data-tip
+												data-for="download"
+												onClick={handleDownloadFile}
+											>
+												<CarbonDownload fontSize={16} />
+											</StyledButton>
+											<StyledReactTooltip
+												id="download"
+												place="top"
+												effect="solid"
+											>
+												<span>Download CSV</span>
+											</StyledReactTooltip>
+										</>
+									)}
+									<StyledButton
+										data-tip
+										data-for="remove"
+										onClick={handleClickDesactiveLake}
+									>
+										<CarbonCloseOutline fontSize={16} />
+									</StyledButton>
+									<StyledReactTooltip
+										id="remove"
+										place="top"
+										effect="solid"
+										type="warning"
+									>
+										<span>Remove</span>
+									</StyledReactTooltip>
+								</>
+							)}
+						</StyledContainerButton>
 					</>
 				)}
-				{!YEAR && id !== 'total' && (
-					<>
-						<StyledButton data-tip data-for="info" onClick={toggleInfo}>
-							<CarbonInformation fontSize={16} />
-						</StyledButton>
-						<StyledReactTooltip id="info" place="top" effect="solid">
-							<span>Info</span>
-						</StyledReactTooltip>
-						{!VOLUME && (
-							<>
-								<StyledButton
-									data-tip
-									data-for="download"
-									onClick={handleDownloadFile}
-								>
-									<CarbonDownload fontSize={16} />
-								</StyledButton>
-								<StyledReactTooltip id="download" place="top" effect="solid">
-									<span>Download CSV</span>
-								</StyledReactTooltip>
-							</>
-						)}
-						<StyledButton
-							data-tip
-							data-for="remove"
-							onClick={handleClickDesactiveLake}
-						>
-							<CarbonCloseOutline fontSize={16} />
-						</StyledButton>
-						<StyledReactTooltip
-							id="remove"
-							place="top"
-							effect="solid"
-							type="warning"
-						>
-							<span>Remove</span>
-						</StyledReactTooltip>
-					</>
-				)}
-			</StyledContainerButton>
-		</StyledDiv>
-	)
+			</StyledDiv>
+		)
+	}
 }
 
 LakeSelection.propTypes = {

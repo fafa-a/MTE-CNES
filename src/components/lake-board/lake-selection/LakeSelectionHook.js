@@ -101,7 +101,6 @@ export const useLakeSelectionHook = ({ id, coordinates, index, name }) => {
 			dispatch(toggleLakeChartSelection({ id }))
 		}
 		if (YEAR) {
-			console.log('toggle year')
 			dispatch(toggleYearChartSelection({ year: id }))
 		}
 	}, [YEAR, dispatch, id])
