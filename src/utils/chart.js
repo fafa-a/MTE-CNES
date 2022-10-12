@@ -68,14 +68,6 @@ export const handleDataSetsBorderWidthOption = (
 	obsTypes,
 	config
 ) => {
-	console.log({
-		arrDataSets,
-		activeData,
-		dataOption,
-		dataSetOption,
-		obsTypes,
-		config,
-	})
 	const newData = [...arrDataSets]
 	const activeDataIndex = activeData.map((el, index) => {
 		return {
