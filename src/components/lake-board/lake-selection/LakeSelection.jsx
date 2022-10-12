@@ -310,102 +310,92 @@ export const LakeSelection = ({
 							)}
 					</StyledDivObservationTypes>
 				)}
-				{data[id] && (
-					<>
-						<StyledContainerP
-							onClick={!VOLUME ? toggleSelectedLake : undefined}
-							css={YEAR && increaseWidth}
-						>
-							<StyledParagraph css={isSelected && fontBold}>
-								{YEAR &&
-									active.length > 0 &&
-									`${name} ${information[active.at(-1)].name}`}
-								{!YEAR && name}
-							</StyledParagraph>
-						</StyledContainerP>
-						<StyledContainerButton css={YEAR && decreaseWidth}>
-							{!VOLUME && (
+				{/* {data[id] && ( */}
+				{/* <> */}
+				<StyledContainerP
+					onClick={!VOLUME ? toggleSelectedLake : undefined}
+					css={YEAR && increaseWidth}
+				>
+					<StyledParagraph css={isSelected && fontBold}>
+						{YEAR &&
+							active.length > 0 &&
+							`${name} ${information[active.at(-1)].name}`}
+						{!YEAR && name}
+					</StyledParagraph>
+				</StyledContainerP>
+				<StyledContainerButton css={YEAR && decreaseWidth}>
+					{!VOLUME && (
+						<>
+							{!isVisible && (
 								<>
-									{!isVisible && (
-										<>
-											<StyledButton
-												data-tip
-												data-for="visible"
-												onClick={toggleChartVisibilty}
-											>
-												<CarbonView fontSize={16} />
-											</StyledButton>
-											<StyledReactTooltip
-												id="visible"
-												place="top"
-												effect="solid"
-											>
-												<span>Visible</span>
-											</StyledReactTooltip>
-										</>
-									)}
-									{isVisible && (
-										<>
-											<StyledButton
-												data-tip
-												data-for="hide"
-												onClick={toggleChartVisibilty}
-											>
-												<CarbonViewOff fontSize={16} />
-											</StyledButton>
-											<StyledReactTooltip id="hide" place="top" effect="solid">
-												<span>Hide chart</span>
-											</StyledReactTooltip>
-										</>
-									)}
-								</>
-							)}
-							{!YEAR && id !== 'total' && (
-								<>
-									<StyledButton data-tip data-for="info" onClick={toggleInfo}>
-										<CarbonInformation fontSize={16} />
-									</StyledButton>
-									<StyledReactTooltip id="info" place="top" effect="solid">
-										<span>Info</span>
-									</StyledReactTooltip>
-									{!VOLUME && (
-										<>
-											<StyledButton
-												data-tip
-												data-for="download"
-												onClick={handleDownloadFile}
-											>
-												<CarbonDownload fontSize={16} />
-											</StyledButton>
-											<StyledReactTooltip
-												id="download"
-												place="top"
-												effect="solid"
-											>
-												<span>Download CSV</span>
-											</StyledReactTooltip>
-										</>
-									)}
 									<StyledButton
 										data-tip
-										data-for="remove"
-										onClick={handleClickDesactiveLake}
+										data-for="visible"
+										onClick={toggleChartVisibilty}
 									>
-										<CarbonCloseOutline fontSize={16} />
+										<CarbonView fontSize={16} />
 									</StyledButton>
-									<StyledReactTooltip
-										id="remove"
-										place="top"
-										effect="solid"
-										type="warning"
-									>
-										<span>Remove</span>
+									<StyledReactTooltip id="visible" place="top" effect="solid">
+										<span>Visible</span>
 									</StyledReactTooltip>
 								</>
 							)}
-						</StyledContainerButton>
-					</>
-				)}
+							{isVisible && (
+								<>
+									<StyledButton
+										data-tip
+										data-for="hide"
+										onClick={toggleChartVisibilty}
+									>
+										<CarbonViewOff fontSize={16} />
+									</StyledButton>
+									<StyledReactTooltip id="hide" place="top" effect="solid">
+										<span>Hide chart</span>
+									</StyledReactTooltip>
+								</>
+							)}
+						</>
+					)}
+					{!YEAR && id !== 'total' && (
+						<>
+							<StyledButton data-tip data-for="info" onClick={toggleInfo}>
+								<CarbonInformation fontSize={16} />
+							</StyledButton>
+							<StyledReactTooltip id="info" place="top" effect="solid">
+								<span>Info</span>
+							</StyledReactTooltip>
+							{!VOLUME && (
+								<>
+									<StyledButton
+										data-tip
+										data-for="download"
+										onClick={handleDownloadFile}
+									>
+										<CarbonDownload fontSize={16} />
+									</StyledButton>
+									<StyledReactTooltip id="download" place="top" effect="solid">
+										<span>Download CSV</span>
+									</StyledReactTooltip>
+								</>
+							)}
+							<StyledButton
+								data-tip
+								data-for="remove"
+								onClick={handleClickDesactiveLake}
+							>
+								<CarbonCloseOutline fontSize={16} />
+							</StyledButton>
+							<StyledReactTooltip
+								id="remove"
+								place="top"
+								effect="solid"
+								type="warning"
+							>
+								<span>Remove</span>
+							</StyledReactTooltip>
+						</>
+					)}
+				</StyledContainerButton>
 			</StyledDiv>
 		)
 	}
