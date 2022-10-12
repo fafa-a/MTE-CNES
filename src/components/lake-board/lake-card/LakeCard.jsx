@@ -138,11 +138,11 @@ export const LakeCard = ({ id }) => {
 				</p>
 				<p>
 					<SpanBold>Capacity :</SpanBold>
-					{lake.capacity !== 'NULL' ? ` ${lake.capacity} Hm³` : 'n/a'}
+					{lake.capacity !== 'NULL' ? ` ${lake.capacity} hm³` : 'n/a'}
 				</p>
 				<p>
 					<SpanBold>Area :</SpanBold>
-					{lake.area !== 'NULL' ? ` ${lake.area} m²` : 'n/a'}
+					{lake.area !== 'NULL' ? ` ${lake.area / 10000} ha` : 'n/a'}
 				</p>
 				<SDivCoord>
 					<p>

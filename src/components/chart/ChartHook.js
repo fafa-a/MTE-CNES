@@ -29,7 +29,6 @@ export default function useChartHook() {
 	const [options, setOptions] = useState()
 	const [datesOfYear, setDatesOfYear] = useState({})
 	const form = useSelector(state => state.form)
-	const { yearsVisible } = useSelector(state => state.lakes)
 	const chart = useSelector(state => state.chart)
 	const { lakesChartOptions } = useSelector(state => state)
 	const { yearsChartOptions } = useSelector(state => state)
@@ -667,7 +666,7 @@ export default function useChartHook() {
 			activeLakes,
 			'selected',
 			'borderWidth',
-			obsTypes,
+			obsTypes.length,
 			chart
 		)
 		setDataSets(toggleBoldGraph)
@@ -700,19 +699,28 @@ export default function useChartHook() {
 	}, [yearsChartOptions, data, dataType, obsDepth])
 
 	useEffect(() => {
+		if (!data[active.at(-1)] || !YEAR || dataSets.length === 0) return
 		if (
 			!YEAR ||
 			dataSets.length !==
-				Object.values(yearsChartOptions).length * obsTypes.length
+				Object.values(yearsChartOptions).length *
+					data[active.at(-1)]?.[dataType][obsDepth]?.year[
+						Object.keys(yearsChartOptions)[0]
+					].length
 		)
 			return
+		const dataLength =
+			data[active.at(-1)][dataType][obsDepth].year[
+				Object.keys(yearsChartOptions)[0]
+			].length
+		console.log('In yearborderwidth')
 		const activeYears = Object.values(yearsChartOptions)
 		const toggleYearBoldGraph = handleDataSetsBorderWidthOption(
 			dataSets,
 			activeYears,
 			'selected',
 			'borderWidth',
-			obsTypes,
+			dataLength,
 			chart
 		)
 		setDataSets(toggleYearBoldGraph)

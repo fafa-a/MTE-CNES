@@ -68,6 +68,14 @@ export const handleDataSetsBorderWidthOption = (
 	obsTypes,
 	config
 ) => {
+	console.log({
+		arrDataSets,
+		activeData,
+		dataOption,
+		dataSetOption,
+		obsTypes,
+		config,
+	})
 	const newData = [...arrDataSets]
 	const activeDataIndex = activeData.map((el, index) => {
 		return {
@@ -79,7 +87,7 @@ export const handleDataSetsBorderWidthOption = (
 		const { index } = item
 		const dataOptionValue = item[dataOption]
 
-		if (obsTypes.length === 1) {
+		if (obsTypes === 1) {
 			if (dataOptionValue) {
 				newData[index][dataSetOption] = config.style.selected[dataSetOption]
 			}
@@ -88,7 +96,7 @@ export const handleDataSetsBorderWidthOption = (
 			}
 		}
 
-		if (obsTypes.length === 2) {
+		if (obsTypes === 2) {
 			if (dataOptionValue) {
 				newData[index === 0 ? 0 : index * 2][dataSetOption] =
 					config.style.selected[dataSetOption]
@@ -104,7 +112,7 @@ export const handleDataSetsBorderWidthOption = (
 					config.style.default[dataSetOption]
 			}
 		}
-		if (obsTypes.length === 3) {
+		if (obsTypes === 3) {
 			if (dataOptionValue) {
 				newData[index === 0 ? 0 : index * 3][dataSetOption] =
 					config.style.selected[dataSetOption]
