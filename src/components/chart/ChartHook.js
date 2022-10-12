@@ -156,7 +156,7 @@ export default function useChartHook() {
 
 	useEffect(() => {
 		if (YEAR) return
-		if (active.length > 0 && data[active.at(-1)]) {
+		if (active.length > 0 && data[active.at(-1)][dataType][obsDepth]) {
 			let dataTmp = []
 
 			if (
@@ -166,6 +166,7 @@ export default function useChartHook() {
 				for (const id of active) {
 					if (!VOLUME) {
 						const dataRaw = data[id][dataType][obsDepth]?.raw
+						console.log('dataRaw', dataRaw)
 						const dataActualized = handleObsType(
 							dataRaw,
 							OPTIC,
@@ -221,78 +222,86 @@ export default function useChartHook() {
 		}
 	}, [VOLUME, active, data, dataType, obsDepth, obsTypes])
 
-	const handleObsType = (data, optic, radar, reference) => {
-		let dataTmp = []
-		if (optic && radar && reference) {
-			dataTmp.push([data])
-		}
-		if (optic && !radar && !reference) {
-			dataTmp.push([data.slice(0, 1)])
-		}
-
-		if (optic && !radar && reference) {
-			if (data[2].length === 0) {
+	const handleObsType = useCallback(
+		(data, optic, radar, reference) => {
+			let dataTmp = []
+			if (optic && radar && reference) {
+				dataTmp.push([data])
+			}
+			if (optic && !radar && !reference) {
 				dataTmp.push([data.slice(0, 1)])
 			}
-			dataTmp.push([[data.slice(0, 1)[0], [data.at(-1)][0]]])
-		}
 
-		if (!optic && radar && !reference) {
-			dataTmp.push([data.slice(1, 2)])
-		}
+			if (optic && !radar && reference) {
+				console.log('=>', data)
+				if (data?.[2].length === 0) {
+					dataTmp.push([data.slice(0, 1)])
+				}
 
-		if (!optic && radar && reference) {
-			dataTmp.push([data.slice(1, data.length)])
-		}
+				dataTmp.push([[data.slice(0, 1)[0], [data.at(-1)][0]]])
+			}
 
-		if (optic && radar && !reference) {
-			dataTmp.push([data.slice(0, 2)])
-		}
+			if (!optic && radar && !reference) {
+				dataTmp.push([data.slice(1, 2)])
+			}
 
-		if (!optic && !radar && reference) {
-			if (data.length < 3) return
-			dataTmp.push([[data.at(-1)]])
-		}
-		return dataTmp[0]
-	}
+			if (!optic && radar && reference) {
+				dataTmp.push([data.slice(1, data.length)])
+			}
 
-	const handleObsTypeYearMode = (data, optic, radar, reference) => {
-		let dataTmp = []
-		if (optic && radar && reference) {
-			dataTmp.push(data)
-		}
+			if (optic && radar && !reference) {
+				dataTmp.push([data.slice(0, 2)])
+			}
 
-		if (optic && !radar && !reference) {
-			dataTmp.push(data.map(obs => obs.slice(0, 1)))
-		}
+			if (!optic && !radar && reference) {
+				if (data.length < 3) return
+				dataTmp.push([[data.at(-1)]])
+			}
+			return dataTmp[0]
+		},
+		[data]
+	)
 
-		if (optic && !radar && reference) {
-			if (data[0].length === 2) {
+	const handleObsTypeYearMode = useCallback(
+		(data, optic, radar, reference) => {
+			let dataTmp = []
+			if (optic && radar && reference) {
+				dataTmp.push(data)
+			}
+
+			if (optic && !radar && !reference) {
 				dataTmp.push(data.map(obs => obs.slice(0, 1)))
 			}
-			if (data[0].length === 3) {
-				dataTmp.push(data.map(obs => [obs.slice(0, 1)[0], obs.at(-1)]))
+
+			if (optic && !radar && reference) {
+				if (data?.[0].length === 2) {
+					dataTmp.push(data.map(obs => obs.slice(0, 1)))
+				}
+				if (data?.[0].length === 3) {
+					dataTmp.push(data.map(obs => [obs.slice(0, 1)[0], obs.at(-1)]))
+				}
 			}
-		}
 
-		if (!optic && radar && !reference) {
-			dataTmp.push(data.map(obs => obs.slice(1, 2)))
-		}
+			if (!optic && radar && !reference) {
+				dataTmp.push(data.map(obs => obs.slice(1, 2)))
+			}
 
-		if (!optic && radar && reference) {
-			dataTmp.push(data.map(obs => obs.slice(1, 3)))
-		}
+			if (!optic && radar && reference) {
+				dataTmp.push(data.map(obs => obs.slice(1, 3)))
+			}
 
-		if (optic && radar && !reference) {
-			dataTmp.push(data.map(obs => obs.slice(0, 2)))
-		}
+			if (optic && radar && !reference) {
+				dataTmp.push(data.map(obs => obs.slice(0, 2)))
+			}
 
-		if (!optic && !radar && reference) {
-			if (data[0].length === 2) return
-			dataTmp.push(data.map(obs => obs.at(-1)))
-		}
-		return dataTmp
-	}
+			if (!optic && !radar && reference) {
+				if (data?.[0].length === 2) return
+				dataTmp.push(data.map(obs => obs.at(-1)))
+			}
+			return dataTmp
+		},
+		[data]
+	)
 
 	const setDataLines = useCallback(
 		(item, obsType, index, lakeName, indexColor) => {
@@ -391,8 +400,8 @@ export default function useChartHook() {
 		const allDates = []
 		let allDatesSorted = []
 		if (!YEAR) {
-			chartData.forEach((key, index) => {
-				key.forEach(item => {
+			chartData?.forEach((key, index) => {
+				key?.forEach(item => {
 					item?.forEach((itm, idx) => {
 						const data = setDataLines(
 							itm,
@@ -535,7 +544,7 @@ export default function useChartHook() {
 			plugins: {
 				title: {
 					display: true,
-					text: `${label}  ${unit}`,
+					text: `${label === 'Surface' ? 'Area' : label}  (${unit})`,
 					position: 'top',
 					font: {
 						size: 16,

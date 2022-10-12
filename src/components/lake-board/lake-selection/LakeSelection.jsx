@@ -125,6 +125,59 @@ const decreaseWidth = {
 	width: '10%',
 }
 
+// const DivWrapper = styled('div', {
+// 	display: 'flex',
+// 	alignItems: 'center',
+// 	justifyContent: 'center',
+// 	margin: '0 auto',
+// 	padding: '0 20px',
+// 	height: '100%',
+// })
+
+// let dots = '3'
+// let dotWidth = '15px'
+// let dotStartOpacity = '0.15'
+// let dotAnimationSpeed = '1s'
+// let dotAnimationScale = '1'
+// const dotsAnimation = keyframes({
+// 	'0%, 70%, 100%': {
+// 		opacity: dotStartOpacity,
+// 		transform: 'scale(dotAnimationScale)',
+// 	},
+// 	'35%': {
+// 		opacity: 1,
+// 		transform: 'scale(1)',
+// 	},
+// })
+
+// const DivDotLoader = styled('div', {
+// 	height: dotWidth,
+// 	position: 'relative',
+// 	padding: dotWidth,
+// 	width: dotWidth * 5,
+// 	margin: '0 auto',
+// })
+
+// const DivDot = styled('div', {
+// 	'background': '#b7b7b7',
+// 	'borderRadius': '50%',
+// 	'float': 'left',
+// 	'height': dotWidth,
+// 	'opacity': dotStartOpacity,
+// 	'position': 'relative',
+// 	'left': 0,
+// 	'top': 0,
+// 	'transform': 'scale(dotAnimationScale)',
+// 	'width': dotWidth,
+
+// 	'@for $i from 1 to 4': {
+// 		'&:nth-child(#{$i})': {
+// 			animation: dotsAnimation dotAnimationSpeed '($i * 0.2s) ease-in-out infinite`,
+// 			left: (dotWidth * ($i - 1)) / 2,
+// 		},
+// 	},
+// })
+
 export const LakeSelection = ({
 	id,
 	name,
@@ -158,7 +211,16 @@ export const LakeSelection = ({
 	if (active.includes(id) && !data[id]) {
 		return (
 			<StyledDiv>
-				<StyledParagraph>Loading...</StyledParagraph>
+				<StyledParagraph>
+					Loading...
+					{/* <DivWrapper> */}
+					{/* 	<DivDotLoader> */}
+					{/* 		<DivDot></DivDot> */}
+					{/* 		<DivDot></DivDot> */}
+					{/* 		<DivDot></DivDot> */}
+					{/* 	</DivDotLoader> */}
+					{/* </DivWrapper> */}
+				</StyledParagraph>
 			</StyledDiv>
 		)
 	} else {

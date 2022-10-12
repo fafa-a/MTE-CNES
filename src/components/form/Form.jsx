@@ -1,11 +1,11 @@
-import useFormHook from "./FormHook"
-import { Checkbox } from "@components/checkbox/Checkbox"
-import { Select } from "@components/select/Select"
-import { SelectOption } from "@components/select/SelectOption"
-import { styled, theme } from "@/stitches.config"
-import { DataTypes, ChartTypes, ModeTypes } from "../../config"
-import { CarbonDocumentDownload, CarbonZoomReset } from "../carbon-icons"
-import ReactTooltip from "react-tooltip"
+import useFormHook from './FormHook'
+import { Checkbox } from '@components/checkbox/Checkbox'
+import { Select } from '@components/select/Select'
+import { SelectOption } from '@components/select/SelectOption'
+import { styled, theme } from '@/stitches.config'
+import { DataTypes, ChartTypes, ModeTypes } from '../../config'
+import { CarbonDocumentDownload, CarbonZoomReset } from '../carbon-icons'
+import ReactTooltip from 'react-tooltip'
 import {
 	toggleOptic,
 	toggleRadar,
@@ -16,58 +16,58 @@ import {
 	toggleReference,
 	toggleVolume,
 	toggleYear,
-} from "../../stores/formSlice"
-import { Radiobox } from "../radiobox/RadioBox"
-const StyledContainer = styled("div", {
-	fontFamily: "arial",
-	color: "$text",
-	display: "flex",
-	flexDirection: "column",
-	height: "50%",
+} from '../../stores/formSlice'
+import { Radiobox } from '../radiobox/RadioBox'
+const StyledContainer = styled('div', {
+	fontFamily: 'arial',
+	color: '$text',
+	display: 'flex',
+	flexDirection: 'column',
+	height: '50%',
 	padding: theme.space.sm,
-	minWidth: "100%",
-	maxWidth: "100%",
+	minWidth: '100%',
+	maxWidth: '100%',
 })
 
-const Div = styled("div", {
+const Div = styled('div', {
 	marginBottom: theme.space.base,
 })
 
-const DivFlexRow = styled("div", {
-	display: "flex",
-	justifyContent: "space-evenly",
+const DivFlexRow = styled('div', {
+	display: 'flex',
+	justifyContent: 'space-evenly',
 })
 
-const H3 = styled("h3", {
-	fontFamily: "arial",
+const H3 = styled('h3', {
+	fontFamily: 'arial',
 	marginBottom: theme.space.sm,
 })
-const ButtonIconContainer = styled("div", {
+const ButtonIconContainer = styled('div', {
 	marginTop: theme.space.xl,
-	width: "100%",
-	display: "flex",
-	justifyContent: "end",
+	width: '100%',
+	display: 'flex',
+	justifyContent: 'end',
 })
 
-const ButtonIcon = styled("button", {
-	"backgroundColor": "$background",
-	"color": "$iconColor",
-	"cursor": "pointer",
-	"borderColor": "$iconColor",
-	"borderRadius": theme.borderRadius.xs,
-	"marginLeft": theme.space.xs,
-	"&:hover": {
-		borderColor: "$iconHoverColor",
-		color: "$iconHoverColor",
+const ButtonIcon = styled('button', {
+	'backgroundColor': '$background',
+	'color': '$iconColor',
+	'cursor': 'pointer',
+	'borderColor': '$iconColor',
+	'borderRadius': theme.borderRadius.xs,
+	'marginLeft': theme.space.xs,
+	'&:hover': {
+		borderColor: '$iconHoverColor',
+		color: '$iconHoverColor',
 	},
 })
 
 const Tooltip = styled(ReactTooltip, {
-	fontFamily: "arial",
+	fontFamily: 'arial',
 	fontSize: `${theme.fontSizes.xs}!important`,
-	marginTop: "0 !important",
-	padding: "4px 8px !important",
-	zIndex: "1111 !important",
+	marginTop: '0 !important',
+	padding: '4px 8px !important',
+	zIndex: '1111 !important',
 })
 export const Form = ({ canvas }) => {
 	const {
@@ -164,7 +164,8 @@ export const Form = ({ canvas }) => {
 						/>
 						<SelectOption
 							value={DataTypes.SURFACE}
-							label={dataTypesValues.SURFACE.label}
+							// label={dataTypesValues.SURFACE.label}
+							label="Area"
 							disabled={form.VOLUME}
 						/>
 						<SelectOption
