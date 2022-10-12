@@ -156,7 +156,7 @@ export default function useChartHook() {
 
 	useEffect(() => {
 		if (YEAR) return
-		if (active.length > 0 && data[active.at(-1)][dataType][obsDepth]) {
+		if (active.length > 0 && data[active.at(-1)]?.[dataType][obsDepth]) {
 			let dataTmp = []
 
 			if (
