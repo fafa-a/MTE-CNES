@@ -713,7 +713,6 @@ export default function useChartHook() {
 			data[active.at(-1)][dataType][obsDepth].year[
 				Object.keys(yearsChartOptions)[0]
 			].length
-		console.log('In yearborderwidth')
 		const activeYears = Object.values(yearsChartOptions)
 		const toggleYearBoldGraph = handleDataSetsBorderWidthOption(
 			dataSets,

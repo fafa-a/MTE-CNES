@@ -50,7 +50,11 @@ export default function usePolygonLayerHook() {
 
 	useEffect(() => {
 		if (active.length >= 2) return
-		if (active.length === 1 && containerHeight !== '45%') {
+		if (
+			active.length === 1 &&
+			Object.keys(data).length === 1 &&
+			containerHeight !== '45%'
+		) {
 			resizeMap('45%')
 			setContainerHeight('45%')
 		}
@@ -58,7 +62,7 @@ export default function usePolygonLayerHook() {
 			resizeMap('100%')
 			setContainerHeight('100%')
 		}
-	}, [active, resizeMap])
+	}, [active, resizeMap, data])
 
 	useEffect(() => {
 		if (containerHeight === '100%' && coordId.coord.length > 0) {

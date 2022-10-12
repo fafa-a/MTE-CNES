@@ -304,13 +304,13 @@ export function useAppHook() {
 	}, [DAY, PERIOD])
 
 	useEffect(() => {
-		if (active.length > 0) {
+		if (active.length > 0 && data[active.at(-1)]) {
 			setIsOneLakeActive(true)
 		}
 		if (active.length === 0) {
 			setIsOneLakeActive(false)
 		}
-	}, [active])
+	}, [active, data])
 
 	///  const resetAllData = useCallback(() => {
 	//   setLakeData([])
